@@ -1,15 +1,17 @@
-=begin
-ruby program to print the pwoer of a number 
-=end
+=begin 
+To write a porgram to get the pwoer of a  number 
+=end 
 
 def pow(a,b)
+	power =1
+	for i in 1..b
+		power =power*a 
+	end 
+	return power
+end
 
-end 
-
-puts "Enter Base:- "
+puts "Enter the base of the number"
 base = gets.chomp.to_i
-
-puts "Enter the Exponent:- "
-exponent = gets.chomp.to_i
-
-puts "The power is #{pow(base,expo)}"
+puts "Enter the exponent of the number"
+expo = gets.chomp.to_i 
+puts "The power of the number is #{pow(base,expo)}"
