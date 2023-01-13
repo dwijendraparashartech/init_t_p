@@ -1,0 +1,12 @@
+project_description.txt
+.................................
+
+# skooldbms 
+# skool finance - hrms finance 
+# e-commerce 
+
+
+
+
+
+.................................

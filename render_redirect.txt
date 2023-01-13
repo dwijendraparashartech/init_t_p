@@ -1,0 +1,103 @@
+
+
+
+
+render :json => {'errors' => ['Record not found']}, :status => :not_found
+
+
+return render json: {errors: [{token: 'Token has Expired, Please login again.'},]}, status: :unprocessable_entity
+
+
+render json: FeeConcessionSerializer.new(@fee_concession, meta: { message: 'Fee concession Details.' }).serializable_hash,
+             status: :ok
+
+
+render json: { message: 'Fee concession was successfully destroyed.' }, status: :ok
+
+render json: { errors: @fee_concession.errors }, status: :unprocessable_entity
+
+render json: { message: 'Fee concessions was successfully destroyed.' }, status: :ok
+
+ActiveAdmin.register BxBlockFeeStructure::FeeStructure, as: "FeeStructure" do
+  permit_params :academic_year_id, :academic_class_id, :division_id, :due_date, :installment_id, :fine_id, :name, :custom_id, sub_fee_structures_attributes: [:id, :fee_id, :fee_account, :fee_amount, :_destroy, tax_ids: []]
+	actions :all
+
+	show do
+    attributes_table do
+      row :academic_year
+      row :academic_class
+      row :division
+      row :due_date
+      row :fine
+      row :name
+      row :custom_id
+    end
+    panel 'Sub Fee Structure' do
+      attributes_table_for fee_structure.sub_fee_structures do
+        row :id
+        row :fee_account
+        row :fee_account
+        row :tax_ids do|sub_f|
+          sub_f&.tax_ids.reject { |e| e.nil? || e&.empty? }
+        end
+        row :fee_id
+      end
+    end
+  end
+
+
+  form do |f|
+    f.inputs 'Details' do
+      f.input :name
+      f.input :academic_year, as: :select, collection: BxBlockAcademicYear::AcademicYear.all.map { |y| [y.year, y.id] }, include_blank: false, :input_html => { :width => 'auto' }
+      f.input :academic_class, as: :select, collection: BxBlockAcademicClass::AcademicClass.all.map { |n| [n.name, n.id] }, include_blank: false, :input_html => { :width => 'auto' }
+      f.input :division, as: :select, collection: BxBlockDivision::Division.all.map { |t| [t.title, t.id] }, include_blank: false, :input_html => { :width => 'auto' }
+      f.input :due_date, :as => :datetime_picker
+      # f.input :fine, as: :select, collection: BxBlockFine::Fine.all.map { |f| [f.name, f.id] }, include_blank: false, :input_html => { :width => 'auto' }
+    end
+    f.inputs "Sub Fee Structure" do
+      f.has_many :sub_fee_structures, heading: false, allow_destroy: true do |sb|
+        sb.input :fee, as: :select, collection: BxBlockFee::Fee.all.map { |fee| [fee.name, fee.id] }, include_blank: false, :input_html => { :width => 'auto' }
+        sb.input :fee_amount
+        sb.input :tax_ids, as: :searchable_select, collection: BxBlockTax::Tax.all.map { |fee| [fee.tax_percentage.to_s + "%", fee.id] }, include_blank: false, :input_html => { :width => 'auto', multiple: true }
+      end
+    end
+    f.actions
+  end
+
+
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :academic_year, sortable: :academic_year do |object|
+      if object&.academic_year.present?
+        link_to object&.academic_year&.year, "/admin/academic_years/#{object&.academic_year&.id}"
+      end
+    end
+    # column :academic_class, sortable: :academic_class do |object|
+    #   if object&.academic_class.present?
+    #     link_to object&.academic_class&.name, "/admin/academic_classes/#{object&.academic_class&.id}"
+    #   end
+    # end
+    # column :division, sortable: :division do |object|
+    #   if object&.division.present?
+    #     link_to object&.division&.title, "/admin/divisions/#{object&.division&.id}"
+    #   end
+    # end
+    # column :installment, sortable: :installment do |object|
+    #   if object&.installment.present?
+    #     link_to object&.installment&.name, "/admin/installments/#{object&.installment&.id}"
+    #   end
+    # end
+    # column :fine, sortable: :fine do |object|
+    #   if object&.fine.present?
+    #     link_to object&.fine&.name, "/admin/fines/#{object&.fine&.id}"
+    #   end
+    # end
+    column :due_date
+    column :created_at
+    column :updated_at
+    actions
+  end
+end
