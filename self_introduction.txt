@@ -1,0 +1,18 @@
+self_introduction.txt
+
+::
+
+Q:: Give me your introduction ??
+
+Sir I belongs from bulandshahr,belongs to punjabi culture, have qualified mtech from wireless comm and b.tech in elec n comm from M.I.T. maharastra,I am working as software developer in bittern technologis, noida from june 2019 , i play different roles and responsibilities in the organization till now as - 
+to develop api's in the backend.
+to work with different project from scratch with the big teams.
+development and maintainance of existing web applications in ruby on rails. 
+work at rails projects speed , deployments , errors , project setups and assessments.
+working at both product and service based project .
+In one project i have with worked with React js application for the six months.
+worked with error debuggins through byebug, debugger, inspect elements and developer tools.
+
+
+Q:: Tell me about your recent project ??
+
