@@ -1,0 +1,35 @@
+
+1. what are the serailizers , why we use the serializers ?
+ans - 
+Serializers in Ruby on rails convert a given object into json format. 
+Serializers control the particular attributes rendered when an object or model is 
+converted into json format.
+Serializers control the particular attributes rendered when an object or model is converted into json format. 
+serializers show that actually what we want to see from our serializers.
+
+.....................................................
+
+
+2. what are the csv files ::
+CSV ---  "Comma-Seperated-Values"
+csv are the "Comma-Seperated-Values".It is common data format which consist of rows with values seperated by commas.It's used for exporting and importing data.
+
+Example of CSV Files ::
+You can sexport your gmail contacts as CSV File, and you can also import them using the same format.
+
+What a Csv file looks like ::
+
+id,name
+1,chocolate
+2,bacon
+3,apple
+4,banana
+5,almonds
+
+how to import csv files in rails ::
+
+1. make the method self.import(file) in the model
+2. add some functionalitis in the create method in the controller 
+3. make a form for import csv files in the view files 
+
+.....................................................

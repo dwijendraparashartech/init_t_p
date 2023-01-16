@@ -3,16 +3,81 @@ self_introduction.txt
 ::
 
 Q:: Give me your introduction ??
+Sir I belongs from bulandshahr,belongs to punjabi culture, have qualified mtech from wireless comm and b.tech in elec n comm from M.I.T. maharastra,I am working as software developer in bittern technologis, noida from june 2019.
 
-Sir I belongs from bulandshahr,belongs to punjabi culture, have qualified mtech from wireless comm and b.tech in elec n comm from M.I.T. maharastra,I am working as software developer in bittern technologis, noida from june 2019 , i play different roles and responsibilities in the organization till now as - 
-to develop api's in the backend.
+................................................................................
+
+::
+
+Q:: Tell me your roles and responsibilities in the organization ??
+I play different roles and responsibilities in the organization till now as - 
+to interface and integrate with the RESTful API's
+to develop and integrate different api's in the backend.
 to work with different project from scratch with the big teams.
 development and maintainance of existing web applications in ruby on rails. 
 work at rails projects speed , deployments , errors , project setups and assessments.
 working at both product and service based project .
 In one project i have with worked with React js application for the six months.
 worked with error debuggins through byebug, debugger, inspect elements and developer tools.
+I also integrate other parts like - mailer , email_template , letter opener and sidekiq.
+I have also write different Test cases with Rspec gem. 
+Also worked for designing, css , responsive , templates part of the websites.
+Good test coverage in Rspecs about 90+%
+work with the databases like - mongodb, postgres,sql,sqlite
+work with 
+................................................................................
 
+::
 
 Q:: Tell me about your recent project ??
+sir my recent project is skoolfinance application - 
+i am working at this project at builder.ai from behalf of my organization,
+this is the base application of the finance and accounts in the education cycle like main different modules are - fee_structure , collections, gst_settings,payments and taxations. 
+
+
+................................................................................
+
+::
+
+At what gems you did work in ruby on rails :
+gems ::  
+bullet , friendlyid, sidekiq,slim, 
+
+
+
+
+
+................................................................................
+
+::
+
+What are the main other things you have done in ror application ?
+
+sidekiq
+ruby security features 
+ruby speed development issues 
+
+
+
+................................................................................
+
+::
+
+what problems you did face in the ruby on rails application ?
+devise,pundit,cancancan,sidekiq,rspec,factorybot,faker,kaminari,simplecov
+
+
+
+................................................................................
+
+::
+Tell me which gem you did use many times ??
+Gems :: 
+
+
+
+................................................................................
+
+::
+How to push the code at aws , heroku github 
 

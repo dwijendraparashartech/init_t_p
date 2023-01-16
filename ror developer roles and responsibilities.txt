@@ -1,0 +1,9 @@
+ror developer roles and responsibilities.txt :::::::
+....................................................
+
+....................................................
+
+1. knowledge of docker and docker- based deployment ?
+2. 
+
+

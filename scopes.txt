@@ -1,0 +1,5 @@
+scopes.txt..
+............
+
+scope :order_by_created, -> { order(created_at: :desc) }
+

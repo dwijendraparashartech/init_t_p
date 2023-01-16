@@ -1,0 +1,71 @@
+import.txt..........
+....................
+
+Link of the csv file from google ::
+https://www.rubyguides.com/2018/10/parse-csv-ruby/
+https://www.rubyguides.com/2018/10/parse-csv-ruby/
+https://fool-dev.com/how-to-import-csv-files-in-ruby-on-rails/
+
+what are the csv files in rails ::: 
+CSV ---  "Comma-Seperated-Values"
+csv are the "Comma-Seperated-Values".It is common data format which consist of rows with values seperated by commas.It's used for exporting and importing data.
+
+Example of CSV Files ::
+You can sexport your gmail contacts as CSV File, and you can also import them using the same format.
+
+What a Csv file looks like ::
+
+id,name
+1,chocolate
+2,bacon
+3,apple
+4,banana
+5,almonds
+
+how to import csv files in rails ::
+
+1. make the method self.import(file) in the model
+2. add some functionalitis in the create method in the controller 
+3. make a form for import csv files in the view files 
+................
+
+1.  At first in the model, as like country.rb and we have two columns for a country which is name and code see the below
+
+class Country < ApplicationRecord
+    # Bulk upload companies
+    def self.import(file)
+        CSV.foreach(file.path, headers: true) do |row|
+            company_hash = Country.new
+            company_hash.name = row[0]
+            company_hash.code = row[1]
+            company_hash.save
+        end
+    end
+end
+
+2. now we can add some functionalities in our countries controller
+
+class CountriesController < ApplicationController
+
+   def new
+      @country = Country.new
+   end
+
+   def create
+     Country.import(params[:country][:file]
+     flash[:notice] = "Countries uploaded successfully"
+     redirect_to countries_path #=> or where you want
+   end
+
+end
+
+3. now final touch in our new.html.erb I mean CSV upload form
+
+<%= form_for @country, url: countries_path do |f| %>
+   <div class="form-group">
+      <%= f.label :file, "Upload CSV File" %>
+      <%= f.file_field :file, class: 'form-control-file', required: true %>
+   </div>
+   <%= f.button :submit, "Upload CSV", class: 'btn btn-primary' %>
+<% end %>
+

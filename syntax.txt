@@ -1,0 +1,80 @@
+syntax.txt...
+.............
+
+1. how to add presence validation ::
+
+validates :salutation,:first_name,:last_name ,:company_name ,:vendor_email ,:phone_no_mob ,:phone_no_work, :website_url , presence: true
+..............................................................................
+
+2. how to add uniqueness validation ::
+
+validates :vendor_email, uniqueness: { case_sensitive: false, message: lambda{|x, y| "#{y[:value]} is already present" }}
+..............................................................................
+
+3. how to add custom id ::
+
+    def update_custom_id
+      self.custom_id = ("000000" + self.id.to_s).last(6)
+      self.save
+    end
+..............................................................................
+
+4. how to add csv file -----
+
+
+    def self.to_csv
+      attributes = ["ID", "Name", "Company", "Email", "Contact No."]
+      CSV.generate(headers: true) do |csv|
+        csv << attributes
+        all.each do |vendor|
+          csv << [vendor.custom_id , vendor&.name, vendor.company_name, vendor.vendor_email, vendor&.full_phone_no_mob]
+        end
+      end
+    end
+
+
+    def self.to_sample_csv
+      attributes = ['Salutation', 'First name', 'Last name', 'Company', 'Email', 'Contact No code', 'Contact no mob', 'Phone no work code', 'Phone no work', 'Website url', 'GST treatment', 'GSTIN/UIN', 'PAN Number', 'Source of Supply', 'Currency', 'Payment Tearms', 'TDS', 'Billing Street', 'Billing Address', 'Same as Billing Address', 'Shipping Street', 'Shipping Address', 'Remarks']
+      CSV.generate(headers: true) do |csv|
+        csv << attributes
+        all.each do |vendor|
+          csv << [vendor.salutation, vendor.first_name, vendor.last_name, vendor.company_name, vendor.vendor_email, vendor.phone_no_mob_code, vendor.phone_no_mob, vendor.phone_no_work_code, vendor.phone_no_work, vendor.website_url, vendor&.gst_treatment&.name, vendor.gstin_uin, vendor.pan_number, vendor.state_source_of_supply, vendor.currency, vendor&.payment_term&.term_name, vendor&.account_td&.tax_name, vendor.billing_address, vendor.billing_address2, vendor.is_same_billing_address, vendor.shipping_address, vendor.shipping_address, vendor.remarks]
+        end
+      end
+    end
+
+    ..............................................................................
+
+  5. how to add import functionality -----
+
+
+    def self.import(file, user)
+      invaild_data = []
+      CSV.foreach(file.path, headers: true) do |row|
+        gst_treat = BxBlockProfile::GstTreatment.find_by('name ILIKE ?', row[10].to_s.strip)
+        gst_treatment_id = gst_treat.present? ? gst_treat.id : nil
+
+        payment_term = BxBlockProfile::PaymentTerm.find_by('term_name ILIKE ?', row[15].to_s.strip)
+        payment_term_id = payment_term.present? ? payment_term.id : nil
+
+        tds = AccountBlock::AccountTd.find_by('tax_name ILIKE ?', row[16].to_s.strip)
+        tds_id = tds.present? ? tds.id : nil
+
+        is_same_as_billing_address = ActiveModel::Type::Boolean.new.cast(row[19].strip)
+        if is_same_as_billing_address
+          vendor = AccountBlock::Vendor.create(salutation: row[0].to_s.strip, first_name: row[1].to_s.strip, last_name: row[2].to_s.strip, company_name: row[3].to_s.strip, vendor_email: row[4].to_s.strip, phone_no_mob_code: row[5].to_i, phone_no_mob: row[6].to_s.strip, phone_no_work_code: row[7].to_i, phone_no_work: row[8].to_s.strip, website_url: row[9].to_s.strip, gst_treatment_id: gst_treatment_id, gstin_uin: row[11].to_s.strip, pan_number: row[12].to_s.strip, state_source_of_supply: row[13].to_s.strip, currency: row[14].to_s.strip, payment_term_id: payment_term_id, account_td_id: tds_id, billing_address: row[17].to_s.strip, billing_address2: row[18].to_s.strip, is_same_billing_address: true, remarks: row[22], account_id: user.id)
+          if vendor.errors.any?
+            invaild_data << row.to_h.merge("Error" => vendor.errors.full_messages.join(", "))
+          end
+        else
+          vendor = AccountBlock::Vendor.create(salutation: row[0].to_s.strip, first_name: row[1].to_s.strip, last_name: row[2].to_s.strip, company_name: row[3].to_s.strip, vendor_email: row[4].to_s.strip, phone_no_mob_code: row[5].to_i, phone_no_mob: row[6].to_s.strip, phone_no_work_code: row[7].to_i, phone_no_work: row[8].to_s.strip, website_url: row[9].to_s.strip, gst_treatment_id: gst_treatment_id, gstin_uin: row[11].to_s.strip, pan_number: row[12].to_s.strip, state_source_of_supply: row[13].to_s.strip, currency: row[14].to_s.strip, payment_term_id: payment_term_id, account_td_id: tds_id, billing_address: row[17].to_s.strip, billing_address2: row[18].to_s.strip, is_same_billing_address: false, shipping_address: row[20].to_s.strip, shipping_address2: row[21].to_s.strip, remarks: row[22], account_id: user.id)
+          if vendor.errors.any?
+            invaild_data << row.to_h.merge("Error" => vendor.errors.full_messages.join(", "))
+          end
+        end
+      end
+      invaild_data
+    end
+
+        ..............................................................................
+
