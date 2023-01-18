@@ -1,0 +1,62 @@
+string_methods.txt::
+
+....................
+
+
+1. How to Get The String Length ::  "ruby".size  , "ruby".length
+2. How to Check If A String Is Empty :: "".size == 0  ||   "".empty?
+3. What is String Interpolation? ::  name = "Jesus" ||  puts "Hello #{name}"
+4. How to Extract a Substring :: string = "abc123" || string[0,3] || string[3,3]
+   string = "abc123"  ||  string[0..-2]  , # "abc12"
+5. How to Find Out If a String Contains Another String :: string = "Today is Saturday" || string.include?("Saturday")  # true
+6. How to Find Out the index of the String ::string="Today is Sunday"|| string.index("day") # 2
+7. How to Pad a Ruby String::binary_string="1101",binary_string.rjust(8,"0")# "00001101"
+binary_string = "1111" , binary_string.ljust(8, "0") # # "11110000"
+8. Compare Strings Ignoring Case :: 
+lang1 = "ruby" || lang2 = "Ruby" || lang1.upcase == lang2.upcase
+9. How to Trim a String & Remove White Space ::
+extra_space = "   test    " || extra_space.strip || # "test"
+10. String Prefix & Suffix :: string = "ruby programming" || string.start_with? "ruby" || # true || string = "ruby programming" || string.end_with? "programming" || # true
+11. String Prefix & Suffix ::  delete-prefix ::
+string = "bacon is expensive" || string.delete_suffix(" is expensive")
+12. Convert a String to An Array of Characters ::
+ string = "a b c d" , string.split  #  # ["a", "b", "c", "d"]
+13. Here’s how you can split a list of comma-separated values (CSV)::
+csv = "a,b,c,d" , string.split(",")
+14. Convert an Array to a String :: arr = ['a', 'b', 'c'] || arr.join
+arr = ['a', 'b', 'c'] || arr.join("-")
+15. Convert a String Into An Integer || "49".to_i || "a".to_i
+16. Check If A String Is A Number :: 
+"123".match?(/\A-?\d+\Z/) # true  || "123bb".match?(/\A-?\d+\Z/) # false
+17. How to Append Characters :: string = "" || string << "hello" || string << " " || string << "there"
+18. Iterate Over Characters Of a String in Ruby || "rubyguides".each_char { |ch| puts ch }
+array_of_characters = "rubyguides".chars # # ["r", "u", "b", "y", "g", "u", "i", "d", "e", "s"]
+19. How to Convert a String to Upper or Lowercase in Ruby :: "abcd".upcase | "ABCD".downcase
+20. How to Create Multiline Strings :: b = <<-STRING
+aaa
+bbb
+ccc
+STRING
+
+OR
+
+And another is by using %Q: 
+a = %Q(aaa
+bbb
+ccc
+)
+
+21. How to Replace Text Inside a String Using The Gsub Method :: 
+string = "We have many dogs" , string.gsub("dogs", "cats")
+string = "abccc" |  string.gsub("c", "")
+string = "We have 3 cats" , string.gsub(/\d+/, "5")  # "We have 5 cats"
+22. "abcd?".chomp("?") | # "abcd" , 
+23. How to Change String Encodings :: "abc".encoding , "abc".force_encoding("UTF-8")
+24. Counting Characters :: str = "aaab" || str.count("a") || str.count("b")
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+scope.txt...
+............
+
+scope :by_role, -> (role) { includes(:role).where(roles: {name: role}) }
+scope :newest_first, -> { order(created_at: :desc) }
+scope :employees, -> { includes(:role).where(roles: {name: "Employee"}) }
+scope :order_by_created, -> { order(created_at: :desc) }
+scope :sp_details, ->(sp_id, availability_date) {
+scope :sp_details, ->(sp_id, availability_date) {find_by(service_provider_id: sp_id, availability_date: availability_date)}
+scope :not_deleted, -> { where(deleted_at: nil)}
+scope :newest_first, -> { order(created_at: :desc) }
+
+
+.................................
+
+
+scope :newest_first, -> { order(created_at: :desc) }
+scope name: newest_first  -- can given any name 
+scope condition --  order(created_at: :desc)
+created_at is the column in every table and desc+asc are two parameters, so we can use this condition in every model .
+
+Def :: Scope are custom queries that you define inside your rails models with the scope method. 
+Every Scope takes two arguments : 
+A name, which you use to call  this scope in your code.
+A lambda, which implements the query 
+
+.................................
+
+How to use  scope :: Link :: https://dev.to/mainstreet/how-to-use-scopes-in-ruby-on-rails-1mhj
+
+Method::A
+
+We can write this method directly in controller but it will create the duplicate entries so we will use the Method::B
+
+def index
+  @books = Book.where("LENGTH(title) > 20")
+end 
+
+Method::B
+
+class Book
+  scope :with_long_title, -> { where("LENGTH(title) > 20") }
+end
+
+def index
+  @books = Book.with_long_title
+end
+
+Note :: In the Book model Our scope name is - with_long_title
+and we pass it at the model in index action of controller - Book.with_long_title
+
+
+.................................
+
+Different types of Scope we can use at many places ::
+
+1. Scope with Where ::

@@ -1,0 +1,111 @@
+configration.txt...
+...................
+
+
+.......................................................
+
+what are the basic general configration settings that are used in the configration files ::
+
+ config.after_initialize
+ config.asset_host
+ config.autoload_once_paths
+ config.autoload_paths
+ config.add_autoload_paths_to_load_path
+ config.cache_classes
+ config.beginning_of_week
+  config.cache_store
+  config.colorize_logging
+  config.consider_all_requests_local
+  config.console
+  config.disable_sandbox
+  config.eager_load
+  config.eager_load_namespaces
+  config.eager_load_paths
+  config.enable_dependency_loading
+  config.encoding
+  config.exceptions_app
+  config.debug_exception_response_format
+  config.file_watcher
+  config.filter_parameters
+  config.force_ssl
+  config.javascript_path
+  config.log_formatter
+  config.log_level
+  config.log_tags
+
+
+.......................................................
+
+What are the configration Assets, How we used it ??
+
+
+
+.......................................................
+
+What are the configration Generators, How we used it ??
+
+
+
+.......................................................
+
+What are the configration Middleware, How we used it ??
+
+
+.......................................................
+
+What are the configration Active Model , How we used it ??
+
+
+.......................................................
+
+What is  the configration Active Record ??
+
+
+.......................................................
+
+What is  the configration Active Record ??
+
+
+.......................................................
+
+What is  the configration Active Controller ??
+
+
+.......................................................
+
+What is  the configration Active Index ??
+
+
+.......................................................
+
+What is  the configration Action Mailbox ??
+
+
+.......................................................
+
+What is  the configration Action Mailbox ??
+Active Support
+Active Job 
+Action Cable 
+Active Storage 
+Action Text
+Connections PAramerters 
+
+.......................................................
+How to create the Rails Enviornemnt ??
+
+Rails Enviornment Settings ?
+Database Pooling ?
+Custom Configration ?
+Search Engine Indexing ?
+Event File system Monitor ?
+
+.......................................................
+
+
+What is Sonar Cube ?? 
+SonarQube is a popular platform for Code Quality. It can be used for static and dynamic analysis of a codebase and can detect common code issues such as bugs and vulnerabilities.
+
+.......................................................
+
+

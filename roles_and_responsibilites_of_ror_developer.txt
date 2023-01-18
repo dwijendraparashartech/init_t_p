@@ -1,0 +1,80 @@
+roles_and_responsibilites_of_ror_developer.txt
+
+.................................................
+
+Ruby on Rails Developer duties and responsibilities ::
+
+
+Development of new web applications
+Maintenance of existing web applications
+Writing server-side web application logic in Ruby
+Create back-end components
+Connect the application with the other web services
+Extending and maintaining JSON and Liquid-based APIs
+
+
+Ruby on Rails Developer requirements and qualifications ::
+
+
+BS/MS degree in Computer Science, Engineering or a related subject
+X years of experience with Ruby and the Rails framework
+X years of experience with full web stack including HTTP, CSS, REST
+X years of experience with Git and Github
+X years of experience with Angular or Backbone JS
+Knowledge of Docker and docker-based deployment
+X years of experience with SQL backends, preferably Postgres or mySQL
+Familiarity with testing tools such as Cucumber
+Critical thinker and problem-solving skills
+Team player
+Good time-management skills
+
+.................................................
+
+Responsibilities
+Write clean, maintainable and efficient code
+Design robust, scalable and secure features
+Contribute in all phases of the development lifecycle
+Follow best practices (test-driven development, continuous integration, SCRUM, refactoring and code standards)
+Drive continuous adoption and integration of relevant new technologies into design
+Requirements and skills
+Proven work experience as a Ruby on Rails developer
+Proven work experience in software development
+Demonstrable knowledge of front-end technologies such as JavaScript, HTML, CSS and JQuery
+Experience developing highly interactive applications
+A firm grasp of object oriented analysis and design
+Passion for writing great, simple, clean, efficient code
+Good knowledge of relational databases
+Working knowledge of NoSQL databases
+BS/MS degree in Computer Science, Engineering or in related field
+
+.................................................
+
+Responsibilities
+Design, build, and maintain efficient, reusable, and reliable Ruby code
+Integration of data storage solutions {{may include databases, key-value stores, blob stores, etc.}}
+Integration of user-facing elements developed by front-end developers with server side logic
+Identify bottlenecks and bugs, and devise solutions to these problems
+Help maintain code quality, organization and automatization
+{{Add other responsibilities here that are relevant}}
+Skills
+Experience with Ruby on Rails, along with other common libraries such as RSpec and Resque
+Good understanding of the syntax of Ruby and its nuances
+Solid understanding of object-oriented programming
+Good understanding of server-side templating languages {{such as Liquid, Slim, etc depending on your technology stack}}
+Good understanding of server-side CSS preprocessors {{such as Sass, based on project requirements}}
+Basic understanding of front-end technologies, such as JavaScript, HTML5, and CSS3
+Familiarity with concepts of MVC, Mocking, ORM, and RESTful
+A knack for writing clean, readable Ruby code
+Ability to integrate multiple data sources and databases into one system
+Understanding of fundamental design principles behind a scalable application
+Able to create database schemas that represent and support business processes
+Able to implement automated testing platforms and unit tests
+Proficient understanding of code versioning tools {{e.g. Git, Mercurial or SVN}}
+Familiarity with development aiding tools {{such as Bower, Bundler, Rake, etc}}
+Familiarity with continuous integration
+{{Make sure to mention other frameworks, libraries, or any other technology relevant to your project}}
+{{List education level or certification you require}}
+
+...............................................
+
+

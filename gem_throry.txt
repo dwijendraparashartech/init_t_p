@@ -1,0 +1,10 @@
+gem_throry.txt....
+..................
+
+1. activecord import - bulk of records can be easily connected using the active record associations .
+
+2. kaminari :: for pagination
+
+3. paronia ::  for soft delete 
+
+4. 

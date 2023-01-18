@@ -204,3 +204,12 @@ CarrierWave.configure do |config|
 Upload multiple files in rails using carrier wave gem ::
 
 https://blog.francium.tech/upload-multiple-files-in-rails-api-using-carrierwave-1f37aaad2b07
+
+
+Important link for the carrier wave gem :: 
+
+https://www.rubydoc.info/gems/carrierwave/0.10.0
+
+https://medium.com/@dakota.lillie/uploading-files-using-carrierwave-in-rails-81ef54ebbcdb
+
+https://www.railscarma.com/blog/technical-articles/carrierwave-gem-file-uploads-rails/

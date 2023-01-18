@@ -1,0 +1,54 @@
+Why Ruby on Rails?
+..........................
+
+
+It allows you to launch a faster web application.
+Saves your money by using the Ruby on Rails framework.
+Helps us with maintaining and avoiding problems with stuff migration.
+Ruby on Rail Framework makes our app faster and safer.
+We can easily update our app with the latest functionality.
+It uses Metaprogramming techniques to write programs.
+
+............
+
+Feature of Ruby on Rails
+As we know that most of the languages like Java, HTML, CSS, etc. do not cover the front end and back end. They either only for the back end or for the front end but Ruby on Rails is used for both front end back end, it is like a complete package to develop a web application. Some important features of Ruby on Rails are:
+
+1. Model-view-controller Architecture: Ruby on Rails used MVC architecture, and it contains three components, i.e., model, view, and controller. Here, the model is used to maintain the relationship between object and database, the view is templates that are used to build the data users for web applications, and the controller is used to merge model and view together. MVC is generally used for developing user interfaces that divide the data into three interconnected components so that it can separate the internal representation of the information from the way it presents to and get from the user. 
+
+2. Active Records: The active record framework is introduced in Ruby on Rails. It is a powerful library that allows the developer to design the database interactive queries.
+
+3. Built-in Testing: Ruby on Rails provides its own set of tests that will run on your code. It will save time and effort.
+
+4. Programming Language: This syntax of Ruby on Rails is simple because the syntax of the Ruby programming language is close to English, so it is always easier to structure your thinking and writing it into code.
+
+5. MetaProgramming: Ruby on rails uses the metaprogramming technique to write programs.
+
+6. Convention over configuration: In Ruby on Rails, a programmer can only specify the unconventional aspects of the application. 
+
+7. Scaffolding: Ruby on rails provides a scaffolding feature in which the developer is allowed to define how the application database works. After defining the work of the application database the framework automatically generates the required code according to the given definition. This technique creates interfaces automatically.
+
+....................
+
+Advantages of Ruby on Rails ::
+
+Tooling: Rails provides tooling that helps us to deliver more features in less time.
+Libraries: There’s a 3rd party module(gem) for just about anything we can think of.
+Code Quality: Ruby code quality significantly higher than PHP or NodeJS equivalents.
+Test Automation: The Ruby community is big into and test automation and testing.
+Large Community: Ruby is large in the community.
+Productivity: Ruby is incredibly fast from another language. Its productivity is high.
+
+....................
+
+
+Disadvantages of Ruby on Rails
+Runtime Speed: The run time speed of Ruby on Rails is slow as compare to Node.Js and Golang.
+Lack of Flexibility: As we know that Ruby on Rails is ideal for standard web applications due to its hard dependency between components and models. But when it comes to adding unique functionality and customization in apps it is challenging.
+Boot Speed: The boot speed is also a drawback of ROR. Due to the dependence upon the number of gem dependencies and files, it takes some time to start which can obstruct the developer performance.
+Documentation: To find good documentation is hard for the less popular gems and for libraries that make heavy use of mixins.
+Multithreading: Ruby on Rails supports multithreading, but some IO libraries do not support multithreading because they keep hold of the global interpreter lock. So it means if you are not careful enough, your request will get queued up behind the active requests, and you will face performance issues.
+Active Record: Due to the access use of Active records in the ROR and hard dependency, the domain becomes tightly coupled to your persistence mechanism.
+
+....................
+

@@ -1,0 +1,2 @@
+class Bhanu < ApplicationRecord
+end
