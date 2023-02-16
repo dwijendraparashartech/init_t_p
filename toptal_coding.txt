@@ -1,0 +1,40 @@
+toptal_coding.txt
+....................
+
+Q 1. what is the diff betwee n hash and hashindiffwithaccess ? 
+hash ------ it does not treats symbol and string keys as equivalent 
+hashwithindifferentaccess ----- treats symbol and string keys as equvalent 
+
+hash class --  Hash
+hashwithindifferentclass --  HashWithIndifferentAccess
+
+
+Q 2.  One example to tell the diff between hash and hashwithindifferentaccess :: 
+
+....................................
+
+h = HashWithIndifferentAccess.new
+h[:my_value] = 'foo'
+h['my_value'] #=> will return "foo"
+
+....................................
+
+h = Hash.new
+h[:my_value] = 'foo'
+h['my_value'] #=> nil 
+
+....................................
+
+Q 3.  What is the problem with 
+    class MyController < ApplicationController
+      def options
+        options = {}
+        available_option_keys = [:first_option, :second_option, :third_option]
+        all_keys = params.keys.map(&:to_sym)
+        set_option_keys = all_keys & available_option_keys
+        set_option_keys.each do |key|
+          options[key] = params[key]
+        end
+        options
+      end
+    end

@@ -78,3 +78,6 @@ Familiarity with continuous integration
 ...............................................
 
 
+write the api
+work at different databases
+debug the errors 

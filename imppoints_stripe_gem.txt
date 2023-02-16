@@ -1,0 +1,5 @@
+imppoints_stripe_gem.txt ::
+...........................
+
+1. stripe sees prices only in cents 
+2. 

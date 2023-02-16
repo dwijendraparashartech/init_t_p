@@ -153,7 +153,7 @@ end
 
 ..................................................
 
-L. Crate credit card services in the services  ::
+L. Create credit card services in the services  ::
 
 # app/services/credit_card_service.rb
 
@@ -416,3 +416,22 @@ RSpec.describe ChargesController do
     end
   end
 end
+
+
+....................
+....................
+....................
+....................
+.....................
+..................
+
+
+1. Start by my own way ::    Link ::   https://dashboard.stripe.com/register
+stripe account email: dwijendraparashartech@gmail.com , password : shreedas123.
+2. Activate the stripe account: continue activating
+3. Take the test keys __ for testing only :: 
+publishable key :: pk_test_51LDOs2SBczVtC6SofUIt6pfVg8iiQ45tzcMTTYjhBIYMXckl1SA2JvY0eq3iBOYIl1OnMl3bCODVsLn6sADYfZ0200Cqtrkcwh
+secret key :: sk_test_51LDOs2SBczVtC6SoGAP6RGO3DotGBfd0abkyEbX0vcAs2aishoJYDvkklB0jzVcqc2LGHIfawV4zbm1NOjE0pryJ003hTp2J32
+4. add the test api keys to your website ::
+
+

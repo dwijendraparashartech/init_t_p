@@ -1,0 +1,53 @@
+gsub_txt..
+..........
+
+What is gsub Method ??
+In Ruby, the gusb method replaces all occurrences of a pattern with a given replacement and returns the copy of the string.
+
+Syntax of gsub ::
+
+str.gsub(pattern,replacement)
+
+Parameters
+The gsub method takes two parameters:
+
+pattern: This is the substring/character set that will be removed.
+
+replacement: This is the character(s) that will be substituted for the characters to be removed.
+
+........................................
+
+Ex ::
+
+puts "Hello".gsub(/[aeiou]/, "*")
+puts "Good Morning".gsub(/[ning]/,"<>")
+
+
+puts "Sample".gsub!(/[bcd]/, '*')  
+puts "Program".gsub!(/([gmra])/, '<\1>')
+
+
+
+1. str = "white chocolate"   ||  str.gsub("white", "dark")
+2. "a1".gsub(/\d/, "2") || # "a2"
+3. 
+
+
+
+5.  Advanced Gsub With Blocks ::
+"dog".gsub(/\w+/) { |animal| animal == "dog" ? "cat" : "dog" }
+
+
+
+6. Replace Multiple Terms With A Hash ::
+colors = {
+  "B" => "blue",
+  "G" => "green",
+  "R" => "red"
+}
+"BBBGR".gsub(/\w/, colors)  # "bluebluebluegreenred"
+
+7. Replace Patterns With A Regular Expression :: 
+"a1".gsub(/\d/, "2")  # # "a2"
+
+8. 

@@ -1,42 +1,16 @@
-# =begin
-# Write a program to check the year is leap year or not 
-# =end
-# puts "enter the year you want to check that a leap year or not"
-# yr = gets.chomp.to_i
-# if yr%400 == 0
-# 	puts " #{yr} enter the year is leap year"
-# elsif yr%4 ==0 &&  yr%100 != 0 
-# 	puts "#{yr} enter the year is leap year"
-# else 
-# 	puts "#{yr} the year is not the leap year"
-# end
+# write a program to check the year is leap year or not 
 
 
-# =begin
-# Write the program to check the year is leap year or not 
-# =end 
 
-# puts "enter the year you want to check that year is leap year or not"
-# yr = gets.chomp.to_i
-# if yr%400 == 0 
-# 	puts "enter the year is leap year"
-# elsif yr%4==0 && yr%100!=0
-# 	puts "enter the year is leap year"
-# else 
-# 	puts "enter the year is not the leap year"
-# end 
-
-
-=begin 
-Enter the year you want to check that leap year or not 
-=end 
-
-puts "enter the year you want to check"
-yr = gets.chomp.to_i
-if yr % 400 == 0
-	puts "the year is the leap year"
-elsif yr % 4 == 0 && yr % 100  != 0
-	puts "the year is the leap year"
-else 
-	puts "the year is not the leap year"
+def check_leap_year(yr)
+	yr = gets.chomp.to_i
+	if yr % 400 == =
+		puts "This year is the leap year"
+	elsif yr% 4 ==0  &&  yr % 100 == 0 
+		puts "This year is the leap year"
+	else 
+		puts "This year is not leap year"
+	end
 end 
+
+print check_leap_year(yr)
