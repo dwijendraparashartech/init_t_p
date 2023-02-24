@@ -1,0 +1,72 @@
+ruby_practise_imp_questions.txt
+
+1. Can you explain the role of thread pooling in relation to the thread lifecycle in Ruby?
+
+Ans ::  
+
+In Ruby, the lifecycle of a single thread starts automatically as soon as CPU resources are available. The thread runs the code in the block where it was instantiated and obtains the value of the last expression in that block and returns it upon completion. Threads use up resources, but running multiple threads at a time can improve an app’s performance. Thread pooling is a technique wherein multiple pre-instantiated reusable threads are left on standby, ready to perform work when needed. Thread pooling is best used when there are a large number of short tasks that must be performed. This avoids the overhead of having to create a new thread every time a small task is about to be performed.
+
+
+
+................................
+
+2. Find and fix the bug within the code below.
+
+class Home
+  attr_reader :address
+
+  def initialize(a)
+    address = a
+  end
+
+  def call
+    # perform a process that requires @address
+  end
+
+  private
+
+  def address=(a)
+    @address = clean(a)
+    end
+
+  def clean(a)
+    # return sanitized address
+  end
+end
+
+
+Answer :: 
+Normally if Ruby encounters an identifier, and the identifier does not reference a defined local variable, Ruby will try to call a method with the given name. However, when Ruby encounters address = a within the initialize method, it treats address = a as a local variable initialization and fails to invoke the setter. This occurs when Ruby encounters an identifier beginning with a lowercase character or underscore on the left-hand side of an assignment operator. The solution is to clarify that we want to call the writer method address = by prepending address with the self keyword. The initialize method has been reproduced below:
+
+def initialize(a)
+  self.address = a
+end
+Alternatively, you could also fix the bug by directly assigning the value to the instance variable within the initialize method like so:
+
+def initialize(a)
+  @address = clean(a)
+end
+
+
+........................
+
+
+3. Predict the output of the code below. Explain your answer.
+-> (s) {p s} [“I’m a Proc”]
+
+Ans ::
+
+This question highlights the syntactical elegance of Ruby. A seasoned coder can perform a lot with a single line of Ruby code. The -> operator, or “stabby proc” as it is often called, is a way to create a proc that is also a lambda, or nameless function. This proc takes the parameter s and executes the block {p s}, which is shorthand for puts(s.inspect) before passing the string “I’m a Proc” using the square bracket syntax in place of the typical “call” method. The result is an elegant single line of code that prints the string “I’m a Proc” to the console.
+
+........................
+
+
+4. Can you explain how Ruby looks up a method to invoke?
+
+Can you explain how Ruby looks up a method to invoke?
+Since Ruby is a pure object-oriented language, it’s important to make sure your developer thoroughly understands how objects work. The first place that Ruby looks for a method is in the object’s metaclass or eigenclass—the class that contains methods directly defined on the object. If the method cannot be found in an object’s metaclass, Ruby will then search for the method in the ancestors of an object’s class. The list of ancestors for any class starts with the class of the object itself, and climbs parent classes until it reaches the Object, Kernel, and BasicObject classes at the top of the Ruby class hierarchy. If Ruby cannot find the method, it will internally send another method aptly called “method_missing?” to the object class. Ruby will repeat another search for this method, and will at least find it in the object class, provided the programmer did not see fit to define the “method_missing?” class earlier in the ancestry of the object.
+
+........................
+
+
+5. 

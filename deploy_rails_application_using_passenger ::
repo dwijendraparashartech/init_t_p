@@ -1,0 +1,322 @@
+deploy_rails_application_using_passenger :: 
+
+How To Deploy Ruby on Rails Apps To The Internet (Production/Staging)
+Heroku / Digital Ocean / Rackspace / AWS Ruby on Rails Deployment Tutorial → Apache & Passenger…
+
+VeryVery Best Imp link to Deploy :: 
+
+https://medium.com/@antonio.cm.oliveira/deploying-rails-app-using-aws-codedeploy-to-ec2-the-right-way-2e19fa8c7b4c
+
+https://www.justinweiss.com/articles/a-web-server-vs-an-app-server/#:~:text=Nginx%20and%20Apache%20are%20the,usually%20be%20faster%20that%20way.
+
+.....................
+
+Servers :::
+
+Web Servers
+App Servers
+Database Servers 
+
+
+1. App servers that can be directly exposed to the Internet: Phusion Passenger, Rainbows
+2. App servers that may not be directly exposed to the Internet: Mongrel, Unicorn, Thin, Puma. These app servers must be put behind a reverse proxy web server like Apache and Nginx.
+
+
+Types of App Servers ::
+
+There are a ton of app servers for Rails apps, including Mongrel (which isn't used much anymore), Unicorn, Thin, Rainbows, and Puma. Each has different advantages and different philosophies. But in the end, they all accomplish the same thing – keeping your Rails app running and handling requests.
+
+Types of Web Servers in Rails :: 
+
+Nginx and Apache are the two big web servers you'll run into. If the request is for something that doesn't change often, like CSS, JavaScript, or images, your Rails app probably doesn't need to see it. The web server can handle the request itself, without even talking to your app. It'll usually be faster that way.
+
+.....................................
+
+What is Phusion Passenger ??
+
+Phusion Passenger: Fast web server & app server
+Passenger today has become the recommended server for Ruby on Rails applications. It is a mature, feature rich product which aims to cover necessary needs and areas of application deployment whilst greatly simplifying the set-up and getting-started procedures. It eliminates the traditional middleman server set up architecture by direct integration within Apache and NGINX (front-facing) web servers. It is also referred to as mod_rails / mod_rack for this very reason amongst the Ruby (Rails) community.
+
+
+.....................................
+
+Web Servers :: 
+
+Phusion Passenger: Fast web server & app server
+Puma: A Modern, Concurrent Web Server for Ruby
+Thin: Tiny, Fast, & Funny HTTP Server
+Unicorn: Rack HTTP Server for Fast Clients and Unix
+
+
+//////////////////////////////////////////
+
+Difference between application server and web server
+
+An application server and a web server serve different purposes in a web application architecture.
+
+A web server is responsible for serving static content, such as HTML pages, images, and stylesheets, to clients over the Internet. When a client requests a web page, the web server retrieves the corresponding file and sends it back to the client. Web servers are typically optimized for serving static content quickly and efficiently. Examples of web servers include Apache, Nginx, and IIS.
+
+An application server, on the other hand, is responsible for executing the dynamic aspects of a web application. This includes processing incoming requests, executing business logic, and generating dynamic responses. The application server typically communicates with a database to retrieve and store data, and it may also interact with other systems, such as caching servers, message brokers, and search engines. Examples of application servers include Ruby on Rails, Django, and Spring.
+
+//////////////////////////////////////////////
+
+Create a server in Ruby """"
+
+require 'socket'
+
+server  = TCPServer.new('localhost', 3306) 
+
+loop do
+  request = server.accept
+  request.puts 'simple server request in ruby'
+  request.close
+end
+
+////////////////////////////////////////////////////
+
+How to  Create your Own Server ?????
+
+Link Best :: https://www.rubyguides.com/2016/08/build-your-own-web-server/
+
+1. Step 1: Listening For Connections
+2. Step 2: Parsing The Request
+3. Step 3: Preparing & Sending The Response
+
+
+----------------------------------------------------
+
+Step 1 :::::::::::   Step 1: Listening For Connections
+
+require 'socket'
+server  = TCPServer.new('localhost', 80)
+loop {
+  client  = server.accept
+  request = client.readpartial(2048)
+  puts request
+}
+
+----------------------------------------------------
+
+Step 2 :::::::::::  Step 2: Parsing The Request
+
+def parse(request)
+  method, path, version = request.lines[0].split
+
+  {
+    path: path,
+    method: method,
+    headers: parse_headers(request)
+  }
+end
+
+def parse_headers(request)
+  headers = {}
+
+  request.lines[1..-1].each do |line|
+    return headers if line == "\r\n"
+
+    header, value = line.split
+    header        = normalize(header)
+
+    headers[header] = value
+  end
+
+  def normalize(header)
+    header.gsub(":", "").downcase.to_sym
+  end
+end
+
+----------------------------------------------------
+
+Step 3: Preparing & Sending The Response
+
+SERVER_ROOT = "/tmp/web-server/"
+
+def prepare_response(request)
+  if request.fetch(:path) == "/"
+    respond_with(SERVER_ROOT + "index.html")
+  else
+    respond_with(SERVER_ROOT + request.fetch(:path))
+  end
+end
+
+def respond_with(path)
+  if File.exists?(path)
+    send_ok_response(File.binread(path))
+  else
+    send_file_not_found
+  end
+end
+
+----------------------------------------------------
+
+
+Imp 1 :: Table Of Most Common HTTP Response Codes
+
+Code	Description
+200	OK
+301	Moved permanently
+302	Found
+304	Not Modified
+400	Bad Request
+401	Unauthorized
+403	Forbidden
+404	Not found
+500	Internal Server Error
+502	Bad Gateway
+
+
+----------------------------------------------------
+
+
+Response Class & Methods
+
+
+Here are the “send” methods that are used in the last example:
+
+def send_ok_response(data)
+  Response.new(code: 200, data: data)
+end
+def send_file_not_found
+  Response.new(code: 404)
+end
+
+----------------------------------------------------
+
+
+And here is the Response class:
+
+class Response
+  attr_reader :code
+  def initialize(code:, data: "")
+    @response =
+    "HTTP/1.1 #{code}\r\n" +
+    "Content-Length: #{data.size}\r\n" +
+    "\r\n" +
+    "#{data}\r\n"
+    @code = code
+  end
+  def send(client)
+    client.write(@response)
+  end
+end
+
+----------------------------------------------------
+
+
+At this point we just need to tie everything together in our connection-accepting loop and then we should have a functional server
+
+loop {
+  client  = server.accept
+  request = client.readpartial(2048)
+  request  = RequestParser.new.parse(request)
+  response = ResponsePreparer.new.prepare(request)
+  puts "#{client.peeraddr[3]} #{request.fetch(:path)} - #{response.code}"
+  response.send(client)
+  client.close
+}
+
+----------------------------------------------------
+
+
+How to make a rails app with and wutouht 
+
+https://shopify.engineering/building-web-app-ruby-rails
+
+
+
+
+
+
+
+
+
+
+For deploy a Rails application A Rails hosting  stack requires ::
+
+1. Server 
+2. Domains
+3. OS
+4. Install Dependencies /Build Tools 
+💎Install Ruby (rbenv) 💎
+📋 Install Rails & Bundler (gems) 📋
+💻 Install Web Server (Apache + Passenger) 💻
+🔒 Create Database 🔒
+📢 Create Git Repositories On Server 📢
+📡 Initial Push 📡
+✔️ Bundle & Asset Precompilation ✔️
+⛔️ Restart ⛔️
+⚠️ Test ⚠️
+
+
+Imp Points ::
+
+There are 3 types of the servers ::
+1. Web/HTTP Servers 
+2. APP Servers 
+3. Database Servers 
+
+...
+
+Web Servers ::
+
+Nginx and Apache are the two big web servers you'll run into. If the request is for something that doesn't change often, like CSS, JavaScript, or images, your Rails app probably doesn't need to see it. The web server can handle the request itself, without even talking to your app. It'll usually be faster that way.
+
+......................................
+
+Nginx and Apache are the two big web servers you'll run into. 
+
+......................................
+
+What’s a web server?
+A web server is a program that takes a request to your website from a user and does some processing on it. Then, it might give the request to your Rails app. Nginx and Apache are the two big web servers you’ll run into.
+
+If the request is for something that doesn’t change often, like CSS, JavaScript, or images, your Rails app probably doesn’t need to see it. The web server can handle the request itself, without even talking to your app. It’ll usually be faster that way.
+
+Web servers can handle SSL requests, serve static files and assets, compress requests, and do lots of other things that almost every website needs. And if your Rails app does need to handle a request, the web server will pass it on to your app server.
+
+
+......................................
+
+
+What’s an app server?
+An app server is the thing that actually runs your Rails app. Your app server loads your code and keeps your app in memory. When your app server gets a request from your web server, it tells your Rails app about it. After your app is done handling the request, the app server sends the response back to the web server (and eventually to the user).
+
+You can run most app servers by themselves, without a web server in front of it. That’s probably what you do in development mode! In production, though, you’ll usually have a web server in front. It’ll handle multiple apps at once, render your assets faster, and deal with a lot of the processing you’ll do on every request.
+
+There are a ton of app servers for Rails apps, including Mongrel (which isn’t used much anymore), Unicorn, Thin, Rainbows, and Puma. Each has different advantages and different philosophies. But in the end, they all accomplish the same thing – keeping your Rails app running and handling requests.
+
+
+......................................
+
+What is Passenger ??
+
+Phusion Passenger is a little unique. In “standalone mode,” it can act just like an app server. But it can also be built right into a web server, so you don’t need a separate app server to run your Rails apps.
+
+This can be really convenient. Especially if you’re planning to run a bunch of apps and don’t want to spend time setting up an app server for each one. After installing Passenger, you just point the web server directly at your Rails app (instead of an app server), and your Rails app will start handling requests!
+
+Passenger is a nice option, but having a separate app server can be still be good. Keeping the app server separate gives you the flexibility to choose an app server that best fits your needs, and you can run and scale it on its own. Still, I’m going to try it again the next time I deploy a new small app. I’m hoping it’ll make it easier to deploy future apps to the same server.
+
+......................................
+
+What about Rack?
+Rack is the magic that lets any of these app servers run your Rails app. (Or Sinatra app, or Padrino app, or…)
+
+You can think of Rack as a common language that Ruby web frameworks (like Rails) and app servers both speak. Because each side knows the same language, it means Rails can talk to Unicorn and Unicorn to Rails, without having either Rails or Unicorn know anything about the other.
+
+......................................
+
+
+
+
+
+
+
+..............
+
+There are two types of the hostings ::  
+managed  :: Heroku
+unmanaged :: Unmanaged 
+
+...............
+

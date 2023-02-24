@@ -1,0 +1,33 @@
+deployment_in_Rails_using_aws.txt ::
+
+
+Link ::   https://medium.com/@antonio.cm.oliveira/deploying-rails-app-using-aws-codedeploy-to-ec2-the-right-way-2e19fa8c7b4c 
+
+
+
+covering in this tutorial :: 
+
+Launch an EC2 Instance with code deploy;
+Configure Code Deploy;
+Configure Code Pipeline;
+Deploy your app;
+Why Parameter Store not Secrets Manager?
+Configure your parameters using AWS System Manager (parameter store);
+
+.......
+
+1. Create a AWS Account ::
+
+2, Create VPC ::
+
+3. Create the Public Sunset ::
+
+4. ign in to the AWS Management Console and open the Amazon EC2 console at https://console.aws.amazon.com/ec2/ [At the region that you want].
+
+5.  In the navigation pane, choose Instances, and then choose Launch Instance.
+
+6. Choose an Amazon Machine Image (AMI) page, from the Quick Start tab, locate the operating system and version you want to use, and then choose Select. At this example I use this one, but feel free to choose what you prefer:
+
+7. 
+
+

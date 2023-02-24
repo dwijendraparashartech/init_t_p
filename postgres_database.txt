@@ -1,0 +1,91 @@
+Note :: vi or nano command is used to edit the file 
+Note :: touch is used to create the file 
+
+
+
+database.txt ::
+
+3 types of databases are used in rails ::
+
+development , production , test 
+
+process to connect the postgres database ::
+
+
+0. Install the postgres 
+
+$ sudo apt install postgresql postgresql-contrib libpq-dev
+
+0.1 Check Postgress is properly Installed ::
+
+$ sudo systemctl start postgresql
+$ sudo systemctl enable postgresql
+$ systemctl status postgresql
+$ sudo systemctl restart postgresql
+
+
+1. Create a PostgreSQL user
+
+sudo -u postgres createuser -s [username]
+sudo -u postgres createuser -s jdoe
+
+2.1. Login to Postgres 
+
+sudo -u postgres psql
+
+2.2 Check the available databases ::
+
+postgres=# \l
+
+3. Create the password at psql prompt :: 
+\password [username]
+\password jdoe
+
+4. Exit the psql ::
+\q
+
+5. Create application with postgres database ::
+
+rails new [application name] -d postgresql
+rails new my-app -d postgresql
+
+6.1. Edit the database.yml ::
+
+$ nano config/database.yml
+Add the credentials in the database.yml ::
+
+default: &default
+   adapter: postgresql
+   encoding: unicode
+  
+development:
+   adapter: postgresql
+   encoding: unicode
+   database: library_development
+   username: rubyuser
+   password: <Password for rubyuser>
+
+test:
+   adapter: postgresql
+   encoding: unicode
+   database: library_test
+   username: rubyuser
+   password: <Password for rubyuser>
+ 
+production:
+   adapter: postgresql
+   encoding: unicode
+   database: library_production
+   username: rubyuser
+   password: <Password for rubyuser>
+
+
+6.2 $ rake db:create and $ rake db:migrate  and  rake db:setup
+
+  7. Delete Rails application if any ::
+  $ rm -fr ostechnixapp   delete database  ---- in case of default qlite database 
+
+  $ rake db:drop          drop database first ---- in case of postgrese database 
+  $ rm -fr ostechnixapp   delete database second ---- in case of postgrese database 
+
+  8.  

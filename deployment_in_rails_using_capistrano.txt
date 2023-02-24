@@ -1,0 +1,38 @@
+Deployment_in_rails_using_capistrano.txt 
+
+Link ::  https://www.jetbrains.com/help/ruby/capistrano.html
+
+
+Prerequisites﻿
+In this tutorial, we'll use two machines to demonstrate the application's deployment:
+
+Local machine: Mac with macOS, with RubyMine installed and the created command-line launcher. The command-line launcher will be required to specify the editor when generating credentials.
+
+Web server: The Ubuntu machine with enabled SSH access and Git installed. In this tutorial, the web server has the sample-web-server name and has the deploy user with sudo permissions.
+
+
+..........................................................................
+
+Initials ::
+
+A. Install Rubymine ::
+
+A. nvm install 12.14.1
+B. npm install --global yarn
+C. Download Toolbox .tar.gz from :  https://www.jetbrains.com/toolbox-app/
+D. Run this command ::
+sudo tar -xzf jetbrains-toolbox-1.17.7391.tar.gz -C /opt
+E. $  sudo snap install rubymine --classic OR  sudo snap install rubymine --classic --edge
+F. 
+
+
+1. Install rbenv and Ruby on the web server
+2. Install and Configure Passenger & Nginx 
+3. Install Capistrano Gems 
+4. Capify the Application 
+5. Provide Custom Credentials 
+6. Deploy your App
+7. Capistrano Run/Debug Configrtion 
+
+
+

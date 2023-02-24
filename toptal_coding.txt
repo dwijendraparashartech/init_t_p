@@ -114,7 +114,7 @@ x = [{"a" => 10},{"b" => 20},{"c" => 30}]
 y = x[0].merge(x[1]).merge(x[2])
 y.keys  # will return all keys
 y.values # will return all values
-y.y.values.inject(:+)   # will return the sum of all values
+y.values.inject(:+)   # will return the sum of all values
 
 But a better first line would be this:
 
@@ -206,10 +206,45 @@ class Person < ActiveRecord::Base
   has_many :children, class: Person, foreign_key: :parent_id
   has_many :grandchildren, class: Person, through: :children, source: :children
 end
+
 Consequently, since this is still just using the parent_id defined in the first case, no changes to the table in the database are required.
 
 ....
 
 
-Q9.
+Q9. Given an array [1,2,3,4,5,6,7,8,9], sum it up using a method.
+
+Answer: Summation of an array is one of the most fundamental concepts in programming, and there are a lot of methods to achieve it, such as iterating the array and summing the numbers. In Ruby, it’s neat to know that we can call inject, because it’s so powerful yet simple.
+
+def sum(array)
+  return array.inject(:+)
+end
+
+
+....
+
+Q10. What is wrong with the code below? Also, state the reason.
+require "benchmark"
+puts Benchmark.measure do
+    break if Random.rand(100) === 1 while true
+end
+
+..
+
+Sol :: 
+
+Answer: The operator precedence is the issue in the code. The code will return:
+
+LocalJumpError: no block given (yield)
+As do-end is weaker than attracting arguments to the function, that’s why one either needs to surround the whole call to Benchmark.measurewith parentheses, or to use curly brackets instead of do-end.
+
+
+
+....
+
+Toptal Other 21 Imp Interview Coding questions ::
+
+
+
+
 

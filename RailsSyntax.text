@@ -1,0 +1,290 @@
+RailsSyntax.text::
+
+In this blog all syntax with the rails will be shown from starting to the end ::
+
+.............................................
+
+1. Block :: 
+
+[1, 2, 3].each { |num| puts num }
+
+[1, 2, 3].each do |num|
+  puts num
+end
+
+...................
+
+2. Yield :: Calling of Block inside Method ::
+
+def print_once
+  yield
+end
+print_once { puts "Block is being run" }
+
+
+def print_twice
+  yield
+  yield
+end
+print_twice { puts "Hello" }
+# "Hello"
+# "Hello"
+
+...................
+
+3. Lambda ::
+
+say_something = -> { puts "This is a lambda" }
+say_something = lambda { puts "This is a lambda" }
+say_something.call
+say_something.()
+say_something[]
+say_something.===
+# "This is a lambda"
+
+...................
+
+4. Proc ::
+
+my_proc = Proc.new { |x| puts x }
+t = Proc.new { |x,y| puts "I don't care about arguments!" }
+t.call
+# "I don't care about arguments!"
+
+...................
+
+5. Basic Form ::
+
+<%= form_with do |form| %>
+  Form contents
+<% end %>
+
+...................
+
+6. Search Form :: 
+
+<%= form_with url: "/search", method: :get do |form| %>
+  <%= form.label :query, "Search for:" %>
+  <%= form.text_field :query %>
+  <%= form.submit "Search" %>
+<% end %>
+
+...................
+
+7. Form With :: 
+
+form_with using models ::
+
+<%= form_with model: @article do |form| %>
+  <%= form.text_field :title %>
+  <%= form.text_area :body, size: "60x10" %>
+  <%= form.submit %>
+<% end %>
+
+form with using url's ::
+
+<%= form_with url: user_path do |f| %>
+   <%= f.label :first_name %>
+   <%= f.text_field :first_name %>
+   <%= f.label :last_name %>
+   <%= f.text_field :last_name %>
+   <%= f.submit %>
+<% end %>
+
+...................
+
+8. Form For :: 
+form_for(record, options = {}, &block) public
+
+<%= form_for :person do |f| %>
+  First name: <%= f.text_field :first_name %><br />
+  Last name : <%= f.text_field :last_name %><br />
+  Biography : <%= f.text_area :biography %><br />
+  Admin?    : <%= f.check_box :admin %><br />
+  <%= f.submit %>
+<% end %>
+
+<%= form_for @user do |f| %>
+   <%= f.label :first_name %>
+   <%= f.text_field :first_name %>
+   <%= f.label :last_name %>
+   <%= f.text_field :last_name %>
+   <%= f.submit %>
+<% end %>
+
+
+
+...................
+
+9. Form tag ::
+
+
+<%= form_tag user_path do %>
+   <label>First Name:</label>
+   <%= text_field_tag :'user[first_name]' %>
+   <label>Last Name:</label>
+   <%= text_field_tag :'user[last_name]; %>
+  
+   <%= submit_tag "Create User" %>
+<% end %>
+
+
+
+Form Tag Search Form :: 
+
+<%= form_tag("/search", :method => "get") do %>
+   <%= label_tag(:q, "Search:") %>
+   <%= text_field_tag(:q) %>
+   <%= submit_tag("Search") %>
+<% end %>
+
+...................
+
+
+10. Simple Controller Basic Crud Methods :: 
+
+class ArticlesController < ApplicationController
+  def index
+    @articles = Article.all
+  end
+
+  def show
+    @article = Article.find(params[:id])
+  end
+
+  def new
+    @article = Article.new
+  end
+
+  def create
+    @article = Article.new(article_params)
+    if @article.save
+      redirect_to @article
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    @article = Article.find(params[:id])
+  end
+
+  def update
+    @article = Article.find(params[:id])
+    if @article.update(article_params)
+      redirect_to @article
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @article = Article.find(params[:id])
+    @article.destroy
+    redirect_to root_path, status: :see_other
+  end
+
+
+
+  private
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
+end
+
+...................
+
+11. Api Methods in Rails :: 
+
+
+
+class Api::V1::FactsController < ApplicationController
+
+	before_action :find_fact,only: [:show, :update, :destroy]
+
+def index 
+	@facts = Fact.all
+	render json: @facts
+end 
+
+def show
+	render json: @fact
+end 
+
+def create
+	@fact = Fact.new(fact_params)
+	if @fact.save 
+		render json: @fact
+	else 
+		render error: {error: 'Unable to create fact'},status: 400 
+	end
+end 
+
+def update
+	if @fact 
+	@fact.update(fact_params)
+	render json: {message: 'Fact successfully updated.'},status: 200
+	else
+	render json: {error: 'Unable to update fact.' },status: 400
+end
+
+def destroy
+	if @fact 
+		@fact.destroy
+		render json: {message: 'Facts successfully destroyed'},status: 200
+		else
+		render json: {error: 'Unable to delete fact'},status:400
+		end
+end
+
+private 
+def fact_params
+	params.require(:fact).permit(:fact, :likes, :user_id)
+end
+
+def find_fact
+	@fact = Fact.find(params[:id])
+end 
+end 
+
+...................
+
+
+12. Ajax :: How to Use :: 
+
+A. Rails way of AJAX with remote: true
+B. Tradition way of AJAX (only with Javascript/Jquery)
+
+A. 
+A.1 ::  AJAX with remote:true for button/link :
+
+Befor Ajax use ::
+
+ 	index.html.erb
+	<a href=”<%= some_randoms_path %>”>Button/Link</a>
+		OR
+	<%= link_to “Button/Link”, some_randoms_path %>
+
+After Ajax use ::
+
+	index.html.erb
+	<a href=”<%= some_randoms_path %>” id=‘random_id’ data-remote=”true”>Button/Link</a>
+		OR
+	<%= link_to “Button/Link”, some_randoms_path, id: ‘random_id’, remote: true %>
+
+
+A.2 ::  AJAX with remote:true for form ::
+
+AJAX with remote:true for form
+
+Now there is no need to write any javascript code to send any request (AJAX request) to any path as “ remote: true ” will handle it. return render json: { random_param_name: “Event created successfully!”} });
+
+B. 
+some_random.html.erb
+<%= form_for(@random_variable, html: {id: “random_id”}, remote: true) do |form| %>
+  //form code will go here
+<% end %>
+
+
+
+ 

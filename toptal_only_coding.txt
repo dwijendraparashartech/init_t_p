@@ -1,0 +1,256 @@
+toptal_only_coding.txt
+
+.........................................
+
+
+1. Given an array [1,2,3,4,5,6,7,8,9], sum it up using a method.
+
+Answer: Summation of an array is one of the most fundamental concepts in programming, and there are a lot of methods to achieve it, such as iterating the array and summing the numbers. In Ruby, it’s neat to know that we can call inject, because it’s so powerful yet simple.
+
+def sum(array)
+  return array.inject(:+)
+end
+
+.........................................
+
+2. solve the below problem :: 
+
+Given this input:
+
+x = [{"a" => 10},{"b" => 20},{"c" => 30}]
+How can you obtain the following?
+
+one array containing all keys
+another containing all values
+the sum of all the values
+
+
+Sol ::  
+x = [{"a" => 10},{"b" => 20},{"c" => 30}]
+y = x[0].merge(x[1]).merge(x[2])
+y.keys  # will return all keys
+y.values # will return all values
+y.values.inject(:+)   # will return the sum of all values
+
+But a better first line would be this:
+
+y = x.reduce(:merge)
+…because it would work on an array of any size, not just the exact input given.
+
+
+.........................................
+
+3. What is the code with the controller code below :: 
+
+
+class CommentsController < ApplicationController
+  def users_comments
+    posts = Post.all
+    comments = posts.map(&:comments).flatten
+    @user_comments = comments.select do |comment|
+      comment.author.username == params[:username]
+    end
+  end
+end
+
+Sol ::   
+Replace - 
+posts = Post.all      to the below line please 
+posts = Post.includes(comments: [:author]).all
+
+.........................................
+
+4. What is the problem with 
+    class MyController < ApplicationController
+      def options
+        options = {}
+        available_option_keys = [:first_option, :second_option, :third_option]
+        all_keys = params.keys.map(&:to_sym)
+        set_option_keys = all_keys & available_option_keys
+        set_option_keys.each do |key|
+          options[key] = params[key]
+        end
+        options
+      end
+    end
+
+Solution :: 
+Replace :: 
+this ::
+all_keys = params.keys.map(&:to_sym)
+
+by this ::
+all_keys = params.slice(*available_option_keys)
+
+.........................................
+
+
+5. Suppose we have a Student with id=”4”. If we delete the Student with id=”4”, what will be the result of the following queries:
+
+Student.find(4)  ------
+will raise an error: ActiveRecord::RecordNotFound: Couldn't find Student with id=4
+
+
+
+Student.find_by_id(4) ------
+will return nil and will not raise an error.
+
+.........................................
+
+6. What is wrong with the code below? Also, state the reason.
+require "benchmark"
+puts Benchmark.measure do
+    break if Random.rand(100) === 1 while true
+end
+
+..
+
+Sol :: 
+
+Answer: The operator precedence is the issue in the code. The code will return:
+
+LocalJumpError: no block given (yield)
+As do-end is weaker than attracting arguments to the function, that’s why one either needs to surround the whole call to Benchmark.measurewith parentheses, or to use curly brackets instead of do-end.
+
+.........................................
+
+
+7. Write a function that sorts the keys in a hash by the length of the key as a string. For instance, the hash:
+
+{ abc: 'hello', 'another_key' => 123, 4567 => 'third' }
+should result in:
+
+["abc", "4567", "another_key"]
+
+
+..........
+
+Ans :: 
+
+
+Best Answer ::
+hsh.keys.map(&:to_s).sort_by(&:length)
+
+Other Answers ::
+hsh.keys.collect(&:to_s).sort_by { |key| key.length }
+def key_sort hsh
+	hsh.keys.collect(&:to_s).sort { |a, b| a.length <=> b.length }
+end
+collect { |x| x.to_s }
+
+..................
+
+Ans::  hsh.keys.map(&:to_s).sort_by(&:length)
+
+
+As is always true in programming, there are in fact multiple ways to accomplish this.
+
+The most straightforward answer would be of the form:
+
+hsh.keys.map(&:to_s).sort_by(&:length)
+
+
+or:
+
+hsh.keys.collect(&:to_s).sort_by { |key| key.length }
+Alternatively, Ruby’s Enumerable mixin provides many methods to operate on collections. The key here is to turn the hash keys into a collection, convert them all to strings, then sort the array.
+
+def key_sort hsh
+	hsh.keys.collect(&:to_s).sort { |a, b| a.length <=> b.length }
+end
+An equivalent call of the collect method is done with the usual block syntax of:
+
+collect { |x| x.to_s }
+
+.........................................
+
+
+
+8.  What will val1 and val2 equal after the code below is executed? Explain your answer.
+
+val1 = true and false  # hint: output of this statement in IRB is NOT value of val1!
+val2 = true && false
+
+..........
+
+Ans :: 
+(val1 = true) and false    # results in val1 being equal to true
+val2 = (true && false)     # results in val2 being equal to false
+
+..........
+
+Description ::
+
+Although these two statements might appear to be equivalent, they are not, due to the order of operations. Specifically, the and and or operators have lower precedence than the = operator, whereas the && and || operators have higher precedence than the = operator, based on order of operations.
+
+To help clarify this, here’s the same code, but employing parentheses to clarify the default order of operations:
+
+(val1 = true) and false    # results in val1 being equal to true
+val2 = (true && false)     # results in val2 being equal to false
+This is, incidentally, a great example of why using parentheses to clearly specify your intent is generally a good practice, in any language. But whether or not you use parentheses, it’s important to be aware of these order of operations rules and to thereby ensure that you are properly determining when to employ and / or vs. && / ||.
+
+...........
+
+
+
+9. Consider the following code :: What will be the value of each of the following ::
+
+..............................................................
+
+VAL = 'Global'
+ 
+module Foo
+  VAL = 'Foo Local'
+ 
+  class Bar
+    def value1
+      VAL
+    end
+  end
+end
+
+class Foo::Bar
+  def value2
+    VAL
+  end
+end
+
+...
+
+What will be the value of each of the following:
+
+Foo::Bar.new.value1
+Foo::Bar.new.value2
+............................................................
+
+
+..................
+
+Ans ::
+
+Foo::Bar.new.value1   ------    'Foo Local'
+Foo::Bar.new.value2   ------     'Global'
+
+
+Description ::
+
+Foo::Bar.new.value1 will be equal to 'Foo Local' and Foo::Bar.new.value2 will be equal to 'Global'.
+
+Here’s why:
+
+The module keyword (as well as the class and def keywords) will create a new lexical scope for all of its contents. The above module Foo therefore creates the scope Foo in which the VAL constant equal to 'Foo Local' is defined. Inside Foo, we declare class Bar, which creates another new lexical scope (named Foo::Bar) which also has access to its parent scope (i.e., Foo) and all of its constants.
+
+However, when we then declare Foo::Bar (i.e., using ::), we are actually creating yet another lexical scope, which is also named Foo::Bar (how’s that for confusing!). However, this lexical scope has no parent (i.e., it is entirely independent of the lexcial scope Foo created earlier) and therefore does not have any access to the contents of the ‘Foo’ scope. Therefore, inside class Foo::Bar, we only have access to the VAL constant declared at the beginning of the script (i.e., outside of any module) with the value 'Global'.
+
+..................
+
+
+10. Is the line of code below valid Ruby code? If so, what does it do? Explain your answer.
+
+-> (a) {p a}["Hello world"]
+
+
+
+
+
+

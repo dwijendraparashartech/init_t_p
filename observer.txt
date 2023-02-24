@@ -1,0 +1,74 @@
+observer.txt :: 
+
+
+When to use it:
+
+Observer pattern provides a simple mechanism for one object to inform a set of interested objects when its state changes.
+
+
+Observer pattern is used when there is one to many relationship between objects such as if one object is modified, then its dependent objects are to be notified and updated automatically.
+
+.......................
+
+class User < Activerecord::Base
+  after_save :send_email_notification
+
+  private
+  def send_email_notification
+    if status_changed?
+      UserNotificationMailer.account_open_email(self).deliver if status=='created'
+      UserNotificationMailer.account_activated_email(self).deliver if status == 'active'
+      UserNotificationMailer.account_deactivation_email(self).deliver if status =='deactive'
+    end
+  end
+end
+
+.......................
+
+not to send emails. This violates the Single Responsibility Principle. So best solution is to use observer pattern here.
+
+Create a UserObserver class inside model which will inherit from ActiveRecord::Observer.
+
+
+
+class UserObserver < ActiveRecord::Observer
+  def after_save(record)
+    if record.status_changed?
+      UserNotificationMailer.account_open_email(record).deliver if record.status=='created'
+      UserNotificationMailer.account_activated_email(record).deliver if record.status == 'active'
+      UserNotificationMailer.account_deactivation_email(record).deliver if record.status =='deactive'
+    end
+  end
+end
+
+
+.......................
+
+
+How to use single observer for multiple models?
+
+Let’s suppose we have two entities where we need to trigger user email if any of the entity state changes
+
+
+
+class Notifier < ActiveRecord::Observer
+  observe User, Post
+
+  def after_save(record)
+    return unless record.status_changed?
+    case record.class.name
+    when 'User'
+      UserNotificationMailer.account_open_notification(record).deliver if record.status=='created'
+      UserNotificationMailer.account_activation_notification(record).deliver if record.status == 'active'
+      UserNotificationMailer.account_deactivation_notification(record).deliver if record.status =='deactive'
+    when 'Post'
+      UserNotificationMailer.post_approval_notification(record).deliver if record.status=='approved'
+    end
+  end
+end
+
+
+.........................
+
+The convention is to name observers after the class they observe. If we want to use one observer for several classes, we need to use observe :mode_1, :model_2
+

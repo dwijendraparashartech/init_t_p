@@ -1,0 +1,50 @@
+designs_patterns_rails.txt 
+
+1. Presenter or ViewObjects ::
+..................................
+
+For the use of sharing view logic we prepare the module inside helper files and reuse that in 
+the view files but when if complexity increases then we use the Presenter or ViewObjects 
+
+Before ::
+
+................................
+
+<p> 
+  User Full Name: <%= "#{user.first_name} #{user. last_name}" %>       
+  <%= link_to "View More Detail", user, class: "W-75 p-3      text-#{user.active? ? "orange" : "
+green"} border-#{user.active? ? "orange" : "green"}" %>
+</p>
+
+................................
+
+2. Presenter or ViewObjects ::
+
+app/presenters/user_presenter.rb 
+
+................................
+
+class UserPresenter 
+  def initialize(user)
+    @user = user
+  end
+
+   def full_name
+     "#{@user.first_name} #{@user. last_name}", 
+   end
+
+   def css_color
+    @user.active?? "orange" : "green", 
+   end
+end
+
+..................................
+
+<% presenter = UserPresenter.new(user) %> 
+User Full Name: <%= presenter.full_name %> 
+<%= link_to "View More Detail", user, class: "W-75 p-3   text-#{presenter.css_color} border-#{presenter.css_color}" %> 
+
+..................................
+
+2. Builder Design Patterns :: 
+

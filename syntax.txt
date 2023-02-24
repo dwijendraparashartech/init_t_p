@@ -1,80 +1,297 @@
-syntax.txt...
-.............
-
-1. how to add presence validation ::
-
-validates :salutation,:first_name,:last_name ,:company_name ,:vendor_email ,:phone_no_mob ,:phone_no_work, :website_url , presence: true
-..............................................................................
-
-2. how to add uniqueness validation ::
-
-validates :vendor_email, uniqueness: { case_sensitive: false, message: lambda{|x, y| "#{y[:value]} is already present" }}
-..............................................................................
-
-3. how to add custom id ::
-
-    def update_custom_id
-      self.custom_id = ("000000" + self.id.to_s).last(6)
-      self.save
-    end
-..............................................................................
-
-4. how to add csv file -----
 
 
-    def self.to_csv
-      attributes = ["ID", "Name", "Company", "Email", "Contact No."]
-      CSV.generate(headers: true) do |csv|
-        csv << attributes
-        all.each do |vendor|
-          csv << [vendor.custom_id , vendor&.name, vendor.company_name, vendor.vendor_email, vendor&.full_phone_no_mob]
-        end
-      end
-    end
+Link ::  https://www.codecademy.com/learn/learn-ruby/modules/learn-ruby-object-oriented-programming-part-i-u/cheatsheet
+
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
 
 
-    def self.to_sample_csv
-      attributes = ['Salutation', 'First name', 'Last name', 'Company', 'Email', 'Contact No code', 'Contact no mob', 'Phone no work code', 'Phone no work', 'Website url', 'GST treatment', 'GSTIN/UIN', 'PAN Number', 'Source of Supply', 'Currency', 'Payment Tearms', 'TDS', 'Billing Street', 'Billing Address', 'Same as Billing Address', 'Shipping Street', 'Shipping Address', 'Remarks']
-      CSV.generate(headers: true) do |csv|
-        csv << attributes
-        all.each do |vendor|
-          csv << [vendor.salutation, vendor.first_name, vendor.last_name, vendor.company_name, vendor.vendor_email, vendor.phone_no_mob_code, vendor.phone_no_mob, vendor.phone_no_work_code, vendor.phone_no_work, vendor.website_url, vendor&.gst_treatment&.name, vendor.gstin_uin, vendor.pan_number, vendor.state_source_of_supply, vendor.currency, vendor&.payment_term&.term_name, vendor&.account_td&.tax_name, vendor.billing_address, vendor.billing_address2, vendor.is_same_billing_address, vendor.shipping_address, vendor.shipping_address, vendor.remarks]
-        end
-      end
-    end
-
-    ..............................................................................
-
-  5. how to add import functionality -----
 
 
-    def self.import(file, user)
-      invaild_data = []
-      CSV.foreach(file.path, headers: true) do |row|
-        gst_treat = BxBlockProfile::GstTreatment.find_by('name ILIKE ?', row[10].to_s.strip)
-        gst_treatment_id = gst_treat.present? ? gst_treat.id : nil
+Syntaxes ::::
 
-        payment_term = BxBlockProfile::PaymentTerm.find_by('term_name ILIKE ?', row[15].to_s.strip)
-        payment_term_id = payment_term.present? ? payment_term.id : nil
 
-        tds = AccountBlock::AccountTd.find_by('tax_name ILIKE ?', row[16].to_s.strip)
-        tds_id = tds.present? ? tds.id : nil
+1. Syntax of Proc Method ::
 
-        is_same_as_billing_address = ActiveModel::Type::Boolean.new.cast(row[19].strip)
-        if is_same_as_billing_address
-          vendor = AccountBlock::Vendor.create(salutation: row[0].to_s.strip, first_name: row[1].to_s.strip, last_name: row[2].to_s.strip, company_name: row[3].to_s.strip, vendor_email: row[4].to_s.strip, phone_no_mob_code: row[5].to_i, phone_no_mob: row[6].to_s.strip, phone_no_work_code: row[7].to_i, phone_no_work: row[8].to_s.strip, website_url: row[9].to_s.strip, gst_treatment_id: gst_treatment_id, gstin_uin: row[11].to_s.strip, pan_number: row[12].to_s.strip, state_source_of_supply: row[13].to_s.strip, currency: row[14].to_s.strip, payment_term_id: payment_term_id, account_td_id: tds_id, billing_address: row[17].to_s.strip, billing_address2: row[18].to_s.strip, is_same_billing_address: true, remarks: row[22], account_id: user.id)
-          if vendor.errors.any?
-            invaild_data << row.to_h.merge("Error" => vendor.errors.full_messages.join(", "))
-          end
-        else
-          vendor = AccountBlock::Vendor.create(salutation: row[0].to_s.strip, first_name: row[1].to_s.strip, last_name: row[2].to_s.strip, company_name: row[3].to_s.strip, vendor_email: row[4].to_s.strip, phone_no_mob_code: row[5].to_i, phone_no_mob: row[6].to_s.strip, phone_no_work_code: row[7].to_i, phone_no_work: row[8].to_s.strip, website_url: row[9].to_s.strip, gst_treatment_id: gst_treatment_id, gstin_uin: row[11].to_s.strip, pan_number: row[12].to_s.strip, state_source_of_supply: row[13].to_s.strip, currency: row[14].to_s.strip, payment_term_id: payment_term_id, account_td_id: tds_id, billing_address: row[17].to_s.strip, billing_address2: row[18].to_s.strip, is_same_billing_address: false, shipping_address: row[20].to_s.strip, shipping_address2: row[21].to_s.strip, remarks: row[22], account_id: user.id)
-          if vendor.errors.any?
-            invaild_data << row.to_h.merge("Error" => vendor.errors.full_messages.join(", "))
-          end
-        end
-      end
-      invaild_data
-    end
+In Ruby, a proc is an instance of the Proc class and is similar to a block. As opposed to a block, a proc is a Ruby object which can be stored in a variable and therefore reused many times throughout a program.
 
-        ..............................................................................
+square = Proc.new { |x| x ** 2 }
+# A proc is defined by calling Proc.new followed by a block.
+
+[2, 4, 6].collect!(&square)
+# When passing a proc to a method, an & is used to convert the proc into a block.
+
+puts [2, 4, 6].collect!(&square)
+# => [4, 16, 36]
+
+....................
+
+2. Syntax of Yield Keywords ::
+
+In Ruby, the yield keyword is used to transfer control from a method to a block and then back to the method once executed.
+
+
+
+def yield_test
+  puts "I'm inside the method."
+  yield
+  puts "I'm also inside the method."
+end
+
+yield_test { puts ">>> I'm butting into the method!" }
+#Output
+# I'm inside the method.
+# >>> I'm butting into the method.
+# I'm also inside the method.
+
+....................
+
+3. Syntax of Lambda Method ::
+
+In Ruby, a lambda is an object similar to a proc. Unlike a proc, a lambda requires a specific number of arguments passed to it, and it returns to its calling method rather than returning immediately.
+
+def proc_demo_method
+  proc_demo = Proc.new { return "Only I print!" }
+  proc_demo.call
+  "But what about me?" # Never reached
+end
+
+puts proc_demo_method 
+# Output 
+# Only I print!
+
+# (Notice that the proc breaks out of the method when it returns the value.)
+
+def lambda_demo_method
+  lambda_demo = lambda { return "Will I print?" }
+  lambda_demo.call
+  "Sorry - it's me that's printed."
+end
+
+puts lambda_demo_method
+# Output
+# Sorry - it's me that's printed.
+
+# (Notice that the lambda returns back to the method in order to complete it.)
+
+
+....................
+
+3. Syntax of Call Method ::
+
+Ruby .call Method ::
+
+In Ruby, a proc and a lambda can be called directly using the .call method.
+
+......
+
+proc_test = Proc.new { puts "I am the proc method!" }
+lambda_test = lambda { puts "I am the lambda method!"}
+
+proc_test.call # => I am the proc method!
+lambda_test.call # => I am the lambda method!
+
+#The following code would result in "I am the proc method!" and "I am the lambda method!" printed to the console respectively, once the proc, proc_test, and the lambda, lambda_test, are called.
+
+......
+
+
+....................
+
+4.Syntax of Class Variables ::
+
+In Ruby, class variables are attached to the class in which they are declared. A class variable should be declared with two @ symbols preceding it.
+
+lass Child
+  @@children = 0
+  def initialize(name, birth_year)
+    @name = name
+    @birth_year = birth_year
+    @@children +=1
+  end
+
+  def self.children_added
+    return @@children
+  end
+
+end
+
+naomi = Child.new("Naomi", 2006)
+bertha = Child.new("Bertha", 2008)
+
+puts Child.children_added # => 2
+
+
+....................
+
+5. Ruby .new Method
+
+In Ruby, a new class instance can be created by calling the .new method of the class. Arguments to the class’ initialize method can be passed in to the .new call.
+
+class Fighter
+  def initialize(name, style, division, age)
+    @name = name
+    @style = style
+    @division = division
+    @age = age
+  end
+end
+
+conor = Fighter.new("Conor", "mixed martial arts", "Welterweight", 31)
+
+
+....................
+
+
+Ruby Instance Variable
+In Ruby, the @ symbol is used to signify an instance variable. Instance variables hold a value specific to each instance of that class, not to all members of the class itself.
+
+class Student
+  def initialize(name, grade)
+    @name = name
+    @grade = grade
+  end
+end
+
+# In this example, name and grade are the instance variables.
+
+....................
+
+Ruby initialize Method
+In a Ruby class, an initialize method is used to generate new instances of the class. It is usually the first method of a class.
+
+class Person
+  def initialize
+    # this code runs when a new instance is created
+  end
+end
+
+#Every time Person.new is called, the initialize method of the Person class is called.
+
+....................
+
+Ruby Class
+A Ruby class is used to organize and model objects with similar attributes and methods.
+
+class NewClass
+  # code for this class 
+end
+
+
+# A basic class definition consists of the class keyword, the name of the class in CamelCase (with the first letter capitalized) format, and an end keyword.
+
+....................
+
+Ruby super Keyword
+Ruby’s built-in super keyword is used to directly access the attributes or methods of a superclass. This means a class with super will inherit the attributes or methods of a superclass.
+
+class Trip
+  def initialize(duration, price)
+    @duration = duration
+    @price = price
+  end
+end
+
+
+class Cruise < Trip
+  def initialize(duration, price)
+    super
+  end
+end
+
+spain_backpacking = Trip.new(14, 800.00)
+carnival = Cruise.new(7, 2400.00)
+
+....................
+
+Ruby attr_reader attr_writer Methods
+In Ruby, attr_reader and attr_writer are methods used to read and write variables, respectively.
+
+class Student
+  attr_reader :name
+  attr_writer :name
+  def initialize(name)
+    @name = name
+  end
+end
+#In this example, Ruby is able to both read and write the @name instance variable since it was passed to attr_reader and attr_writer as a symbol.
+
+top_student = Student.new("Jyothi")
+puts top_student.name # => Jyothi
+#In classes with attr_reader, instance variables can be accessed using . notation
+
+puts top_student.name # => Jyothi
+top_student.name = "Anika"
+puts top_student.name # => Anika
+#In classes with attr_writer, instance variables can be reassigned using . notation
+
+....................
+
+Ruby namespace
+In Ruby, the term namespace refers to a module the contains a group of related objects. An example of a Ruby namespace is the Math module.
+
+#To retrieve a constant from the Math module, the scope resolution operator (::), should be used.
+
+puts Math::PI
+# => 3.141592653589793
+
+#In this example, Ruby is targetting the PI constant from the Math module using the scope resolution operator, (::), and printing its value to the console.
+
+
+....................
+
+
+Ruby require Keyword
+In Ruby, the require keyword is used to fetch a certain module which isn’t yet presented in the interpreter. It is best practice to place this at the beginning of your code.
+
+
+require 'date'
+
+puts Date.today
+# => 2020-04-16
+
+....................
+
+Ruby Module
+In Ruby, a module contains a set of methods, constants, or classes which can be accessed with the . operator similarly to classes . Unlike classes, it is impossible to create instances of a Ruby module.
+
+#A Ruby module can be created using the module keyword followed by the module name written in CapitalizedCamelCase format finalized with an end.
+
+module MyPizza
+  FAVE_TOPPING = "Buffalo Chicken"
+end
+#In this example, myPizza is a module that holds a constant, FAVE_TOPPING, set equal to the string, Buffalo Chicken.
+
+
+....................
+
+
+Ruby attr_accessor Method
+In Ruby, attr_accessor, used to make a variable both readable and writeable, is a shortcut to attr_reader and attr_writer.
+
+class CollegeStudent
+  attr_reader :dorm
+  attr_accessor :major
+
+  def initialize(dorm, major)
+    @dorm = dorm
+    @major = major
+  end
+end
+
+#In this example, Ruby is able to only read the @dorm instance variable but both read and write the @major instance variable since it was passed to the attr_accessor method.
+
+
+
+
+
+
+
+
+
+
+
 

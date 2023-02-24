@@ -1,0 +1,27 @@
+examles.text
+..................
+
+In this blog all examples are given ::
+
+How to add one object to another object in rails ::: 
+
+cycle = Cycle.find(1)
+[1, 2, 3, 4].each do |barcode|
+   item = Items.where(:barcode => barcode)
+   cycle.items << item
+end
+cycle.save
+
+or do
+
+cycle = Cycle.find(1)
+[1, 2, 3, 4].each do |barcode|
+   item = Items.where(:barcode => barcode)
+   item.cycle = cycle
+   item.save
+end
+
+..................
+
+
+

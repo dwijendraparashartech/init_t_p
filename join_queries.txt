@@ -1,0 +1,107 @@
+join_queries.txt
+
+....................
+
+1. Join Across Tables :: First Simple Query of Join Method ::
+
+we add an Address model where a company has many addresses. If we wanted to grab all employees who are at companies that have addresses, we would perform the following query:
+
+Employee.joins(company: [:addresses])
+
+
+2. Nested Join Tables :: Second Simple Query of Join Method ::
+
+
+If we want to grab all active employees at companies that are verified in the state of California, we would perform this query:
+
+Employee.where(status: "active").joins(company: [:addresses]).where(addresses: { state: 'CA'}, companies: { verified: true })
+
+
+3. Include First Query ::
+
+:includes is a method in ActiveRecord used to preload data in order to avoid N + 1 queries. Use :joins when you solely need to filter data based on associated tables and use :includes if you need to reference data in associated tables later on. For example, we’d want to use :includes if we were to load all active employees at companies that are verified and then print each employee’s name and their company name.
+
+employees = Employee.where(status: "active").includes(:company).where(companies: { verified: true })
+employees.each do |employee|
+  puts employee.name
+  puts employee.company.name
+end
+
+4. Join Using Inner Join ::
+
+A.  Joining a Single Association
+Book.joins(:reviews) :  return a Book object for all books with reviews
+Book.joins(:reviews).distinct
+
+B.  Joining Multiple Associations
+Book.joins(:author, :reviews)
+return all books with their author that have at least one review". Note again that books with multiple reviews will show up multiple times.
+
+C. Joining Nested Associations (Single Level)
+Book.joins(reviews: :customer) ::   return all books that have a review by a customer
+
+D. Joining Nested Associations (Multiple Level)
+Author.joins(books: [{ reviews: { customer: :orders } }, :supplier] )
+return all authors that have books with reviews and have been ordered by a customer, and the suppliers for those books.
+
+E. Specifying Conditions on the Joined Tables
+
+time_range = (Time.now.midnight - 1.day)..Time.now.midnight
+Customer.joins(:orders).where('orders.created_at' => time_range).distinct
+
+This will find all customers who have orders that were created yesterday, using a BETWEEN SQL expression to compare created_at.
+
+An alternative and cleaner syntax is to nest the hash conditions:
+
+time_range = (Time.now.midnight - 1.day)..Time.now.midnight
+Customer.joins(:orders).where(orders: { created_at: time_range }).distinct
+
+time_range = (Time.now.midnight - 1.day)..Time.now.midnight
+Customer.joins(:orders).merge(Order.created_in_time_range(time_range)).distinct
+
+
+F. LEFT OUTER JOINS ::
+
+If you want to select a set of records whether or not they have associated records you can use the left_outer_joins method.
+
+Customer.left_outer_joins(:reviews).distinct.select('customers.*, COUNT(reviews.*) AS reviews_count').group('customers.id')
+
+
+
+..............................................................................................................................................................................................
+
+
+
+join_queries.txt
+
+....................
+
+1. Simple Joins ::
+
+Category.joins(:products)
+Category.joins(:products).uniq
+Product.joins(:category)
+
+2. Multiple Association with Joins :: 
+
+Product.joins(:category, :likes)
+Product.joins(:category, :likes).uniq 
+
+This will return all products that have a category and at least one like. To avoid returning duplicate products, you can again use .uniq:
+
+3. Nested Associations with Joins :: 
+
+Category.joins(products: [:reviews, :likes]).uniq
+This returns all categories that have products that were liked.
+
+
+
+Category.joins(products: [:reviews, :likes]).uniq
+You could also run a query based on multiple associations. For example, let's say Product has_many reviews and likes.
+
+
+4. Conditional Joins :: 
+Category.joins(:products).where(products: {quantity: 0})
+
+
+

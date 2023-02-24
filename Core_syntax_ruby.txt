@@ -1,0 +1,53 @@
+Core_syntax_ruby.txt
+
+1. Syntaxt of Proc ::
+
+proc1 = Proc.new {|x| x**2 }
+proc2 = proc {|x| x**2 }
+
+square = Proc.new {|x| x**2 }
+square.call(3)  #=> 9
+# shorthands:
+square.(3)      #=> 9
+square[3]       #=> 9
+
+..................................
+
+
+2. Syntax of Lambda ::
+
+lambda1 = lambda {|x| x**2 }
+lambda2 = ->(x) { x**2 }
+
+or
+
+say_something = -> { puts "This is a lambda" }
+say_something.call
+
+
+..................................
+
+
+3. Syntax of Proc and Lambda :: 
+
+p = proc {|x, y| "x=#{x}, y=#{y}" }
+l = lambda {|x, y| "x=#{x}, y=#{y}" }
+
+p.call(1, 2) 
+l.call(1, 2) 
+
+Erros and Bugs and Questions ::
+
+p.call(1, 2)      #=> "x=1, y=2"
+p.call([1, 2])    #=> "x=1, y=2", array deconstructed
+p.call(1, 2, 8)   #=> "x=1, y=2", extra argument discarded
+p.call(1)         #=> "x=1, y=", nil substituted instead of error
+
+l.call(1, 2)      #=> "x=1, y=2"
+l.call([1, 2])    # ArgumentError: wrong number of arguments (given 1, expected 2)
+l.call(1, 2, 8)   # ArgumentError: wrong number of arguments (given 3, expected 2)
+l.call(1)         # ArgumentError: wrong number of arguments (given 1, expected 2)
+
+..................................
+
+

@@ -4,7 +4,6 @@ ans -
 Serializers in Ruby on rails convert a given object into json format. 
 Serializers control the particular attributes rendered when an object or model is 
 converted into json format.
-Serializers control the particular attributes rendered when an object or model is converted into json format. 
 serializers show that actually what we want to see from our serializers.
 
 .....................................................
@@ -445,4 +444,89 @@ https://itnext.io/environment-variables-in-ruby-on-rails-17e4934cfd71
 
 .......................................................
 .......................................................
+MVC Architecture Usage ::
+
+https://www.nopio.com/blog/ruby-rails-popular-job-interview-questions/
+
+Let’s explain request/response flow in Rails:
+
+The user opens their browser and enters a URL.
+The browser sends a GET request to the URL. The request hits the Rails Router (config/routes.rb).
+The router receives the request information from the web server and based on that, decides which controller action should be called. If a request matches to any path in the routes file, the corresponding controller and action will be called.
+The controller receives the parameters from the router and passes them into appropriate model methods.
+The model queries a database to fetch data.
+The Database returns stored data to the model.
+The model manages the data and returns it to the controller.
+The controller feeds the received data to the view.
+The view renders the page as HTML, prepares a response and forwards it to the controller.
+The controller forwards the ready response to the browser.
+The browser displays a response to the user.
+
+.....................................................................
+
+
+What is the Active Record ??
+
+
+9. What are the drawbacks of using Active Record and when we shouldn’t use it?
+Although Active Record has many advantages over the raw sql queries, there are some situations when using plain sql queries is the better option. You should use raw sql queries instead of an Active Record query when you have to create a query with complex criterias, and when you have to update significant amount of records. In the first case raw sql query will be easier to write and less confusing. For the second case, let’s analyze this situation as an example.
+
+Firstly, let’s add a larger amount of data into the Department table. Add to the db/seeds.rb file this piece of code:
+
+(1..1000).each do |i|
+  Department.create(name: 'Test')
+end
+And run:
+
+$ rake db:seed
+Now, let’s add  all of our employees to one department. First, let’s try this with Active Record.
+
+Create migration:
+
+$ rails generate migration AddDepartmentToEmployeesWithAR
+Replace the update method in this migration with this piece of code:
+
+def change
+  Employee.all.each do |employee|
+    employee.update(department_id: 1)
+  end
+end
+Now, let’s do the same thing; but this time we will use raw sql query to update all employees with one department.
+
+Create migration:
+
+$ rails generate migration AddDepartmentToEmployeesWithSQL
+Replace update method in this migration with this piece of code:
+
+def change
+  execute 'UPDATE employees SET department_id = 2'
+end
+Now let’s see which migration will be faster.
+
+migration
+As you can see, second migration which uses plain sql query is much faster than first migration which uses ActiveRecord query.
+
+
+
+..................................................
+
+
+12. What’s different between ActiveRecord::Relation’s count, length and size methods?
+count – counts the number of elements using query with the SQL command ‘COUNT’ but the result is not stored internally during object life cycle. This means, each time we invoke this method, SQL query is performed again. You should use this method if you don’t have anything loaded.
+length – loads all objects just to count them and then return the result count. It should be used only if you have already loaded all entries to avoid another database query.
+size – returns the size of the collection. If a collection is loaded, it will count its elements without any database query; but if a collection is not loaded, it will perform an additional query.
+So we can say that size adapts to the situation.
+
+
+..................................................
+
+
+14. What’s the difference between nil?, empty?, blank? and present? methods?
+nil? – tests whether the object is exactly nil, that is whether it is an instance of NilClass
+empty? – can be used on strings, arrays and hashes and returns true if they don’t contain elements. If called on something that is nil, it will throw a NoMethodError.
+blank? – an object is blank if it’s false, empty, or a whitespace string.
+present? – An object is present if it’s not blank.
+Here is the table with all the cases:
+
+
 

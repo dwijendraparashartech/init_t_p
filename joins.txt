@@ -1,1 +1,399 @@
-joins.txt
+joins.txt ::
+
+Links :: 
+
+https://medium.com/swlh/getting-really-good-at-rails-joins-93fd5b33fa8e
+
+.........................
+
+
+Joins Definition :: 
+
+joins() allows you to join tables to your current model. 
+
+For ex.
+
+ 
+User.joins(:posts)
+User.joins(:posts).where(posts: { title: "Hello world" })
+User.joins(posts: :images).where(images: { caption: 'First post' })
+
+.........................
+
+"SELECT "users".* FROM "users" INNER JOIN "posts" ON "posts"."user_id" = "users"."id" INNER JOIN "images" ON "images"."post_id" = "images"."id""
+
+.........................
+
+
+Employee.where(status: "active").joins(:company).where(companies: { verified: true })
+
+.........................
+
+Employee.where(status: "active").joins(:company).where(companies: { verified: true })
+
+Employee.where(status: "active").joins(:company)
+
+........................................................
+
+
+Different Situations of Handles Joins ::
+
+Employee.joins(company: [:addresses])
+
+.........................
+
+Cond 1 ::  We wanted to grab all employees who are at companies that have addresses :: 
+
+Employee.joins(company: [:addresses])
+
+
+.........................
+
+ Cond 2 ::  We want to grab all active employees at companies that are verified in the state of California :: 
+
+ Employee.where(status: "active").joins(company: [:addresses]).where(addresses: { state: 'CA'}, companies: { verified: true })
+
+ .........................
+
+
+When to use :includes
+:includes is a method in ActiveRecord used to preload data in order to avoid N + 1 queries. Use :joins when you solely need to filter data based on associated tables and use :includes if you need to reference data in associated tables later on. For example, we’d want to use :includes if we were to load all active employees at companies that are verified and then print each employee’s name and their company name.
+
+.........................
+
+.........................
+
+
+
+
+# == Schema Information
+# Table name: employees
+# id
+# company_id
+# name
+# status
+class Employee < ApplicationRecord
+  belongs_to: :company
+end
+# == Schema Information
+# Table name: companies
+# id
+# name
+# verified
+class Company < ApplicationRecord
+  has_many: :employees
+end
+
+
+...........................
+...........................
+
+1. I want to load all active employees ::
+
+Employee.where(status: "active")
+
+...........................
+
+
+2. IF   if we want to load all active employees who belong to companies
+
+Without Joins :: This Query will take 1 Second .
+
+active_employees = Employee.where(status: "active")
+active_employees.select do |employee|
+  employee.company.verified?
+end
+
+
+With Joins :: :: This Query will take 0.5 Second .
+
+Employee.where(status: "active").joins(:company).where(companies: { verified: true })
+
+
+............................
+
+
+3. Rails Joins queries for a particular id :: 
+
+I have three models
+
+Tag => :id, :name
+Tagging => :id, :tag_id, :post_id
+Post => :id, :summary
+
+class Post < ActiveRecord::Base
+
+   has_many :taggings
+   has_many :tags, :through => :taggings 
+ end
+
+ class Taggins < ActiveRecord::Base 
+   belongs_to :post 
+   belongs_to :tag
+ end
+
+ class Tag < ActiveRecord::Base 
+   has_many :taggings 
+   has_many :posts, :through => :taggings 
+ end
+
+
+
+I know the id of the tag. I would like to query for all of the posts that have a specific tag_id, through the Taggings model.
+
+Something like
+
+@post = Post.joins(:taggings).where(:tag_id => 17)
+
+Ans ::
+1.  @post = Post.joins(:taggings).where(taggings: {tag_id: 17})
+
+2. 
+
+If you have the tag object you can do
+
+ @posts = @tag.posts 
+or
+
+ class Post < .... 
+   ....
+   def self.find_by_tag_id(tag_id)
+      Post.joins(:taggings).where('taggings.tag_id = ?', tag_id)
+   end
+ end
+
+ 3. 
+ @post = Post.joins(:taggings).where("taggings.tag_id = ?", 17)
+
+
+/............../
+
+A left outer join (or just left join) is used to query a table based on matching and non-matching entries from a related table. Contrarily to an inner join, the left outer join will always return all the entries of the left table even if the join condition does not find any match on the right table.
+
+/.................../
+
+
+............................  ............................  ............................
+
+
+Rails left_outer_joins or left_joins :: 
+
+https://www.bigbinary.com/blog/support-for-left-outer-joins-in-rails-5
+
+Suppose in a blog application there are authors and posts. A post belongs to an author, while author has many posts.
+
+
+We will see this in rails 4,5,6 
+
+in rails 4 :: 
+
+In Rails 4.x, we need to write the SQL for left outer join manually as Active Record does not have support for outer joins.
+
+authors = Author.join('LEFT OUTER JOIN "posts" ON "posts"."author_id" = "authors"."id"')
+                .uniq
+                .select("authors.*, COUNT(posts.*) as posts_count")
+                .group("authors.id")
+
+
+
+
+Rails 5 has added left_outer_joins method.
+
+authors = Author.left_outer_joins(:posts)
+                .uniq
+                .select("authors.*, COUNT(posts.*) as posts_count")
+                .group("authors.id")
+It also allows to perform the left join on multiple tables at the same time.
+
+>> Author.left_joins :posts, :comments
+  Author Load (0.1ms)  SELECT "authors".* FROM "authors" LEFT OUTER JOIN "posts" ON "posts"."author_id" = "authors"."id" LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
+If you feel left_outer_joins is too long to type, then Rails 5 also has an alias method left_joins.
+
+
+.............................................................
+
+
+Rails Nested Joins :: 
+
+
+How to join on nested belongs_to in Ruby on Rails
+
+2
+
+
+I have three models, Application, which belongs to a Board, which belongs to a User.
+
+class User < ActiveRecord::Base
+  has_many :boards
+end
+
+class Board < ActiveRecord::Base
+  belongs_to :user
+  has_many :applications
+end
+
+class Application < ActiveRecord::Base
+  belongs_to :board
+end
+
+I'm always only ever going to want to show the boards or applications for the current user. How can I say "show every application for the current board for the current user"? Basically how to query for something for specific parent id values.
+
+https://stackoverflow.com/questions/32834682/how-to-join-on-nested-belongs-to-in-ruby-on-rails
+
+Ans ::::::::::::::::::::::::::::::::::;;
+
+3
+
+
+You should provide the current user id and board id at first.
+
+user = User.find(user_id)           #get current user
+board = user.boards.find(board_id)  #get current board
+board.applications                  #get every application
+
+
+The power of ActiveRecord should make this relatively simple:
+
+board = current_user.boards.find params[:board_id]
+board.applications #-> collection of Application objects for board
+
+
+...........................................
+
+User.joins(boards: :applications).where("users.id = ?", current_user.id)
+
+
+....................
+
+Includes and Joins ;;
+
+Book.includes(:comments).where(comments: {id:2})
+This is the left outer join
+
+....................
+
+
+Book.joins(:comments).where(comments: {id:2})
+This is the inner Join 
+
+....................
+
+
+Types of Joins in Postgres :: 
+
+1. Inner Join
+2. Left Join
+3. Right Join
+4. Full Outer Join
+
+............................
+
+
+
+
+
+Link ::  https://blazarblogs.wordpress.com/2019/08/09/database-joins-activerecord-way/
+
+
+
+Let’s create two tables Club and Student using rails.
+
+
+class Club < ApplicationRecord   
+  has_many :students 
+end 
+
+class Student < ApplicationRecord   
+  belongs_to :club 
+end
+
+
+
+Now I created some records in both tables –
+
+sample_postgres=> SELECT * FROM clubs;
+  id | club_name 
+ ----+-----------
+   1 | Football
+   2 | Band
+   3 | Chess
+ (3 rows)
+
+
+ sample_postgres=> SELECT * FROM students;
+  id | student_name | club_id 
+ ----+--------------+---------
+   1 | John         |       1
+   2 | Henry        |       1
+   3 | Clark        |       2
+   4 | Andrew       |       2
+   5 | Dustin       |       2
+   6 | Max          |       3
+   7 | Julie        |       3
+ (7 rows)
+Now apply different types of joins.
+
+
+
+..........................................................
+
+
+1.
+
+Syntax of Left Joins ::
+
+Student.left_joins(:club)
+
+..........
+
+2. 
+
+Syntax of Forced Left Joins :: 
+
+Student.eager_load(:club)
+
+..........
+
+3. 
+
+Syntax of Right Joins ::
+
+Club.left_joins(:students)
+
+..........
+
+4. 
+
+Syntax of Forced Right Joins :: 
+
+Club.eager_load(:students)
+
+..........
+
+5. 
+
+Syntax of Inner Joins ::
+
+Student.joins(:club)  OR    Club.joins(:students)
+
+..........
+
+6. 
+
+Syntax of Other/Custom Joins ::
+
+Student.joins('RIGHT JOIN "clubs" ON "students"."id" = "clubs"."id"')
+
+..........
+
+6. 
+
+Syntax of Full Outer Joins ::
+
+Student.joins(' FULL OUTER JOIN "clubs" ON "students"."id" = "clubs"."id" ')
+
+
+
+.............................................................................
+
+

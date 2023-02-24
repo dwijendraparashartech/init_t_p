@@ -1,0 +1,26 @@
+range.txt :: 
+
+
+1.  How to find the even and odd numbers in the range 1 to 100 in rails 
+
+(1..100).select(&:even?)
+=> [2,4,6,8,10]
+
+
+(1..100).select(&:odd?)
+
+(1..10).step(2).to_a
+
+(1..100).select {|a| a%2 != 0}
+
+ 1.step 10, 2 do |x|
+ 	puts "#{x}"
+ end 
+
+ puts "Odd numbers between 9 to 1: "
+	9.step 1, -2 do |x|
+      puts "#{x}"
+ 	end
+
+
+2. 

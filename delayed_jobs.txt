@@ -1,0 +1,29 @@
+delayed_jobs.txt :: 
+
+https://www.andolasoft.com/blog/4-simple-steps-to-implement-delayed-job-in-rails.html
+
+
+...................
+
+step 1 :: 
+
+Add Gem to gemfile 
+
+delayed_job :: support multiple back-ends for storing the queue
+gem ‘delayed_job_active_record’  --  delayed job with active record 
+gem ‘delayed_job_active_record’, ‘4.0.3’ + bundle 
+
+...................
+
+step 2 :: 
+
+Generate the related file for the Job run
+
+$ rails g delayed_job:active_record
+
+This add the following :: 
+
+
+
+...................
+

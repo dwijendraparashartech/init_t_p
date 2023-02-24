@@ -1,0 +1,17 @@
+objects_in_ruby.txt ::
+
+Link ::   https://zetcode.com/lang/rubytutorial/objects/
+
+Ruby is an object-oriented programming language. This means that in Ruby programs we work with objects.  These objects are created and modified during the lifetime of a Ruby script.
+
+Types of Objects ::
+
+Built-in objects and Custom objects
+
+..........................
+
+ Built-in objects are predefined objects that all programmers can use. They are available with the core of the Ruby language or from various libraries. 
+
+ Custom objects are created by application programmers for their application domains.
+
+s
