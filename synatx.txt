@@ -1,0 +1,7 @@
+synatx.txt ::
+
+1. singleton method :: 
+def Obj.GFG
+# Method body 
+end
+Here, the GFG is a singleton method and Obj is an object.

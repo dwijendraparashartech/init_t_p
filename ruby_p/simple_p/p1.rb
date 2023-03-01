@@ -86,20 +86,47 @@
  # print [0,8,5,4,1,22,1,4].sort_by{|number| -number}.reverse
 
 
-def list_duplicates(array)
-	duplicates = array.select {|e| array.count(e)>1}
-	duplicates.uniq
-end 
-print list_duplicates([1,1,4,5,6,6,9])
+# def list_duplicates(array)
+# 	duplicates = array.select {|e| array.count(e)>1}
+# 	duplicates.uniq
+# end 
+# print list_duplicates([1,1,4,5,6,6,9])
 
-ary = [1,2,1,3,5,4,5,5]
+# ary = [1,2,1,3,5,4,5,5]
 
-p ary.select{|e| ary.count(e)>1}.uniq
+# p ary.select{|e| ary.count(e)>1}.uniq
 
-ay.select{|i| ay.consider_all_requests_local
+# ay.select{|i| ay.consider_all_requests_local
 
 
-}
+# }
 
-a = [1,1,2]
-a.select{|i| a.count(i)>1}.uniq
+# a = [1,1,2]
+# a.select{|i| a.count(i)>1}.uniq
+
+
+def my_sort(list)
+  return list if list.size <= 1 
+
+  swapped = false
+  while !swapped
+    swapped = false
+    0.upto(list.size-2) do |i|
+      if list[i] > list[i+1]
+        list[i], list[i+1] = list[i+1], list[i]
+        swapped = true
+      end
+    end
+  end
+
+  list
+end
+
+print my_sort([2,1,3,5,4,40])
+
+
+..............................
+
+
+
+

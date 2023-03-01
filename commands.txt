@@ -1,0 +1,55 @@
+commands.txt
+
+
+................
+
+1. how to generate controller 
+
+
+
+
+
+................
+
+2. how to generate model 
+
+
+
+
+
+
+
+................
+
+3. how to delete table 
+
+
+
+
+
+
+
+
+................
+
+4. how to add column in schema 
+
+
+
+
+
+
+
+
+
+
+................
+
+5. how to add column in schema 
+
+
+
+
+
+
+

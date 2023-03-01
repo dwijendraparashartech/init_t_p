@@ -1,0 +1,7 @@
+imp_int_ques.txt
+
+https://www.ideamotive.co/ruby-on-rails/interview
+
+
+very very good link to understand which types of the questions asked in ruby on rails developer ::
+

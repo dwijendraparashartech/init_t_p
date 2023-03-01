@@ -184,7 +184,33 @@ Check out the latest commit to this branch in the reflog, and then check it out 
 
 .............................................
 
-20. 
+20. How can you copy a commit made in one branch to another (e.g. a hot fix commit from released branch to current development branch)?
+
+You need to use the cherry-pick command. It provides the possibility to play back an existing commit to your current location/branch. So you need to switch to the target branch (e.g. git checkout development) and call git cherry-pick {hash of that commit}.
+
+In spite of applying the same changes, it will be a new commit with a new hash because the changes are applied to a different destination.
+
+.............................................
+
+21. What is a conflict in git and how can it be resolved?
+
+A conflict arises when more than one commit that has to be merged has some change in the same place or same line of code. Git will not be able to predict which change should take precedence. This is a git conflict.
+
+To resolve the conflict in git, edit the files to fix the conflicting changes and then add the resolved files by running git add. After that, to commit the repaired merge, run git commit. Git remembers that you are in the middle of a merge, so it sets the parents of the commit correctly.
+
+.............................................
+
+
+Link :: Git very imp questions asked everytime ??
+
+https://www.toptal.com/git/interview-questions
+
+.............................................
+
+
+
+
+
 
 
 

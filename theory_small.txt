@@ -1,0 +1,263 @@
+small_theory ::
+
+1.object : an object is a unit of data .that just any piece of data like the number '3' or string "hello".
+
+2.class  : a class is what kind of data it is. ruby seperates everything into classes like like integers,floats and strings.
+
+
+3.method : these are the things that you can do with an object. ex- you can add integers together so + is a method. 
+
+4. what are the mehods to converting between classes :: 
+to_s
+to_i
+to_f
+to_a
+
+
+5.PORO : 
+A basic Ruby object used in a Rails application that is not backed by ActiveRecord, or stored in the database.
+
+6. Monkey Patching : it is the process of dynamic modification of a buggy class by adding existing or overriding the new method.
+
+7.Meta Prorgramming : 
+Metaprogramming is a technique by which you can write code that writes code by itself dynamically at runtime. This means you can define methods and classes during runtime.
+
+8.Observers : 
+Observer is a behavioral design pattern that allows some objects to notify other objects about changes in their state. The Observer pattern provides a way to subscribe and unsubscribe to and from these events for any object that implements a subscriber interface.
+
+
+9. Callbacks: 
+Callbacks are methods that get called at certain moments of an object's life cycle. With callbacks it is possible to write code that will run whenever an Active Record object is created, saved, updated, deleted, validated, or loaded from the database.
+
+
+10. dynamic typing: 
+Ruby is a dynamically typed language, which means the interpreter tries to infer the data type of variables and object properties at runtime. This generally leads to programs being more dynamic and easier (faster) to code, and the interpreter/compiler loading code faster. 
+
+
+11. duck typing :
+In Ruby, the class is never (OK, almost never) the type. Instead, the type of an object is defined more by what that object can do. In Ruby, we call this duck typing. If an object walks like a duck and talks like a duck, then the interpreter is happy to treat it as if it were a duck.
+Unlike static and dynamic typing of variables (and expressions), duck typing is not a language feature, but a design principle which is a combination of dynamic typing and object-oriented programming. Since Ruby is a dynamically typed object-oriented programming language, it is natural for the Ruby community to encourage duck typing.
+
+
+12. Ancestors:
+ancestors is a class method in Ruby that returns an array of classes and modules commonly known as the ancestors chain. The order of the elements in this array are listed in a hierarchy of increasing parent rank. When the . ancestors method is called on the String class, its respective ancestors chain is returned.
+puts String.ancestors
+# => [String, Comparable, Object, Kernel, BasicObject]
+
+The ancestors method will return an array of classes, and modules that instances of the caller will traverse to invoke a method whenever it receives a message.
+
+In this case a Range object will first look ::
+
+A. In its own class 
+B. Then Enumerable 
+C. Object
+D. Kernel 
+E. Finally Ending with Basic Object 
+
+https://medium.com/@dseb/ruby-and-the-method-lookup-path-64b746160446
+
+....................................
+
+Kernel classes are the root of all Ruby classes and Object functionality.
+Object is the base class that all Ruby classes inherit from. 
+The Kernel module is included by the Object class,
+
+
+13. What is Enumerable ?
+Enumerable is a collection of iteration methods, a Ruby module, and a big part of what makes Ruby a great programming language.
+Enumerable includes helpful methods like:  map , select , inject 
+....................................
+
+13. What is the difference between objects and basic objects in ruby ?
+
+BasicObject does not include Kernel (for methods like puts) and BasicObject is outside of the namespace of the standard library so common classes will not be found without a using a full class path. Object mixes in the Kernel module, making the built-in kernel functions globally accessible.
+
+
+
+
+
+12.2 Method Lookup: 
+When you call a method in Ruby, a lot of things happen behind the scenes. The Ruby interpreter has to know where this method is declared to know what behavior it has to interpret. This process is called the method lookup. It goes through the ancestor chain of an object to see where this method is declared.
+
+....................................
+
+12 : 
+https://www.rubyguides.com/2016/03/enumerable-methods/
+
+What is each_cons :: 
+
+each_cons gives you sub-arrays of size n, so if you have [1,2,3], then each_cons(2) will give you [[1,2], [2,3]].
+
+
+13. 
+Nice examples for methods ::: and enumerables :: 
+
+https://ruby-doc.org/3.2.1/Enumerable.html
+
+
+
+
+
+13. Singleton Method:
+
+
+
+
+....................................
+
+
+14. Eigen Class or SingleTon Class:
+
+
+
+15.class_eval and instance_eval : 
+The instance_eval method defines a method for one object only, whereas the class_eval method defines it for ALL objects or instances of a class
+
+
+16.self in ruby : 
+
+
+
+
+
+17. Diff between Statically type,dynamically type,strongly,weakly,duck typing language means ?
+
+Statistically Type : A language is statically typed if its type system is verified at compile time. A statically typed language can be either "weakly typed" like C or strongly typed like C#.
+
+Dynamically typed : A dynamically typed language is a language where types are verified at runtime. Many languages have a mixture, of some sort, between static and dynamic typing. 
+
+Variant ::  A variant is a dynamically typed data structure that can hold a range of predefined data types, including strings, integer types, dates, and com objects.
+
+Duck Typing :: 
+
+
+
+18. Ruby Features ::
+
+1. General purpose programming language
+2. Interpreted Programming language 
+3. Object Oriented Programming language
+4. Server Side Scripting language 
+
+
+
+19. Features of Ruby :: 
+
+1.Object Oriented 
+2.Flexibility
+3.Expressive Feature 
+4.Mixins 
+5.Visual Apperance
+6.Dynamic Typing,Duck Typing
+7.Exception Handling
+8.Garbage Colelctor
+9.Portable 
+10.Keywords
+11.Statement Delimiters
+12.Variable Constants.
+13.Naming Conventions
+14.Keyword Arguments
+15.Method Names.
+16.SingleTon Method
+17.Missing Method
+18.Case Sensitive.
+
+How many theory 
+
+20. Method Missing :: 
+method_missing is a method in Ruby that intercepts calls to methods that don't exist. It handles any messages that an object can't respond to. 
+
+21.what is eager loading methods : eager_loading, prelude and include and diff ??
+
+
+
+22 - What is struct in ruby ??
+What is a Struct in Ruby? A struct is a built-in Ruby class, it's used to create new classes which produce value objects. A value object is used to store related attributes together. Here's an example: A Point with two coordinates ( x & y ).
+
+asked in one interview ? 
+
+Q. What is the diff between scopes and namespaces in routes ?
+Q. What is shallow nesting in routes ?
+Q. What are the types of Joins in rails ?
+Q. What are the data structures in Rails ?
+Q. What is abstract Controller in Rails ?
+
+Q- what is the difference between preload,include and eager_load in rails?
+Q- how to connect to the multiple database in rails ?
+Q - what is csrf 
+Q - What is diff between XSS and CSRF in rails 
+Q - Ask the question at multiple databases 
+Q - Ask the question at database query :: 
+Q- how to flattern an array without using sort method
+Q- Find the max occurance number in an array
+Q - how to pass the values from parent to child in react 
+Q - 
+
+.......................
+Q. What is the diff between scopes and namespaces in routes ?
+Scope vs Namespace
+The major difference between the two methods is the value of the module, path and as options. While in the scope method the options have no default value and have no effect unless specified, in the namespace method block the scope will automatically add the same value for as, module and path options.
+In a way, namespace is a shorthand for writing a scope with all three options being set to the same value.
+
+For example, in the following snippet, the namespace will add the admin prefix to the path, module and the path helper method:
+
+namespace "admin" do
+  resources :articles
+end
+The above snippet is the same as:
+
+scope "/admin", as: "admin", module: "admin" do
+  resources :articles
+end
+
+
+Both the snippets will generate the routes for the resource articles like so:
+
+Prefix	VERB	URI Pattern	Controller#Action
+admin_articles	GET	/admin/articles	admin/articles#index
+POST	/admin/articles	admin/articles#create
+admin_new_article	GET	/admin/articles/new	admin/articles#new
+admin_edit_article	GET	/admin/articles/:id	admin/articles#edit
+admin_article	GET	/admin/articles/:id	admin/articles#show
+PATCH	/admin/articles/:id	admin/articles#update
+PUT	/admin/articles/:id	admin/articles#update
+DELETE	/admin/articles/:id	admin/articles#destroy
+
+
+.......................
+
+Q - What is shallow nesting in routes in rails ? 
+
+Shallow nesting
+Adding the 'shallow: true' parameter to your nested resource will define routes at the base level, '/songs/', for four of our RESTful routes — show, edit, update and destroy, while leaving the remaining routes — index, new, create— at the nested level. So how is this useful to us?
+
+.......................
+
+What is data structure in ruby ?? 
+
+A data structure is a specific way to organize & access data.
+
+Examples include:
+
+Arrays
+Binary trees
+Hashes
+
+
+.......................
+
+
+Q- What is abstract controller in Rails ?
+
+An additional advantage is that extracting the abstract base controllers can help you clearly separate different types of HTTP interfaces for your Rails app.
+
+
+
+.......................
+
+Q - MEtal Controllers in Rails ??
+
+https://www.akshaykhot.com/metal-controller-in-rails/
+
+.......................
+

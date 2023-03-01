@@ -1,5 +1,78 @@
 designs_patterns_rails.txt 
 
+..............................
+
+Links ::  https://www.udemy.com/course/design-patterns-through-ruby/
+Very very good link ::  https://github.com/davidgf/design-patterns-in-ruby
+https://www.udemy.com/course/design-patterns-through-ruby/
+
+processor model pattern ::
+
+https://www.educative.io/answers/what-is-the-processor-model-design-pattern-in-rails
+
+
+Types of Design Patterns ??
+
+1. Design Pattern 
+...............................
+2. Creational Pattern ::
+A. Abstract Factory Design PAttern in Ruby 
+B. Factory Method Design Pattern
+C. Prototype Design Pattern
+D. Singleton Design Pattern
+...............................
+3. Structural Pattern :: 
+Bridge Structure
+Composite Structure
+Decorator
+Facade
+Flyweight
+Proxy 
+...............................
+4. Behavioral Pattern :: 
+Responsibility Structure
+Interpreter 
+Iterator
+Mediator
+Memento
+Observer
+State
+Strategy
+Template
+Visitor
+
+
+
+.....................................................................................
+.....................................................................................
+
+Different Other Pattern in Ruby ??
+
+
+1. adapter  , 2. builder , 3. command , 4. composite , 5. convention_over_configration , 6. decorator , 7. dsl , 8. factory, 9. interpreter , 10. iterator , 11. meta_programming.
+12. observer . 13. proxy . 14. singleton, 15. template_method ,16. strategy 
+
+.....................................................................................
+.....................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 1. Presenter or ViewObjects ::
 ..................................
 
