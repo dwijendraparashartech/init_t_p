@@ -16,22 +16,39 @@ What are the Ani Design Patterns ?
 .................................
 
 
+..............................................................
+..................................
+
+1. Builder :: 
+2. Decorator :: 
+3. Form Object ::
+4. Interactor ::
+5. Null Object ::
+6. Observer ::
+7. Policy Object ::
+8. Query Object  ::
+9. Service Object  ::
+10. Value Object (Presenter) ::
+11. View Object  ::
+
+..................................
+..............................................................
 
 
 
 BDFINOPSQVV
 
-1. Builder 
-2. Decorator
-3. Form Object
-4. Interactor
-5. Null Object 
-6. Observer
-7. Policy Object
-8. Query Object 
-9. Service Object 
-10. Value Object (Presenter)
-11. View Object 
+1. Builder :: provide a simple way of returning a given class or instance depending on the case. Construct complex objects without much effort.It also called as Adapter. 
+2. Decorator ::
+3. Form Object ::
+4. Interactor ::
+5. Null Object ::
+6. Observer ::
+7. Policy Object ::
+8. Query Object  ::
+9. Service Object  ::
+10. Value Object (Presenter) ::
+11. View Object  ::
 
 ..................................
 
@@ -300,7 +317,9 @@ class BankTransferPolicy
   end
 end
 ..................................  .................................. ..................................  ..................................
-
+true parllism 
+csrf n xss attack
+preload  imclude eagerload
 
 8. Query Object 
 

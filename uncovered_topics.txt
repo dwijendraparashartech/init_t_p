@@ -1,0 +1,16 @@
+uncovered_topics.txt ::
+covered these :: 
+..........................
+
+
+1. action cable
+2. web sockets
+3. multiple datbases
+4. queries of joins and includes at diff diff conditions 
+5. deployment throught heroku , amazon and others 
+6. types of servers is used
+7. how to established client server connections
+8. diff examples 
+9. real life examples of meta progamming 
+10. 
+

@@ -1,5 +1,64 @@
 small_theory ::
 
+
+.......................  .......................  .......................
+
+Rails 7 Features ::
+
+A. Diff bet rails 6 and 7 ::
+
+1. BackgroundJobs :: infinite runtime with background jobs 
+2. Byebug Change :: byebug - debugger 
+3. Association Check :: check association absence and presence 
+4. Ruby Version :: Use rvm 2.7.0 or greater
+5. Importmap :: node and webpacker is not required use importmap - use importmap-rails gem
+6. Asynchronous Querying ::  load_async(asynchronous query) - Post.load_assync - use multiple queries.
+7. Hotwire ::  turbolink and ujs are replaced by turbo and stimulous
+8. Encrypted Database Layer :: 
+9. Assert a Single Record with Sole :: 
+10.Stream Generated Files from Controller Actions ::
+11.ZeitWork Mode for Rails 7 
+
+
+.......................  .......................  .......................
+
+Rails 6 Features ::
+
+B.Diff bet rails 5 and 6 ::
+
+1.Multiple Databases :: Use multiple databases and switching between multiple databases
+2.Bulk :: bulk_insert ,bulk_upser and update_all
+3.Ruby Version :: rvm 2.5.0 or greater
+4.Gems Compatibility :: can check all gems compatiable with rails-6
+5.Default Bundler :: Webpacker 
+6.Parellel Testing :: 
+7.
+
+
+
+.......................  .......................  .......................
+
+C. Diff bet rails 4 and 5 ::
+
+1. Active Job is here
+2. Action Cable is here
+3. Use Rails instead of Rake 
+4. Rails api only application 
+5. Active Record Improvements.
+
+
+
+
+
+
+
+.......................  .......................  .......................
+
+
+using importmap replace with webpack 
+can assoicate check
+
+
 1.object : an object is a unit of data .that just any piece of data like the number '3' or string "hello".
 
 2.class  : a class is what kind of data it is. ruby seperates everything into classes like like integers,floats and strings.
@@ -260,4 +319,158 @@ Q - MEtal Controllers in Rails ??
 https://www.akshaykhot.com/metal-controller-in-rails/
 
 .......................
+
+Q - intervew 
+
+1. what is hotwire, how we use it explain it in detail ? 
+2. how cancancan and pundit is diff 
+3. how the poro is useful in writing testcases
+4. what do you use for the rspecs
+5. what are the value objects design patterns
+6. what are the service object
+7. what is sidekiq its functionality
+8. why we write the background jobs which did you use 
+9. what gems you use at initially in application
+10. what are the other features of rails 7 
+11. what is the diff between rails 6 and rails 7 in details we want the answer
+12. what is request response flow in the rails 
+13. what tools you use in background job-sidekiq , delayed job what is the diff bet them
+14. how you improve the speed of the application in rails 
+15. which design pattern you use most 
+16. what is metaprogramming give it with one of the example
+17. how pundit work
+18. take theoro understanding of the gems what is in the mid in the details of that
+19. we want some practical answers
+20. what is the diff between mocs and stubs in testing 
+21. ask about the pundit gem that how it works and all the things related to it 
+22. what problem you face in your gem and all in rails 
+23. how to create the architecture of project from scratch 
+24. prepare any good real life example of metaprogramming and some diff answer practical answers of the metaprogamming 
+25. Array Programs :: Very Good Blog :: 
+
+https://github.com/kumar91gopi/Algorithms-and-Data-Structures-in-Ruby
+
+.................................................................................
+
+
+Q1. Swapping :: Swapping of Two Numbers :: 
+
+                 .....................................................
+
+1. 
+
+Swapping of two numbers :: 
+..............................
+
+Method First ::  Using Temporary variable)
+
+
+def swap(a,b)
+    temp = a
+    a = b
+    b = temp
+    return a,b
+end
+print swap(3,1)
+
+..............................
+
+Method Second :: (Ruby magic)
+
+def swap(a,b)
+    a,b=b,a
+    return a,b
+end
+print swap(3,1)
+
+..............................
+
+Method Third :: (Using sum and difference, no temporary variable required)
+
+def swap(a,b)
+    a = a+b
+    b = a-b
+    a = a-b
+    return a,b
+end
+print swap(3,1)
+
+
+..............................
+
+
+ Method Fourth :: :: Method 4 (Using bitwise XOR ,no temporary variable required) 
+
+
+def swap(a,b)
+    a = a^b
+    b = a^b
+    a = a^b
+    return a,b
+end
+
+..............................
+
+.................................................................................
+
+
+
+.................................................................................
+
+
+Q2. Reversing :: Reversing of Array  :: 
+
+                 .....................................................
+
+....................................
+
+
+First Method   ::  # Iterative
+
+# Iterative
+def reverse_array(a)
+    right=a.length-1
+    left=0
+    while(left<right)
+     #swap the elements
+        temp=a[left]        #Swapping can be like done like this a[left],a[right]=a[right],a[left]
+        a[left]=a[right]
+        a[right]=temp
+        
+        left+=1
+        right-=1
+    end
+    print a
+end
+
+reverse_array([1,2,3,4,5]) # => [5,4,3,2,1]
+
+...................................
+
+Second  Method ::  # Recursive
+
+
+....................................
+#driver program
+
+def driver_program(a)
+    right=a.length-1
+    left=0 
+    reverse_array(a,left,right)
+    print a
+end
+def reverse_array(a,left,right)
+    
+    return  if left>=right 
+     #swap the elements
+        temp=a[left]        
+        a[left]=a[right]
+        a[right]=temp
+        reverse_array(a,left+1,right-1)
+end
+
+driver_program([1,2,3,4,5]) # => [5,4,3,2,1]
+
+......................................
+
 

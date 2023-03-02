@@ -1,0 +1,427 @@
+rails 4 5 6 7 diff.txt :: 
+.............................
+
+Rails 7 Features ::
+Link :: https://inside.caratlane.com/fascinating-features-of-rails-7-9714a500f89e
+        https://gist.github.com/zakariaf/534ff8dfc3a807779133dc078114b969
+        https://gist.github.com/zakariaf/534ff8dfc3a807779133dc078114b969#add-missing-method
+        https://manny.codes/this-week-in-rails-wrapped-an-overview-of-rails-7-1-features-part-i/#02-adding-autoload-paths-to-load_path-disabled
+
+.............................
+   
+
+1. Background Jobs 
+2. Byebug Change :: byebug - debugger 
+3. Association Check :: Check association absence and presence
+4. Ruby Version :: Use rvm 2.7.0 or greater
+5. Importmap :: node and webpacker is not required use importmap - use importmap-rails gem 
+6. Asynchronous Querying ::  load_async(asynchronous query) - Post.load_assync - use multiple queries ::     load_async method
+7. Hotwire ::  turbolink and ujs are replaced by turbo and stimulous ::
+8. Encrypted Database Layer :: 
+9. Assert a Single Record with Sole ::  Call sole or find_sole_by ::
+10.Stream Generated Files from Controller Actions ::
+11.ZeitWork Mode for Rails 7 
+12.Invert Where Method 
+13.Comparison Validator
+14. Named Variants 
+15. Add missing Method 
+16. Association Previously Changed Method 
+17. Disable partial_inserts as default
+18. Active storage pre-defined variants
+19. Add tracking of belongs_to association
+20. PostgreSQL custom enum types
+21. PostgreSQL generated columnsPostgreSQL custom enum types
+22. A new #update_attribute! method was added
+23. db:prepare can load the schema of an empty database.
+24. 
+
+.......................  .......................  .......................
+
+
+
+
+
+Rails 7 Features ::
+
+
+
+1.
+
+.......................  .......................  .......................
+
+Rails 7 Features ::
+
+A. Diff bet rails 6 and 7 ::
+
+1. BackgroundJobs :: Infinite Runtime with Background jobs :: 
+
+Now in Rails 7 Passing the :unlimited flag as the attempts parameter on retry_on which allows for a job to retry continuously until it succeeds.Before this it was not possible . 
+
+Ex ::  
+
+class MyJob < ActiveJob::Base
+  retry_on(AlwaysRetryException, attempts: :unlimited)
+ 
+  def perform
+    raise "KABOOM"
+  end
+end
+
+...............
+
+
+2. Byebug Change :: byebug - debugger 
+................
+
+3. Association Check :: Check association absence and presence :: Add Association Method ::
+
+Ex1:: 
+
+# Before:
+account.users.joins(:contact).where.not(contact_id: nil)
+ 
+# After:
+account.users.where.associated(:contact)
+
+....
+Ex2:: 
+
+Before
+User.where.not(contact_id: nil)
+
+After
+User.where.associated(:contact)
+
+
+...............
+
+4. Ruby Version :: Use rvm 2.7.0 or greater
+
+
+...............
+
+5. Importmap :: node and webpacker is not required use importmap - use importmap-rails gem ::
+
+JavaScript in Rails 7 will no longer require NodeJS or Webpack. And you can still use npm packages.
+
+importmaps-rails gem::
+
+A. Install date-fns 
+
+$ ./bin/importmap pin date-fns
+This will add a line in config/importmap.rb like:
+
+pin "date-fns", to: "https://ga.jspm.io/npm:date-fns@2.27.0/esm/index.js"
+
+In your JavaScript code, you can continue using everything as you used to:
+import { formatDistance, subDays } from "date-fns";
+ 
+formatDistance(subDays(new Date(), 3), new Date(), { addSuffix: true });
+//=> "3 days ago"
+
+...............
+
+6. Asynchronous Querying ::  load_async(asynchronous query) - Post.load_assync - use multiple queries ::     load_async method 
+
+There is now a load_async method that you can use when querying data to fetch results in the background. This is especially important when you need to load several un-related queries from a controller action. You can run:
+
+Ex :: 
+
+def PostsController
+  def index
+    @posts = Post.load_async
+    @categories = Category.load_async
+  end
+end
+
+This will fire both queries in the background at the same time. So, if each query takes 200ms, the total time spent fetching the data is ~200ms instead of 400ms, if they are fetched serially.
+
+...............
+
+7. Hotwire ::  turbolink and ujs are replaced by turbo and stimulous ::
+
+There are 3 main connections for hotwire ::
+1. Turbo
+2. Stimulus
+3. Strada
+
+...............
+
+8. Encrypted Database Layer :: 
+
+Encryption at Database Layer
+Rails 7 allows marking certain database fields as encrypted using the encrypts method on ActiveRecord::Base. This means that after an initial setup, you can write code like this:
+
+class Message < ApplicationRecord
+  encrypts :text
+end
+You can continue using the encrypted attributes like you would any other attribute. Rails 7 will encrypt and decrypt it automatically between the database and your application.
+
+But this comes with a slight quirk: you cannot query the database by that field unless you pass a deterministic: true option to the encrypts method. The deterministic mode is less secure than the default non-deterministic mode, so only use it for attributes you absolutely need to query.
+
+
+...............
+
+9. Assert a Single Record with Sole ::  Call sole or find_sole_by ::
+
+When querying records, you can now call sole or find_sole_by (instead of first or find_by) when you want to assert that the query should only match a single record.
+
+Product.where(["price = %?", price]).sole
+# => ActiveRecord::RecordNotFound      (if no Product with given price)
+# => #<Product ...>                    (if one Product with given price)
+# => ActiveRecord::SoleRecordExceeded  (if more than one Product with given price)
+ 
+user.api_keys.find_sole_by(key: key)
+# as above
+
+...............
+
+10.Stream Generated Files from Controller Actions ::
+
+
+
+...............
+
+11.ZeitWork Mode for Rails 7 
+
+...............
+
+
+12.Invert Where Method :: 
+
+Invert_where method to the ApplicationRecord used to invert all the defined scope conditions.
+
+Before
+
+class User < ApplicationRecord
+    scope :verified, -> { where(email_verified: true, phone_verified: 
+true) }
+    scope :unverified, -> { where.not(email_verified: true,
+ phone_verified:true) }
+
+    scope :with_verified_email, -> { where(email_verified: true) }
+    scope :with_unverified_email, -> { where.not(email_verified: true) }
+end
+After Rails 7 :
+
+class User < ApplicationRecord
+    scope :verified, -> { where(email_verified: true, phone_verified: true)
+ }
+
+    scope :with_verified_email, -> { where(email_verified: true) }
+end
+Instead of creating unverified and with_unverified_email scopes with negating conditions, we can just chain invert_where to verified and with_verified_email scopes.
+
+
+
+...............
+
+
+13.Comparison Validator ::
+
+The comparison validator validates the state of the object before it is going to store in the database. Considering all its presence, uniqueness, numerical properties, and validity of the particular data it has been checked properly.
+
+class Post < ApplicationRecord
+    validates :end_date, date: { after: Proc.new { Date.today } }
+    validates :end_date, date: { after: :start_date }
+end
+If we want to validate the end_date, we have to use the custom_validator or otherwise we can use gem_validator.
+
+After Rails 7 onwards :
+
+class Post < ApplicationRecord
+    validates_comparison_of :end_date, greater_than: -> { Date.today }
+    validates :end_date, greater_than: :start_date
+end
+
+
+...............
+
+
+14. Named Variants :: 
+
+You can name variants using ActiveStorage in the latest Ruby on Rails 7.
+
+class User < ApplicationRecord
+    has_one_attached :avatar do |attachable|
+        attachable.variant :thumb, resize: "100x100"
+    end
+end
+
+#Call avatar.variant(:thumb) to get a thumb variant of an avatar:
+<%= image_tag user.avatar.variant(:thumb) %>
+
+...............
+
+15. Add missing Method 
+
+It returns the list of all records that don't have an association. opposite of associated
+
+Before
+User.where(contact_id: nil)
+
+After
+User.where.missing(:contact)
+
+...............
+
+16. Association Previously Changed Method ::
+
+The association_previously_changed? method tells if the previous save updated the association to reference a different associated object.
+
+> event.organizer
+=> #<Organizer id: 1, name: "Organization 1">
+
+> event.organizer = Organizer.second
+=> #<Organizer id: 2, name: "Organization 2">
+
+> event.organizer_changed?
+=> true
+
+> event.organizer_previously_changed?
+=> false
+
+> event.save!
+=> true
+
+> event.organizer_changed?
+=> false
+
+> event.organizer_previously_changed?
+=> true
+
+...............
+
+17. Disable partial_inserts as default :: 
+
+# == Schema Information
+#
+# Table name: posts
+#
+#  id                     :bigint
+#  title                  :string
+#  description            :text
+#  created_at             :datetime
+#  updated_at             :datetime
+
+class Post < ApplicationRecord
+end
+Before
+It's enabled as default
+
+Rails.configuration.active_record.partial_inserts => true
+
+The INSERT command does not include description as we are just passing title to the Post.new command
+
+> Post.new(title: 'Rails 7').save
+
+Post Create (1.7ms)  INSERT INTO "posts" ("title", "created_at", "updated_at") VALUES (?, ?, ?)  [["title", "Rails 7"], ["created_at", "2021-12-25 20:31:01.420712"], ["updated_at", "2021-12-25 20:31:01.420712"]]
+After
+It's disabled as default
+
+Rails.configuration.active_record.partial_inserts => false
+
+The INSERT command includes description too, even when we don't pass description to the Post.new command
+
+> Post.new(title: 'Rails 7').save
+
+Post Create (1.7ms)  INSERT INTO "posts" ("title", "description", "created_at", "updated_at") VALUES (?, ?, ?)  [["title", "Rails 7"], ["description", ""], ["created_at", "2021-12-25 20:31:01.420712"], ["updated_at", "2021-12-25 20:31:01.420712"]]
+More details: https://blog.kiprosh.com/rails-7-introduces-partial-inserts-config-for-activerecord/
+
+............
+
+18. Disable partial_inserts as default :: 
+
+Before
+class Puppy < ApplicationRecord
+  has_one_attached :photo
+end
+<%= image_tag puppy.photo.variant(resize_to_fill: [250, 250]) %>
+
+After
+class Puppy < ApplicationRecord
+  has_one_attached :photo do |attachable|
+    attachable.variant :thumb, resize: "100x100"
+    attachable.variant :medium, resize: "300x300", monochrome: true
+  end
+end
+<%= image_tag puppy.photo.variant(:thumb) %>
+
+............
+
+
+19. Add tracking of belongs_to association ::
+
+class Event
+  belongs_to :organizer
+end
+
+class Organizer
+  has_many :events
+end
+
+
+............
+
+22. A new #update_attribute! method was added ::
+
+Rails added a new ActiveRecord::Persistence#update_attribute!method. This method is similar to update_attribute, but calls save! instead of save.
+
+class Topic < ActiveRecord::Base
+  before_save :check_title
+
+  def check_title
+    throw(:abort) if title == "abort"
+  end
+end
+
+topic = Topic.create(title: "Test Title")
+# => #<Topic title: "Test Title">
+
+topic.update_attribute!(:title, "Another Title")
+# => #<Topic title: "Another Title">
+
+topic.update_attribute!(:title, "abort")
+# raises ActiveRecord::RecordNotSaved
+
+ActiveRecord::Persistence#update_attribute! raises ActiveRecord::ActiveRecordError if an attribute is marked as readonly.
+
+............
+
+23. db:prepare can load the schema of an empty database.
+Previously, if a database existed but had not been populated with tables, db:prepare would run all migrations. Now db:prepare will load the schema when an uninitialized database exists and dump schema after migrations.
+
+............
+
+
+
+
+.......................  .......................  .......................
+
+Rails 6 Features ::
+
+B.Diff bet rails 5 and 6 ::
+
+1.Multiple Databases :: Use multiple databases and switching between multiple databases
+2.Bulk :: bulk_insert ,bulk_upser and update_all
+3.Ruby Version :: rvm 2.5.0 or greater
+4.Gems Compatibility :: can check all gems compatiable with rails-6
+5.Default Bundler :: Webpacker 
+6.Parellel Testing :: 
+7.
+
+
+
+.......................  .......................  .......................
+
+C. Diff bet rails 4 and 5 ::
+
+1. Active Job is here
+2. Action Cable is here
+3. Use Rails instead of Rake 
+4. Rails api only application 
+5. Active Record Improvements.
+
+
+
+
