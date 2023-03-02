@@ -45,6 +45,55 @@ C. Diff bet rails 4 and 5 ::
 3. Use Rails instead of Rake 
 4. Rails api only application 
 5. Active Record Improvements.
+6. Ruby 2.2.1+ support only
+7. Advantages of Symbol GC available in Ruby
+8. Remove Array allocation if not needed 
+Array should not be allocated if not needed. Basically if you are initializing a variable by an empty array and there are conditions below which would add values to array or something then just delay initialization of variable to a array as possible as you can.
+var = []
+some_object = 54
+
+if some_object == 54
+  var << 'found'
+end
+var = nil
+some_object = 54
+
+if some_object == 54
+  var ||= []
+  var << 'found'
+end
+Basically we have delayed initialization i.e. allocation until needed.
+
+9. ActiveRecord Improvements ::
+
+With Rails 5 - ActiveRecord::Base#where.or is introduced. Y
+Post.where('id = 1').or(Post.where('id = 2'))
+# => SELECT * FROM posts WHERE (id = 1) OR (id = 2)
+
+10. Ajax Library :: 
+
+Rails provide you an extensive library of AJAX functions. The associated java scripting required for AJAX gets generated automatically.
+
+11. Customized URL
+Search engine friendly URLs can be developed in Rails.
+
+12. Render From Anywhere
+Earlier we used gem render_anywhere to render views outside controller. In Rails 5, you can render your views from anywhere.
+
+13. ActionPack Assertions
+The assertions assert_template and assigns() are deprecated and moved into its own gem.
+
+14. Keyword Arguments
+It supports keyword arguments which helps to reduce memory consumption by Rails application.
+
+15. Module #prepend
+It allows you to insert a module in front of the class it was prepended.
+
+16. Symbol Garbage Collector
+Passing symbols opens the possibility of several attacks in your system. The symbol garbage collector collects the symbols which prevents your system from several attacks.
+
+................................
+
 
 
 

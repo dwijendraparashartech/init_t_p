@@ -6,7 +6,7 @@ Link :: https://inside.caratlane.com/fascinating-features-of-rails-7-9714a500f89
         https://gist.github.com/zakariaf/534ff8dfc3a807779133dc078114b969
         https://gist.github.com/zakariaf/534ff8dfc3a807779133dc078114b969#add-missing-method
         https://manny.codes/this-week-in-rails-wrapped-an-overview-of-rails-7-1-features-part-i/#02-adding-autoload-paths-to-load_path-disabled
-
+        https://www.bluebash.co/blog/upcoming-rails-7-features/
 .............................
    
 
@@ -33,7 +33,10 @@ Link :: https://inside.caratlane.com/fascinating-features-of-rails-7-9714a500f89
 21. PostgreSQL generated columnsPostgreSQL custom enum types
 22. A new #update_attribute! method was added
 23. db:prepare can load the schema of an empty database.
-24. 
+24. Specify the parent class of a job with a job generator
+25. A new #stub_const method was added.
+26. ActiveRecord::ConnectionPool is now Fiber-safe
+27. Merged
 
 .......................  .......................  .......................
 
@@ -178,11 +181,23 @@ user.api_keys.find_sole_by(key: key)
 
 10.Stream Generated Files from Controller Actions ::
 
+Rail on Ruby 7 allows you to streamline a file generated on the fly using send_stream inside controller action.
 
+send_stream(filename: "subscribers.csv") do |stream|
+stream.write "email_address,updated_at\n"
+@subscribers.find_each do |subscriber|
+stream.write "#{subscriber.email_address},#{subscriber.updated_at}\n"
+end
+end
+This provides developers with an immediate/ partial response to know that something is happening, which will benefit when deployed on Heroku.
 
 ...............
 
-11.ZeitWork Mode for Rails 7 
+11.ZeitWork Mode for Rails 7 ::
+
+All Rail 7 applications will now run in the Zeitwerk mode. The management has ensured that this transformation will be smooth for the developers. Zeitwerk is a code loader for Ruby on Rails. The developers can easily load your project's module and classes using this.
+
+This is launched so that any gem dependency, project, application etc., can have its loader. Each loader has its inflector, configuration, and logger. Zeitwerk has all features of the Classic mode; the only difference is that it provides a better strategy for loading elements.
 
 ...............
 
@@ -393,6 +408,44 @@ Previously, if a database existed but had not been populated with tables, db:pre
 
 ............
 
+24. Specify the parent class of a job with a job generator.
+Rails added a --parent option to the job generator to specify the parent class of a job. There’s now a superclass option in the job generator.
+
+It’s possible now to do:
+
+bin/rails g job process_payment --parent=payment_job
+to get:
+
+class ProcessPaymentJob < PaymentJob
+  # your stuff here
+end
+
+............
+
+ 25. A new #stub_const method was added ::
+
+ A new #stub_const method was added to easily change the value of a constant for the duration of a block, silencing warnings. The implementation is not thread-safe if you have parallel testing enabled though.
+
+# World::List::Import::LARGE_IMPORT_THRESHOLD = 5000
+
+stub_const(World::List::Import, :LARGE_IMPORT_THRESHOLD, 1) do
+  assert_equal 1, World::List::Import::LARGE_IMPORT_THRESHOLD
+end
+
+assert_equal 5000, World::List::Import::LARGE_IMPORT_THRESHOLD = 5000
+In the example above, by using this method instead of setting World::List::Import::LARGE_IMPORT_THRESHOLD to 5000, we can prevent warnings from being thrown and ensure that the original value is restored after the test has finished.
+
+Take note, however, that stubbing a constant can have unintended consequences when used in a multithreaded environment. If multiple threads depend on the same constant and each thread attempts to stub the constant, it can lead to conflicting stubs and unpredictable behaviour. To avoid this issue, it is important to carefully consider the impact of stubbing constants in concurrent threads, such as when running separate test suites in parallel.
+
+..............
+26. ActiveRecord::ConnectionPool is now Fiber-safe ::
+
+Rails made ActiveRecord::ConnectionPool Fiber-safe. Rails has a lot of thread-centric code and does I/O with databases with threads inherently, this pull request makes it possible to switch how the connection pool is interacted with. For instance, if you use a fiber-based job processor or server like falcon, you should set config.active_support.isolation_level to :fiber, in which case multiple fibers in the same thread will be used to manage connections.
+
+..............
+
+27. Merged:- The default skeleton of Rails shouldn't require the whole JavaScript toolchain with Webpack by default. If needed, we can easily go from Hotwire to Webpack with an import mapped Hotwire. The webpack option will still be available for those who know they'll need the full JS chain (like when using React). 
+
 
 
 
@@ -403,12 +456,211 @@ Rails 6 Features ::
 B.Diff bet rails 5 and 6 ::
 
 1.Multiple Databases :: Use multiple databases and switching between multiple databases
-2.Bulk :: bulk_insert ,bulk_upser and update_all
+2.Bulk :: bulk_insert ,bulk_upsert and update_all
 3.Ruby Version :: rvm 2.5.0 or greater
 4.Gems Compatibility :: can check all gems compatiable with rails-6
 5.Default Bundler :: Webpacker 
 6.Parellel Testing :: 
-7.
+7.Action Mailbox 
+8.Action Text 
+9.Action Cable Easy Access 
+
+
+
+
+
+
+
+
+.......................
+
+1. 
+
+Multiple Databases :: Use multiple databases and switching between multiple databases ::
+To meet this purpose, Rails 6 provides an API for multiple databases support, which is going to enable you do it without digging deep in Active Record.
+
+How to Connect to multiple databases ::
+1. Add the extra databases to your database.yml config file like this:
+2. You can then specify at the model-level which database(s) you want to use:
+3.And then it’s just one line of code to temporarily switch between databases inside a block!
+.........
+
+
+
+1.Add the extra databases to your database.yml config file like this:
+
+development:
+  main:
+    <<: *defaults
+    database: main_db
+  slow_queries:
+    <<: *defaults
+    database: readonly_main_db
+
+2. You can then specify at the model-level which database(s) you want to use:
+
+class User < ApplicationRecord
+  connects_to database: { writing: main, reading: slow_queries }
+end
+
+3. User.connected_to(role: :reading) do
+  # Do something that you know will take a long time
+end
+
+.......................
+
+2.Bulk :: bulk_insert ,bulk_upsert and update_all
+
+1. insert_all, similar to update_all.
+2. upsert_all. This option allows users to do upsert activities in their tasks. 
+
+.......................
+
+3.Ruby Version :: rvm 2.5.0 or greater
+
+.......................
+
+4. 
+RailsBump
+Check your Ruby gems for compatibility with all major Rails versions.
+
+.......................
+
+5.Default Bundler :: Webpacker ::
+
+Webpacker is a gem which allows easy integration of JavaScript pre-processor and bundler with Rails. It provides various helpers and configuration options to use webpack easily with Rails.
+
+The app/javascript directory contains,
+
+app/javascript:
+  ├── channels:
+  │   # action cable channel files here
+  │   └── consumer.js
+  │   └── index.js
+  ├── packs:
+  │   # only webpack entry files here
+  │   └── application.js
+
+  How to use Webpacker with packs?
+
+   the app/javascript/packs/application.js pack will be included by default in app/views/layouts/application.html.erb layout as follows,
+
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+How to configure Webpacker?
+The configuration information for Webpacker lies in config/webpacker.yml. We can change options like source path, packs path and many more from the configuration file.
+
+Keeping the process similar to the previous assets pipeline, the JavaScript compilation happens along with the request while running the Rails server in development mode.
+
+In production mode rake assets:precompile does the job. The assets:precompile rake task runs webpacker:compile by default to generate webpack compiled assets.
+
+We can also use live reloading and hot module replacement in development mode with the help of binstubs provided by Webpacker. More on that can be found here.
+
+.......................
+
+
+
+6. Parellel Testing in Rails :: 
+
+Can Run test cases in parrellel not in series after rails-6 features. takes more advantage of the cpu and its performacne ex- mac book with core 10 cpu base
+
+How to run test cases in parellel ::
+
+1.  It's as easy as adding parallelize to your tests:
+
+class ActiveSupport::TestCase
+  parallelize(workers: :number_of_processors)
+end
+
+Using this configuration, Rails will automatically spawn worker processes based on the number of processors in your machine. Rails will also create namespaced databases (e.g. database-test-0, database-test-1, etc.) to run your tests against.
+
+
+2. Sometimes, you may have to perform a specific setup or cleanup for parallel tests. Rails provides two hooks for you to use — 
+parallelize_setup and 
+parallelize_teardown. 
+
+class ActiveSupport::TestCase
+  parallelize_setup do |worker|
+    # setup
+  end
+ 
+  parallelize_teardown do |worker|
+    # cleanup
+  end
+
+  3. You can also manually set the number of workers:
+
+  class ActiveSupport::TestCase
+  parallelize(workers: 4) # Use 4 worker processes
+end
+Alternatively, use the PARALLEL_WORKERS environment variable to override an existing configuration:
+
+PARALLEL_WORKERS=4 rails test
+
+4. There is also the option to use threads instead of workers to parallelize your test suite.
+
+class ActiveSupport::TestCase
+  parallelize(workers: :number_of_processors, with: :threads)
+end
+with: :threads is the default option when using JRuby or TruffleRuby. Using threads, in theory, provides slightly better performance. Threads require less overhead than processes, after all. In practice, however, I never found using threads all too useful, and you should be fine just sticking to process-based parallelization for the most part.
+
+.......................
+
+
+
+6. Zeitwerk :: 
+
+Zeitwerk, a new and improved, thread-safe code loader for Rails.
+Zeitwerk is the latest code loader for Ruby on Rails. It’s a conventional file structure. Moreover, the Zeitwerk loads the project classes and modules on demand by the users. It means the user doesn’t need to write the necessary calls require for their files. It can overcome the limitations that a traditional loader generally has. This can; Autoload code, Eager Load code, Reload code, and can also work with both applications and gems. Thus, it makes it robust to perform better for achieving results. Moreover, this is built with the intention to eliminate all known use cases of a classic loader.
+
+.......................
+
+
+7.Action Mailbox ::
+Link ::  
+
+Action Mailbox routes incoming emails to controller-like mailboxes for processing in Rails. It supports all major platforms or ingresses like Amazon SES, Mailgun, Mandrill, Postmark, and SendGrid. You can also handle inbound mails directly via the built-in Exim, Postfix, and Qmail ingresses.
+
+Installation of ActionMailBox ::
+
+0.   $ rails new action_mailbox -d postgresql
+1.   $ gem install rails --pre           ::  should be greater than rvm use 2.6
+2.   Create the gemsets file and Add this line in the root directory 
+	.ruby-version and .ruby-gemset
+3.   Run bellow generator to create mailbox related migration and files ::
+	 $ rails action_mailbox:install  ::   it would have created ApplicationMailbox.rb.
+4.   $ rails db:migrate +  $ rails webpacker:install (for install assets file) +  
+5.   You would need to configure your email service provider to post JSON data to your rails webhook when someone sends email to you.
+
+
+
+.......................
+
+8. 
+
+Action Text :: 
+Action Text is going to make writing, editing and displaying text in a Rails app 'super easy' or 'take it to the next level'.Action Text includes the Trix editor that handles:
+1. formatting,
+2. quotes,
+3. and adding links and lists to embedded images and galleries.
+Active Storage is, again, required for this framework to work properly.
+
+The Trix editor will capture rich-text information (such as bold text, headings, images etc.) and save this data into your desired storage solution, along with saving associated metadata into some new tables (note that this means that ActionText requires you to be using ActiveStorage).
+
+
+.......................
+
+
+9.Action Cable Easy Access 
+
+This may be a great feature in Rails 6 update where users can easily test “Action Cables” for different functionalities and at any level. This consists of the following features;
+Channels- It maintains the channel’s subscribers to a specific stream.
+Connections- This feature tests whether the connections identifiers are properly allotted.
+Broadcast- It checks whether the message has been transmitted within other components or not.
+On the basis of the above details on updates, we can say that Rails 6 framework helps the users very much. It improves the process of common development tasks faster and easier. This is also very significant for its extensive usage of JavaScript libraries, prototypes, etc. for agile actions. It could be definitely the best solution for the business world in performing certain actions.
+It became a power-packed solution for the business needs with the latest updates and there are still upcoming.
+
+.......................
 
 
 
@@ -421,7 +673,77 @@ C. Diff bet rails 4 and 5 ::
 3. Use Rails instead of Rake 
 4. Rails api only application 
 5. Active Record Improvements.
+6. Ruby 2.2.1+ support only
+7. Advantages of Symbol GC available in Ruby
+8. Remove Array allocation if not needed 
+9. Active Record Improvements ::
+10. Ajax Library :: 
+11. Customized URL
+12. Render From Anywhere
+13. ActionPack Assertions
+14. Keyword Arguments
+15. Module #prepend
+16. Symbol Garbage Collector
+...........................
 
 
 
+
+.......................  .......................  .......................
+
+C. Diff bet rails 4 and 5 ::
+
+1. Active Job is here
+2. Action Cable is here
+3. Use Rails instead of Rake 
+4. Rails api only application 
+5. Active Record Improvements.
+6. Ruby 2.2.1+ support only
+7. Advantages of Symbol GC available in Ruby
+8. Remove Array allocation if not needed 
+Array should not be allocated if not needed. Basically if you are initializing a variable by an empty array and there are conditions below which would add values to array or something then just delay initialization of variable to a array as possible as you can.
+var = []
+some_object = 54
+
+if some_object == 54
+  var << 'found'
+end
+var = nil
+some_object = 54
+
+if some_object == 54
+  var ||= []
+  var << 'found'
+end
+Basically we have delayed initialization i.e. allocation until needed.
+
+9. ActiveRecord Improvements ::
+
+With Rails 5 - ActiveRecord::Base#where.or is introduced. Y
+Post.where('id = 1').or(Post.where('id = 2'))
+# => SELECT * FROM posts WHERE (id = 1) OR (id = 2)
+
+10. Ajax Library :: 
+
+Rails provide you an extensive library of AJAX functions. The associated java scripting required for AJAX gets generated automatically.
+
+11. Customized URL
+Search engine friendly URLs can be developed in Rails.
+
+12. Render From Anywhere
+Earlier we used gem render_anywhere to render views outside controller. In Rails 5, you can render your views from anywhere.
+
+13. ActionPack Assertions
+The assertions assert_template and assigns() are deprecated and moved into its own gem.
+
+14. Keyword Arguments
+It supports keyword arguments which helps to reduce memory consumption by Rails application.
+
+15. Module #prepend
+It allows you to insert a module in front of the class it was prepended.
+
+16. Symbol Garbage Collector
+Passing symbols opens the possibility of several attacks in your system. The symbol garbage collector collects the symbols which prevents your system from several attacks.
+
+................................
 
