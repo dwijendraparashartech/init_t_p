@@ -1,0 +1,195 @@
+differences.txt :: 
+
+
+1. 
+
+Diff between private and protected Method ?
+
+Private vs Protected Methods
+That's the difference, the fact that protected keeps the method private , but it also allows you to call that method on an object. With private you can only do name , with protected you can do object.name .
+There is a small difference between protected and private methods. You can always call a protected method inside the class or with an implicit receiver, just like private, but in addition you can call a protected method with an explicit receiver as long as this receiver is self or an object of the same class as self.
+
+.............................................................
+
+2. 
+
+Diff between Method Overloading  and Method Overriding ?
+
+Method Overloading ::
+It allows a class to have more than one method with same name but different number of arguments.
+
+Ex 1 , 2 ,3  ,4 ,5 Are Method Overloading :: 
+......................
+Ex: 1 
+
+class MethodOverloadingExample
+	def display_message(message)
+		puts message
+	end 
+
+	def display_message(message,user)
+		puts "Hello #{user},#{message}"
+	end 
+end 
+
+obj1 = MethodOverloadingExample.new
+obj1.display_message('Welcome to the Ruby World')
+$ ruby method_overloading_example.rb
+#Output :: Wrong Number of Arguments (given1,expected2)-Arguments Error
+
+......................
+Ex: 2 
+
+class MethodOverloadingExample
+	def display_message(message)
+		puts message
+	end 
+
+	def display_message(message,user)
+		puts "Hello #{user},#{message}"
+	end 
+
+	def display_message
+		puts "Welcome to the Ruby World"
+	end 
+end 
+
+obj1 = MethodOverloadingExample.new
+obj1.display_message('Welcome to the Ruby World')
+$ ruby method_overloading_example.rb
+#Output :: Wrong Number of Arguments (given1,expected0)-Arguments Error
+
+......................
+Ex: 3
+
+class MethodOverloadingExample
+	def display_message(message)
+		puts message
+	end 
+
+	def display_message(message,user)
+		puts "Hello #{user},#{message}"
+	end 
+
+	def display_message
+		puts "Welcome to the Ruby World"
+	end 
+end 
+
+obj1 = MethodOverloadingExample.new
+obj1.display_message('Welcome to the Ruby World','Chetan Singh')
+$ ruby method_overloading_example.rb
+#Output :: Wrong Number of Arguments (given1,expected0)-Arguments Error
+
+
+......................
+Ex: 4
+
+class MethodOverloadingExample
+	def display_message(message)
+		puts message
+	end 
+
+	def display_message(message,user)
+		puts "Hello #{user},#{message}"
+	end 
+end 
+
+obj1 = MethodOverloadingExample.new
+obj1.display_message('Welcome to the Ruby World','Chetan Singh')
+$ ruby method_overloading_example.rb
+#Output :: 'Welcome to the Ruby World','Chetan Singh'
+
+
+......................
+
+Ex: 5 :: Can support the variable no of arguments by * ,we take these variable no of arguments in the array list but this will be 
+
+class MethodOverloadingExample
+	def display_message(*message)
+		puts message
+	end 
+
+	def display_message(message,user)
+		puts "Hello #{user},#{message}"
+	end 
+
+	def display_message
+		puts "Welcome to the Ruby World"
+	end 
+end 
+
+obj1 = MethodOverloadingExample.new
+obj1.display_message('Welcome to the Ruby World','Chetan Singh')
+$ ruby method_overloading_example.rb
+#Output :: 'Welcome to the Ruby World','Chetan Singh'
+
+......................  ......................  ......................  ......................
+
+Example of Method Overriding :: 
+
+
+The below example is for the method overriding 
+..........................
+
+Ex.
+
+method_overriding_example.rb 
+
+....
+
+class MethodOverridingExample
+
+def display_message 
+	message = "Welcome to the Ruby Progamming World"
+	puts message
+end 
+
+def display_message
+	user = 'Chetan Singh'
+	message = 'Welcome to the Ruby World'
+	puts "Hello #{user} #{message}"
+end
+
+def display_message
+	puts "Welcome to the Ruby World"
+end 
+
+end 
+
+....
+........................
+
+Execute :: 
+
+ruby method_overriding_example.rb 
+obj1 = MethodOverridingExample.new
+obj1.display_message
+
+Output :: Last method will be used because ruby is the interpretd language so it execute the code line by line .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.....................
+Final Explanation ::
+if i give the methods in the same name and diiferent no of arguments or not but if we are giving the method with the same name then last method will override 
+
+Q- Does Ruby support method overloading ?
+No.Ruby is the dynamic language so it does not support the method overloading because this is the characterstics of static language.
+
+
+
+Method Overriding ::
+

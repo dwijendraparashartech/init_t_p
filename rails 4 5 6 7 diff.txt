@@ -747,3 +747,13 @@ Passing symbols opens the possibility of several attacks in your system. The sym
 
 ................................
 
+Features of Rails 3 :::::::::::::::::::
+
+D. Diff between Rails 2 and Rails 3 :::
+
+.......................................
+
+Q.Difference Between Rails 2 And Rails 3 ?
+Ans: I found 7 major Difference between rails 2 and rails 3 has: New Router Api, New mailer, New Active Record Query interface, Assets pipeline, Security Improvements, Unobtrusive JavaScript (UJS) , Dependency management with bundler.
+
+

@@ -7,17 +7,33 @@ Rails 7 Features ::
 
 A. Diff bet rails 6 and 7 ::
 
-1. BackgroundJobs :: infinite runtime with background jobs 
+1. Background Jobs 
 2. Byebug Change :: byebug - debugger 
-3. Association Check :: check association absence and presence 
+3. Association Check :: Check association absence and presence
 4. Ruby Version :: Use rvm 2.7.0 or greater
-5. Importmap :: node and webpacker is not required use importmap - use importmap-rails gem
-6. Asynchronous Querying ::  load_async(asynchronous query) - Post.load_assync - use multiple queries.
-7. Hotwire ::  turbolink and ujs are replaced by turbo and stimulous
+5. Importmap :: node and webpacker is not required use importmap - use importmap-rails gem 
+6. Asynchronous Querying ::  load_async(asynchronous query) - Post.load_assync - use multiple queries ::     load_async method
+7. Hotwire ::  turbolink and ujs are replaced by turbo and stimulous ::
 8. Encrypted Database Layer :: 
-9. Assert a Single Record with Sole :: 
+9. Assert a Single Record with Sole ::  Call sole or find_sole_by ::
 10.Stream Generated Files from Controller Actions ::
 11.ZeitWork Mode for Rails 7 
+12.Invert Where Method 
+13.Comparison Validator
+14. Named Variants 
+15. Add missing Method 
+16. Association Previously Changed Method 
+17. Disable partial_inserts as default
+18. Active storage pre-defined variants
+19. Add tracking of belongs_to association
+20. PostgreSQL custom enum types
+21. PostgreSQL generated columnsPostgreSQL custom enum types
+22. A new #update_attribute! method was added
+23. db:prepare can load the schema of an empty database.
+24. Specify the parent class of a job with a job generator
+25. A new #stub_const method was added.
+26. ActiveRecord::ConnectionPool is now Fiber-safe
+27. Merged
 
 
 .......................  .......................  .......................
@@ -32,11 +48,10 @@ B.Diff bet rails 5 and 6 ::
 4.Gems Compatibility :: can check all gems compatiable with rails-6
 5.Default Bundler :: Webpacker 
 6.Parellel Testing :: 
-7.
-
-
 
 .......................  .......................  .......................
+
+Rails 5 Features :: 
 
 C. Diff bet rails 4 and 5 ::
 
@@ -48,64 +63,18 @@ C. Diff bet rails 4 and 5 ::
 6. Ruby 2.2.1+ support only
 7. Advantages of Symbol GC available in Ruby
 8. Remove Array allocation if not needed 
-Array should not be allocated if not needed. Basically if you are initializing a variable by an empty array and there are conditions below which would add values to array or something then just delay initialization of variable to a array as possible as you can.
-var = []
-some_object = 54
-
-if some_object == 54
-  var << 'found'
-end
-var = nil
-some_object = 54
-
-if some_object == 54
-  var ||= []
-  var << 'found'
-end
-Basically we have delayed initialization i.e. allocation until needed.
-
 9. ActiveRecord Improvements ::
-
-With Rails 5 - ActiveRecord::Base#where.or is introduced. Y
-Post.where('id = 1').or(Post.where('id = 2'))
-# => SELECT * FROM posts WHERE (id = 1) OR (id = 2)
-
 10. Ajax Library :: 
-
-Rails provide you an extensive library of AJAX functions. The associated java scripting required for AJAX gets generated automatically.
-
 11. Customized URL
-Search engine friendly URLs can be developed in Rails.
-
 12. Render From Anywhere
-Earlier we used gem render_anywhere to render views outside controller. In Rails 5, you can render your views from anywhere.
-
 13. ActionPack Assertions
-The assertions assert_template and assigns() are deprecated and moved into its own gem.
-
 14. Keyword Arguments
-It supports keyword arguments which helps to reduce memory consumption by Rails application.
-
 15. Module #prepend
-It allows you to insert a module in front of the class it was prepended.
-
 16. Symbol Garbage Collector
-Passing symbols opens the possibility of several attacks in your system. The symbol garbage collector collects the symbols which prevents your system from several attacks.
-
 ................................
 
 
-
-
-
-
-
-
 .......................  .......................  .......................
-
-
-using importmap replace with webpack 
-can assoicate check
 
 
 1.object : an object is a unit of data .that just any piece of data like the number '3' or string "hello".
@@ -138,11 +107,13 @@ Observer is a behavioral design pattern that allows some objects to notify other
 Callbacks are methods that get called at certain moments of an object's life cycle. With callbacks it is possible to write code that will run whenever an Active Record object is created, saved, updated, deleted, validated, or loaded from the database.
 
 
-10. dynamic typing: 
+10. Dynamic typing: 
 Ruby is a dynamically typed language, which means the interpreter tries to infer the data type of variables and object properties at runtime. This generally leads to programs being more dynamic and easier (faster) to code, and the interpreter/compiler loading code faster. 
 
 
-11. duck typing :
+11. Duck typing :
+Duck typing is a style of programming where it allows an object to be passed in to a method that expects a certain type even if it doesn’t inherit from that type. 
+
 In Ruby, the class is never (OK, almost never) the type. Instead, the type of an object is defined more by what that object can do. In Ruby, we call this duck typing. If an object walks like a duck and talks like a duck, then the interpreter is happy to treat it as if it were a duck.
 Unlike static and dynamic typing of variables (and expressions), duck typing is not a language feature, but a design principle which is a combination of dynamic typing and object-oriented programming. Since Ruby is a dynamically typed object-oriented programming language, it is natural for the Ruby community to encourage duck typing.
 
@@ -184,12 +155,12 @@ BasicObject does not include Kernel (for methods like puts) and BasicObject is o
 
 
 
-12.2 Method Lookup: 
+14. Method Lookup: 
 When you call a method in Ruby, a lot of things happen behind the scenes. The Ruby interpreter has to know where this method is declared to know what behavior it has to interpret. This process is called the method lookup. It goes through the ancestor chain of an object to see where this method is declared.
 
 ....................................
 
-12 : 
+15 : 
 https://www.rubyguides.com/2016/03/enumerable-methods/
 
 What is each_cons :: 
@@ -197,7 +168,7 @@ What is each_cons ::
 each_cons gives you sub-arrays of size n, so if you have [1,2,3], then each_cons(2) will give you [[1,2], [2,3]].
 
 
-13. 
+16. 
 Nice examples for methods ::: and enumerables :: 
 
 https://ruby-doc.org/3.2.1/Enumerable.html
@@ -206,7 +177,8 @@ https://ruby-doc.org/3.2.1/Enumerable.html
 
 
 
-13. Singleton Method:
+17. Singleton Method: A method given only to a single object is called a singleton method.
+
 
 
 
@@ -215,6 +187,8 @@ https://ruby-doc.org/3.2.1/Enumerable.html
 
 
 14. Eigen Class or SingleTon Class:
+
+
 
 
 
@@ -270,7 +244,6 @@ Duck Typing ::
 17.Missing Method
 18.Case Sensitive.
 
-How many theory 
 
 20. Method Missing :: 
 method_missing is a method in Ruby that intercepts calls to methods that don't exist. It handles any messages that an object can't respond to. 
@@ -400,126 +373,3 @@ Q - intervew
 https://github.com/kumar91gopi/Algorithms-and-Data-Structures-in-Ruby
 
 .................................................................................
-
-
-Q1. Swapping :: Swapping of Two Numbers :: 
-
-                 .....................................................
-
-1. 
-
-Swapping of two numbers :: 
-..............................
-
-Method First ::  Using Temporary variable)
-
-
-def swap(a,b)
-    temp = a
-    a = b
-    b = temp
-    return a,b
-end
-print swap(3,1)
-
-..............................
-
-Method Second :: (Ruby magic)
-
-def swap(a,b)
-    a,b=b,a
-    return a,b
-end
-print swap(3,1)
-
-..............................
-
-Method Third :: (Using sum and difference, no temporary variable required)
-
-def swap(a,b)
-    a = a+b
-    b = a-b
-    a = a-b
-    return a,b
-end
-print swap(3,1)
-
-
-..............................
-
-
- Method Fourth :: :: Method 4 (Using bitwise XOR ,no temporary variable required) 
-
-
-def swap(a,b)
-    a = a^b
-    b = a^b
-    a = a^b
-    return a,b
-end
-
-..............................
-
-.................................................................................
-
-
-
-.................................................................................
-
-
-Q2. Reversing :: Reversing of Array  :: 
-
-                 .....................................................
-
-....................................
-
-
-First Method   ::  # Iterative
-
-# Iterative
-def reverse_array(a)
-    right=a.length-1
-    left=0
-    while(left<right)
-     #swap the elements
-        temp=a[left]        #Swapping can be like done like this a[left],a[right]=a[right],a[left]
-        a[left]=a[right]
-        a[right]=temp
-        
-        left+=1
-        right-=1
-    end
-    print a
-end
-
-reverse_array([1,2,3,4,5]) # => [5,4,3,2,1]
-
-...................................
-
-Second  Method ::  # Recursive
-
-
-....................................
-#driver program
-
-def driver_program(a)
-    right=a.length-1
-    left=0 
-    reverse_array(a,left,right)
-    print a
-end
-def reverse_array(a,left,right)
-    
-    return  if left>=right 
-     #swap the elements
-        temp=a[left]        
-        a[left]=a[right]
-        a[right]=temp
-        reverse_array(a,left+1,right-1)
-end
-
-driver_program([1,2,3,4,5]) # => [5,4,3,2,1]
-
-......................................
-
-

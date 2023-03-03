@@ -95,7 +95,9 @@ A quick look at the pattern's name
 Let's just quickly analyze its name before we move on:
 
 value - in your application there are many classes, some of them are complex which means that they have a lot of lines of code or performs many actions and some of them are simple which means the opposite. This design pattern focuses on providing values that's why it is so simple - it don't care about connecting to the database or external APIs.
+
 object - you know what is an object in objected programming and similarly, value object is an object that provides some attributes and accepts some initialization params.
+
 A small simple object, like money or a date range, whose equality isn't based on identity.
 
 The Value design pattern isolates static, constant values from the active code of an application. You use a separate class or module for storing constant values at one place and access them wherever and whenever needed.

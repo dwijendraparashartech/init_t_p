@@ -1,0 +1,386 @@
+examples_basic_advance_programs_ruby.txt
+
+............................................
+
+1. Give an Example to Sort an Array without using Sort Method ::
+...................
+.........................................
+................................................................
+
+
+Example of sort array :: 
+
+#Using bubble sort algorithm in ruby
+
+a = [1,5,7,2,3,50,78,34,89]
+
+a.size.times.each do |t|
+ i=0
+ a.each do |b|
+   if b > a[i+1]
+     a[i],a[i+1] = a[i+1],a[i]
+   end
+   i+=1 if i < a.size-2
+ end
+end
+print a
+
+
+# with swapped true method 
+
+def my_sort(list)
+  return list if list.size <= 1 
+
+  swapped = false
+  while !swapped
+    swapped = false
+    0.upto(list.size-2) do |i|
+      if list[i] > list[i+1]
+        list[i], list[i+1] = list[i+1], list[i]
+        swapped = true
+      end
+    end
+  end
+
+  list
+end
+
+print my_sort([2,1,3,5,4,40])
+
+
+# Sort an Array program with ascending and descending method ::
+
+print [0,8,5,4,22,1,4].sort_by{|number| number}
+print [0,8,5,4,22,1,4].sort_by{|number| number}.reverse
+
+
+...........................................
+..........................................................
+
+2. Give an Example to get Duplicate Items of an Array  ::
+
+def list_duplicates(array)
+	duplicates = array.select{|e| array.count(e) >1}
+end
+print list_duplicates([1,1,4,5,6,6,9])
+
+..........................................................
+
+def list_duplicates(array)
+	duplicates = array.select{|e| array.count(e) >1}.uniq
+end
+print list_duplicates([1,1,4,5,6,6,9])
+
+def list_duplicates(array)
+	duplicates = array.select{|e| array.count(e) >1}
+end
+print list_duplicates([1,1,4,5,6,6,9])
+
+..........................................................
+...................
+.........................................
+................................................................
+
+
+3. Give an Example to Flatten  an Array without using Flatten Method   ::
+...................
+.........................................
+................................................................
+
+
+
+
+There are 3 types that we can flatten an array :: 
+
+1.Flattening an Array by One Dimension ::
+
+my_array = [1, [2, 3, [4, 5]]]
+single_flatten(my_array) #=> [1, 2, 3, [4, 5]]
+
+................
+
+def single_flatten(array)
+  results = []
+  array.each do |element|
+    if element.class == Array
+      element.each {|value| results << value}
+    else
+      results << element
+    end
+  end
+  results
+end
+
+............
+Exp :: 
+This method takes in an array and sets an empty results array. It then looks at each element of the array in question. If the element is an array, it will look at each element within that array, and append the nested element’s value to the results array using the shovel operator. If the element is not an array, it will append the value of that element into the the results array. Once every element in the array has either had itself or its components appended into the results, the method returns the result array, which is equivalent to the original array flattened by one dimension:
+
+
+
+......................
+
+
+2.Flattening an Array n Times
+
+my_array = [1, [2, 3, [4, [5, 6]]]]
+multiple_flatten(my_array, 2) #=> [1, 2, 3, 4, [5, 6]]
+
+................
+def multiple_flatten(array, n)
+  count = 0
+  arr = array
+  while count < n do
+    arr = single_flatten(arr)
+    count += 1
+  end
+  arr
+end
+
+Exp :: 
+
+First, we set the count to zero and the variable arr to our initial array. If the counter hasn’t reached the number of dimensions we’ve specified wanting to reduce our array by, arr will be passed into single_flatten. Every time the block in the while loop executes, arr is reassigned to the result of single_flatten, and the counter is incremented by one. Once the counter is equal to the number of dimensions we want to reduce by, the final return value of the method is arr, the last result of the single_flatten.
+
+
+......................
+
+3.Flattening an Array with Recursion
+
+my_array = [1, [2, 3, [4, 5]]]
+recursive_flatten(my_array) #=> [1, 2, 3, 4, 5]
+
+.................
+def recursive_flatten(array, results = [])
+  array.each do |element|
+    if element.class == Array
+      recursive_flatten(element, results)
+    else
+      results << element
+    end
+  end
+  results
+end
+
+.................
+
+Exp :: 
+
+
+Like the single flatten, it checks if an element is an array, and if not, appends the value of the element to a results array. However, if the element is an array, the method calls itself pulling in this element and the existing results array. The method will keep calling itself on the elements of elements until all the elements are not arrays and can be pushed into the results array.
+
+Because we want the method to be completely recursive, we’re setting results to an optional argument that defaults to an empty array. If we set the results array to be empty within the method, it will reset the results array every time the function is called. The first time we call recursive_flatten, we call it without the results argument. This way, it will create our initially empty results array that will then be filled passed around and into the other recursive_flatten methods and never be reset back to being empty!
+
+......................
+
+...................
+.........................................
+................................................................
+
+
+
+4. Give an Example to Find out the even and odd numbers in an array   ::
+
+...................
+.........................................
+................................................................
+
+program for even numbers in an array using normal method  :: 
+
+
+even_numbers = []
+[1,2,3,4,5].each do |n|
+    if n %2 == 0 
+        even_numbers << n 
+    end 
+end 
+puts even_numbers
+
+
+program for odd numbers in an array using normal method  :: 
+
+odd_numbers = []
+[1,2,3,4,5].each do |n|
+    if n %2 != 0 
+        odd_numbers << n 
+    end 
+end 
+puts odd_numbers
+
+
+
+program for even numbers in an array using select method  :: 
+
+puts [1,2,3,4,5].select{|n| n%2 == 0}
+
+program for odd numbers in an array using select method   :: 
+
+puts [1,2,3,4,5].select{|n| n%2 != 0}
+
+
+
+...................
+.........................................
+................................................................
+
+5. Find Maximum occurance items in an array   ::
+
+...................
+.........................................
+................................................................
+
+pets = [1,2,3,4,2,10,2,10,10,10,10]
+puts pets.max_by {|i| pets.count(i)}
+
+...................
+.........................................
+................................................................
+
+
+6. Find whether two array elements are match or not (order does not matter) ::
+
+a = [1,2,3,2,2]
+b = [1,3,2,2,2]
+puts a.sort == b.sort
+# output : true
+
+c = [1,2,3,2,2]
+d = [1,3,2,2,1]
+puts c.sort == d.sort 
+# output : false
+
+................................
+
+7. Reversing :: Reversing of Array  :: Reverse an Array without Reverse Method ::
+
+                 .....................................................
+
+....................................
+
+
+First Method   ::  # Iterative
+
+# Iterative
+def reverse_array(a)
+    right=a.length-1
+    left=0
+    while(left<right)
+     #swap the elements
+        temp=a[left]        #Swapping can be like done like this a[left],a[right]=a[right],a[left]
+        a[left]=a[right]
+        a[right]=temp
+        
+        left+=1
+        right-=1
+    end
+    print a
+end
+
+reverse_array([1,2,3,4,5]) # => [5,4,3,2,1]
+
+...................................
+
+Second  Method ::  # Recursive
+
+
+....................................
+#driver program
+
+def driver_program(a)
+    right=a.length-1
+    left=0 
+    reverse_array(a,left,right)
+    print a
+end
+def reverse_array(a,left,right)
+    
+    return  if left>=right 
+     #swap the elements
+        temp=a[left]        
+        a[left]=a[right]
+        a[right]=temp
+        reverse_array(a,left+1,right-1)
+end
+
+driver_program([1,2,3,4,5]) # => [5,4,3,2,1]
+
+................................
+
+..................................
+..................................
+.................................
+..................................
+...................................
+
+8.
+
+Swapping of two numbers :: 
+..............................
+
+Method First ::  Using Temporary variable)
+
+
+def swap(a,b)
+    temp = a
+    a = b
+    b = temp
+    return a,b
+end
+print swap(3,1)
+
+..............................
+
+Method Second :: (Ruby magic)
+
+def swap(a,b)
+    a,b=b,a
+    return a,b
+end
+print swap(3,1)
+
+..............................
+
+Method Third :: (Using sum and difference, no temporary variable required)
+
+def swap(a,b)
+    a = a+b
+    b = a-b
+    a = a-b
+    return a,b
+end
+print swap(3,1)
+
+
+..............................
+
+
+ Method Fourth :: :: Method 4 (Using bitwise XOR ,no temporary variable required) 
+
+
+def swap(a,b)
+    a = a^b
+    b = a^b
+    a = a^b
+    return a,b
+end
+
+..............................
+
+.................................................................................
+
+
+
+..................................
+..................................
+.................................
+..................................
+...................................
+9. Find the duplicate items in an array ::
+
+array = [1,2,1,3,5,4,4,5,5]
+p array.select{|e| array.count(e)>1}.uniq
+
+...................................
+
+10. 
+
+
+

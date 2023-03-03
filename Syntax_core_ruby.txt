@@ -50,4 +50,12 @@ l.call(1)         # ArgumentError: wrong number of arguments (given 1, expected 
 
 ..................................
 
+4. Synatx of Singleton Method ::
+
+singleton method :: 
+def Obj.GFG
+# Method body 
+end
+Here, the GFG is a singleton method and Obj is an object.
+
 
