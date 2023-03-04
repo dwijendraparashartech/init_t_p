@@ -44,14 +44,15 @@ D. Joining Nested Associations (Multiple Level)
 Author.joins(books: [{ reviews: { customer: :orders } }, :supplier] )
 return all authors that have books with reviews and have been ordered by a customer, and the suppliers for those books.
 
-E. Specifying Conditions on the Joined Tables
+..........................................................
 
+E. Specifying Conditions on the Joined Tables
 time_range = (Time.now.midnight - 1.day)..Time.now.midnight
 Customer.joins(:orders).where('orders.created_at' => time_range).distinct
 
 This will find all customers who have orders that were created yesterday, using a BETWEEN SQL expression to compare created_at.
 
-An alternative and cleaner syntax is to nest the hash conditions:
+An alternative and cleaner syntax is to nest the hash conditions: 
 
 time_range = (Time.now.midnight - 1.day)..Time.now.midnight
 Customer.joins(:orders).where(orders: { created_at: time_range }).distinct

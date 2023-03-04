@@ -17,21 +17,6 @@ remove a substring from a specified string ::    return my_string.slice! substr
 split a delimited string and convert it to an array:: return my_string.split(d)
 draw a string as bold or italic text ::  "<#{tag}> #{word} </#{tag}>"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Get The String Length :: "ruby".size      ||     "ruby".size
 Check If A String Is Empty :: "".size == 0  ||   "".empty?
 String Interpolation? ::  name = "Jesus"   ,  puts "Hello #{name}"
@@ -47,8 +32,6 @@ string = "abccc"  ,  string.gsub("c", "")
 
 string = "We have 3 cats", string.gsub(/\d+/, "5") , # "We have 5 cats" 
 How to Create Multiline Strings ::  
-
-
 
 Convert a String to Upper or Lowercase in Ruby ::  "abcd".upcase  , "ABCD".downcase
 Iterate Over Characters Of a String in Ruby :: "rubyguides".each_char { |ch| puts ch }

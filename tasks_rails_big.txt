@@ -1,0 +1,49 @@
+tasks_rails_big.txt ::
+
+.........................
+
+1. Add has_and_belongs_to_many Association ::
+
+class Physician < ApplicationRecord
+  has_many :appointments
+  has_many :patients, through: :appointments
+end
+
+class Appointment < ApplicationRecord
+  belongs_to :physician
+  belongs_to :patient
+end
+
+class Patient < ApplicationRecord
+  has_many :appointments
+  has_many :physicians, through: :appointments
+end
+
+.........................
+
+2. Add has_many_through Association ::
+
+class Assembly < ApplicationRecord
+  has_and_belongs_to_many :parts
+end
+
+class Part < ApplicationRecord
+  has_and_belongs_to_many :assemblies
+end
+
+.........................
+
+3. Add Polymorphic Association in Rails ::
+
+class Picture < ApplicationRecord
+  belongs_to :imageable, polymorphic: true
+end
+
+class Employee < ApplicationRecord
+  has_many :pictures, as: :imageable
+end
+
+class Product < ApplicationRecord
+  has_many :pictures, as: :imageable
+end
+

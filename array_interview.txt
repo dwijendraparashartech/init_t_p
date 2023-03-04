@@ -2,47 +2,16 @@ array_interview.txt ::
 
 array = [1, 1, 2, 3, nil]
 
-1. Remove duplicate items from array ::
-
-array.uniq
-
-2. Remove nil items from array ::
-array.compact
-
-3. Remove Even items from array ::
-array.reject! {|c| c.even?}
-
-4. Remove Odd items from array ::
-array.reject! {|c| c.odd?}
-
-5. Remove nil items from array ::
-array.reject! {|c| c.nil?}
-
-6. M.IMP<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-array = ['Simple', 'Ample', 'Sit']
-array.find{|s| s['Si']}
-
-...............
-
-7. # find common items from below arrays
-
-array1 = [1, 2, 3 ]
-
-array2 = [0, 5, 2]
-
+1. Remove duplicate items from array :: array.uniq
+2. Remove nil items from array ::  array.compact
+3. Remove Even items from array :: array.reject! {|c| c.even?}
+4. Remove Odd items from array ::  array.reject! {|c| c.odd?}
+5. Remove nil items from array ::  array.reject! {|c| c.nil?}
+6. Presence in the String :: array = ['Simple', 'Ample', 'Sit'] ,  array.find{|s| s['Si']}
+7. Find common items from below arrays :: array1 = [1, 2, 3 ] ,array2 = [0, 5, 2]
 print array3 = array1 & array2
-
-...............
-
-8. Sum up the values of a Hash in Ruby ?
-
-hash = {"a"=>10, "b"=>20, "c"=>30}
-hash.values.inject { |a, b| a + b }
-
-
-...............
+8. Sum up the values of a Hash in Ruby ?  hash = {"a"=>10, "b"=>20, "c"=>30}
+  hash.values.inject { |a, b| a + b }
 
 9. Write the Routes for below code  for comments and blk_upload ::
 

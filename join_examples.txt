@@ -8,22 +8,10 @@ Link ::  https://www.learneroo.com/modules/137/nodes/768
 
 Types of Joins :: 
 
-1. Simple Joins
-A simple joins statement lets you return records that have an associated record.
-
-2. Nested Associations ::
-
-Sometimes you'll want to get records based on a nested association:
-
-3. Where :: 
-
-Before looking at more advanced joins queries, let's look at querying a single model.
-
-.where lets you retrieve all items that match a specific condition.
-
-4. Conditional Joins ::
-
-The goal of joins is often to get one model based on specific conditions in another model. 
+1. Simple Joins :: A simple joins statement lets you return records that have an associated record.
+2. Nested Associations :: Sometimes you'll want to get records based on a nested association:
+3. Where :: Before looking at more advanced joins queries, let's look at querying a single model. , .where lets you retrieve all items that match a specific condition.
+4. Conditional Joins :: The goal of joins is often to get one model based on specific conditions in another model. 
 
 
 ................ .................... ................ ...................  ................

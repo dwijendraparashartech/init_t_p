@@ -1,0 +1,28 @@
+Tasks_rails_small.txt ::
+
+1. How to add column in database ::
+
+
+-----------
+
+2. How to renamte column in database ::
+
+
+-----------
+
+3. Add index in rails ::
+
+
+-----------
+
+
+4. Create table in rails ::
+
+
+------------
+
+5. delete table in rails ::
+
+
+------------
+
