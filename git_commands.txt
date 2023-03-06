@@ -1,2 +1,72 @@
-git_commands.txt ::
+git_commands.txt :: 
+...................
+
+Steps ::
+
+1. Setup the Project
+....................
+
+
+
+2. Start a Project
+..................
+
+A. Create a git repo to initilaise the current directory as a git repo = git init <directory>
+B. Download a remote Repo =   git clone <url>
+
+3. Make a change
+................
+
+A.Add a file to staging =   git add <file>
+B.Stages all files = git add .
+C.Commit all stages files to git = git commit -m "commit message"
+D.Add all changes made to tracked file and commit =  
+
+4. Merging
+................
+
+5. Undoing Changes
+..................
+
+6. Stashes
+..........
+
+7. 
+
+............................................
+
+Basic Concepts :: 
+
+main - default development branch
+origin - default upstream repo
+HEAD - current branch
+HEAD*- parent of HEAD
+HEAD-4-great-great grand parent of HEAD
+
+............................................
+
+Branches ::
+
+List of local branches -  $ git branch
+List of remote branches - $ git branch -r
+List of all branches -  $ git branch -a
+Create a new branch - $ git branch <new-branch>
+Switch to a branch and update the working directory - $ git checkout <branch>
+Create a new branch and switch to it - $ git checkout -b <new-branch>
+Delete a merged branch - git branch -d <branch>
+Delete a branch whether merged or not - git branch -D <branch>
+Add a tag to current commit (often used for new version releases) - $ git tag <tag-name>
+
+............................................
+
+Merging :: Merge branch a into branch b.Add no-ff option for no fast forward merge 
+
+$ git checkout b
+$ git merge a
+
+Merge and squash all commit into one new commit - git merge --squash -a 
+
+
+
+
 

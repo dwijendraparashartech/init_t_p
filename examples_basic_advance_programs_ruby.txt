@@ -7,6 +7,7 @@ examples_basic_advance_programs_ruby.txt
 ............................................
 
 
+
 0.1.  Examples and Methods of String :: 
 
 string methods 
@@ -160,6 +161,20 @@ def list_duplicates(array)
 end
 print list_duplicates([1,1,4,5,6,6,9])
 
+........................................
+..........................................................
+
+2. Give an Example to get Duplicate Items of an Array  ::
+
+def find_duplicates(array)
+  duplicates = []
+  array.each do |element|
+    duplicates << element if array.count(element) > 1
+  end
+  duplicates.uniq
+end
+
+p find_duplicates([1, 2, 3, 1, 5, 6, 7, 8, 5, 2]) #=> [1, 5, 2]
 ..........................................................
 ...................
 .........................................
@@ -603,4 +618,1579 @@ ActiveRecord::Base.establish_connection({
 
 
 ................
+
+11. 
+
+Explain this ruby idiom: a ||= b
+Mid 
+Top 84 Ruby Interview Questions  Ruby  84  
+Answer
+Is it a common idiom that strong ruby developers will use all the time.
+
+# a = b when a == false
+# otherwise a remains unchanged
+a || a = b # (Kudos to Markus Prinz)
+a = 1
+b = 2
+a ||= b #=> a = 1
+a = nil
+b = 2
+a ||= b #=> a = 2
+a = false
+b = 2
+a ||= b #=> a = 2
+
+................
+
+
+12. Q.  controller action as a parameter. The valid music genres are as follows: classical, rock, house, country, hip_hop, and rnb. All other genres should generate a 404 status code.
+You will likely receive a variety of potential answers for an open-ended coding question like this, but here are two of the most straightforward approaches to creating a route. The most straightforward solution would be to create a simple route that specifies the controller action to call and passes the genre of music as a parameter. If the genre parameter is not included in the list of valid genres, the action will raise an ActionController::RoutingError and redirect to a 404 page.
+
+get 'music/:genre' => 'music#genre'
+Alternatively, a better solution would be to use resource routing which comes with the added benefit of URL generation helpers. You can use the constraints option to verify the validity of a route by checking the parameter against a list of genres. This method requires that the parameter name for the genre be passed as :id and would look something like this:
+
+genres = %w|classical rock house country hip_hop rnb|
+resource :music, only: [:show], constraints: {id: Regexp.new(genres.join('|'))}
+
+............
+
+13. How would you flatten the following?
+hash = { a: { b: { c: 42, d: 'foo' }, d: 'bar' }, e: 'baz' }
+to
+
+{ :a_b_c=>42, :a_b_d=>"foo", :a_d=>"bar", :e=>"baz" }
+λ = ->(h, key = nil) do
+  h.map do |k, v|
+    _k = key ? "#{key}_#{k}" : k.to_s
+    v.is_a?(Hash) ? λ.call(v, _k) : [_k.to_sym, v]
+  end.flatten #⇒ note flatten 
+end
+Hash[*λ.call(hash)]
+#⇒ {:a_b_c=>42, :a_b_d=>"foo", :a_d=>"bar", :e=>"baz"}
+Understanding recursion is important. While all these Fibonacci numbers and factorials are repeated over and over again, the real-world tasks are less academic. Walking through the hash in the described manner is often a must.
+
+The exercise might be stated as the exact opposite: given the “flattened” form of the hash, rebuild its nested representation.
+
+
+.............
+
+14. 7. Consider the following:
+Given the following syntactic sugar:
+
+(1..42).reduce &:*
+#⇒ 1405006117752879898543142606244511569936384000000000
+What makes this notation to be an equivalent of:
+
+(1..42).reduce { |memo, elem| memo * elem }
+Does the Ruby parser handle this particular case, or could this be implemented in plain Ruby?
+
+The candidate can monkeypatch to the Symbol class with their own implementation of the aforementioned syntactic sugar.
+
+E.g.
+
+class Symbol
+def to_proc
+  # this implementation in incomplete
+  # — more sophisticated question: why?
+  # — even more hard: re-implement it properly
+lambda { |memo, recv| memo.public_send(self, recv)  }
+end
+end
+(1..42).reduce &:*
+#⇒ 1405006117752879898543142606244511569936384000000000
+There is not much magic in this example. An ampersand converts an argument, that is apparently a Symbol instance here, to Proc object, simply calling to_proc method on it. The implementation is Symbol#to_proc in done in C for performance reasons, but the candidate can write their own implementation in Ruby to make sure everything works as expected.
+
+Answers to additional questions in the code: — the code above fails when the callee expects to receive one parameter only
+
+(e.g. a try to use this implementation with Enumerator#each)
+
+will fail with an arity error:
+
+(1..42).each &:*
+ArgumentError: wrong number of arguments (given 1, expected 2)
+To fix this, the candidate should use the splat argument to lambda and analyze the amount of actual argument passed:
+
+lambda do |*args|
+  case args.size
+  when 1 then # each-like
+when 2 then # with accumulator
+...
+
+15. 8. What’s wrong with the code below and why?
+require 'benchmark'
+puts Benchmark.measure do  
+    break if Random.rand(100) === 1 while true
+end
+Operator precedence matters! The code will return
+
+LocalJumpError: no block given (yield)
+As do-end is weaker than attracting arguments to the function, that’s why one either needs to surround the whole call to Benchmark.measure with parentheses, or to use curly brackets instead of do-end.
+
+...
+
+16.. 
+
+9. Build an array based on the following scenario.
+Provided we have a hash of a fixed structure (e. g. we receive this hash from a third-party data provider, that guarantees the structure):
+
+input = [ {a1: 42, b1: { c1: 'foo' }}, 
+{a2: 43, b2: { c2: 'bar' }}, 
+{a3: 44, b3: { c3: 'baz' }},
+… ]
+How can one build an array of cN values (['foo', bar', baz'])?
+
+Some examples would be:
+
+input.map { |v| v.to_a.last.last.to_a.last.last }
+or
+
+input.map { |v| v.flatten.last.flatten.last }
+Here one iterates through the array, collecting nested hashes and using an index to build the requested key name, but there is more straightforward approach. Hash is an Enumerable, which gives the developer an ability to query it almost as what has been done with an array.
+
+
+...
+
+17. 
+
+10. Consider the following scenario related to variables.
+Given the code below, how one might access the @foo variable from outside? Is it an instance variable, or class variable? What object this variable is defined on?
+
+class Foo
+  class << self
+    @foo = 42
+  end
+end
+You can access the variable with
+
+(class << Foo ; @foo ; end)
+It’s an instance variable and defined on Foo’s Singleton method, or more specifically, the eigenclass of Foo.
+
+Each class in Ruby has its own “eigenclass.” This eigenclass is derived from Class class. Foo class is an instance of it’s eigenclass. This eigenclass has the only instance Foo; it as well has instance methods, defined as class methods on Foo, and it might have instance variables, e. g. @foo variable in this particular example.
+
+...
+
+18.  
+
+11. What are the different uses of Ruby modules? Could you provide an example of each and explain why it is valuable?
+Traits/Mixins:
+Examples: Mappable, Renderable, Movable
+Traits/Mixins is a useful alternative to class inheritance when there is a need to acquire behavior that describes a trait (e.g. Renderable) instead of an is-a relationship (e.g. Vehicle), especially when there is a need for multiple traits since a class can only inherit once.
+Namespace:
+Examples: Graphics, Devise, Finance
+Namespace Ruby classes and modules to avoid naming clashes with similarly-named classes/modules from libraries
+Singleton class alternative:
+Examples: Application, Universe, Game
+Modules cannot be instantiated, therefore they can be used as an easy alternative to singleton classes to represent only one instance of a domain model via module methods (equivalent of class methods)
+Bag of stateless helper methods:
+Examples: Helpers, Math, Physics
+Stateless helper methods receive their data via arguments without needing a class to be instantiated nor keep any state (e.g. calculate_interest(amount, rate_per_year, period)), so a module is used instead for holding a bag of stateless helper methods.
+In addition to knowing the 4 different functions of modules in Ruby cited above, it’s important to know when to use a module v.s. a superclass when doing object-oriented domain modeling since that can greatly impact maintenance of the code a few months down the road in a software project.
+
+For a further practical example, a car-race-betting game allows players to bet on cars rendered on the screen as moving at different speeds. When the game is over, players can print a sheet of game results representing each car’s details and status to claim their prize at a casino.
+
+If the candidate were to implement all of these details in a car object, and later introduce differences between a Jaguar, Mercedez, and Porche, the candidate would rely on a car superclass shared among three subclasses via inheritance.
+
+However, if in the future, trucks and horses are thrown into the mix as well, the candidate would have to split the ability of an object to move, the ability to render object on screen, and the ability to print object details into separate modules (Movable, Renderable, and Printable respectively), and mix them into each of Car, Truck, and Horse.
+
+Next, the three classes can each serve as a superclass for multiple subtypes as needed by the game (e.g. JaguarCar, FireTruck, ThoroughbredHorse). This will offer maximum separation of concerns and improved maintainability of the code.
+
+...
+
+link ::  https://arc.dev/developer-blog/ruby-on-rails-interview-questions/
+
+...
+
+19.  21. Consider the following two methods
+
+Method 1 - def times_two(arg1);
+
+puts arg1*2;
+
+end
+
+Method 2 - def sum(arg1, arg2);
+
+puts arg1 + arg2;
+
+end
+
+What will be the result of each of the following lines of code?
+
+times_two 5
+
+times_two(5)
+
+times_two (5)
+
+sum 1, 2
+
+sum(1, 2)
+
+sum(1,  2)
+...
+
+...
+20.  What are the steps involved in writing and setting up an application in Ruby on Rails?
+
+Given:
+
+x = “hello”
+
+Explain the difference between:
+
+x += " world" and
+
+x.concat " world"
+
+...
+
+20.
+
+
+What’s the following program going to print?
+x = 1
+class MyClass
+  y = 2
+  def foo
+     z = 4
+     y ||= 0
+     puts z + y
+  end
+  define_method :bar do |x|
+     z = 5
+     y ||= 0
+     puts z + y + x
+  end
+end
+my_class = MyClass.new
+my_class.foo
+my_class.bar(10)
+my_class.bar
+
+...
+
+21. 
+
+Implement a class macro :benchmark that can be used to print the time an instance method takes to execute (advanced).
+class Foo
+  def bar
+     ...
+  end
+ 
+  def qux
+     ...
+  end
+  benchmark :bar, :qux
+end
+foo = Foo.new
+foo.bar
+# => bar took 0.12 ms
+foo.qux
+# => qux took 1.15 ms
+
+...
+22.
+
+89) What will be the values of:
+var1 = A.a(0)
+var2 = A.a(2)
+
+Answer- var1 will be equal to nil
+var2 will be equal to 4
+Understand: * A conditional statement in Ruby is an expression that returns nil if the conditional is false. * Ruby methods return the last expression in the method body.
+
+In this example:
+
+A.a(0) returns nil for unsuccessful conditional
+A.a(2) returns the square of 2, i.e 4
+
+...
+
+23. 
+
+
+93) What is the value of the variable upcased in the below piece of code?
+
+upcased = ["one", "two", "three"].map {|n| puts n.upcase }
+
+Answer- upcase = [nil, nil, nil]
+
+Let’s take a look at puts as below:
+﻿
+>> puts "Hi"
+Hi
+=> nil
+
+
+Note the nil at the end: that’s the return value from puts. After all, puts is a method, so it has to return something. As it happens, it always returns nil. The printing out of the string is an action the method performs.
+
+Similarly, evaluating the code in question we can understand that while it’s a common learner mistake to expect the result to be ["ONE", "TWO", "THREE"]. In fact, it’s [nil, nil, nil]. Each time through the block, the block evaluates to the return value of puts to be nil.
+
+﻿
+
+...
+
+24.
+
+94) What will be the value of:
+
+defined? foo
+defined? bar
+
+Answer-
+
+foo has been at least read by the interpreter, therefore it is defined and assigned a nil value. However, since bar has never been written, it was never defined in the first place.
+
+...
+
+25. 
+
+86) Predict the output of the code below. Explain your answer?
+﻿
+-> (s) {p s} [“I’m a Proc”]
+
+Answer- This question highlights the syntactical elegance of Ruby. A seasoned coder can perform a lot with a single line of Ruby code. The -> operator, or “stabby proc” as it is often called, is a way to create a proc that is also a lambda, or nameless function. This proc takes the parameter s and executes the block {p s}, which is shorthand for puts(s.inspect) before passing the string “I’m a Proc” using the square bracket syntax in place of the typical “call” method. The result is an elegant single line of code that prints the string “I’m a Proc” to the console.
+
+87) The .upcase and .capitalize method are used for capitalizing the whole string.
+a) True
+b) False
+
+Answer- B
+Explanation: The .capitalize method doesn’t change the whole string to uppercase, it just capitalizes the first letter.
+
+....
+
+26. 
+
+84) Find and fix the bug within the code below?
+
+Answer- Normally if Ruby encounters an identifier, and the identifier does not reference a defined local variable, Ruby will try to call a method with the given name. However, when Ruby encounters address = a within the initialize method, it treats address = a as a local variable initialization and fails to invoke the setter. This occurs when Ruby encounters an identifier beginning with a lowercase character or underscore on the left-hand side of an assignment operator. The solution is to clarify that we want to call the writer method address = by prepending address with the self keyword. The initialize method has been reproduced below:
+
+def initialize(a)
+  self.address = a
+end
+
+Alternatively, you could also fix the bug by directly assigning the value to the instance variable within the initialize method like so:
+
+﻿
+def initialize(a)
+  @address = clean(a)
+end
+
+...
+
+27. 
+
+54) Explain the difference between:
+
+x += " world"
+and
+
+x.concat " world"
+Answer-
+
+The += operator re-initializes the variable with a new value, so a += b is equivalent to a = a + b.
+
+Therefore, while it may seem that += is mutating the value, it’s actually creating a new object and pointing the the old variable to that new object.
+
+This is perhaps easier to understand if written as follows:
+
+(Examining the object id of foo and foo2 will also demonstrate that new objects are being created.)
+
+The difference has implications for performance and also has different mutation behavior than one might expect.
+
+...
+
+28. 
+
+51) What will be the result of each of the following lines of code?
+
+Answer-
+
+The first three lines of code will all print out 10, as expected.
+
+The next two lines of code will both print out 3, as expected.
+
+However, the last line of code (i.e., sum (1,2)) will result in the following:
+
+Syntax:
+
+The problem is the space between the method name and the open parenthesis. Because of the space, the Ruby parser thinks that (1, 2) is an expression that represents a single argument, but (1, 2) is not a valid Ruby expression, hence the error.
+
+Note that the problem does not occur with single argument methods (as shown with our timesTwo method above), since the single value is a valid expression (e.g., (5) is a valid expression which simply evaluates to 5).
+
+
+
+...
+
+30.
+
+
+50) Which of the expressions listed below will result in “false”?
+
+true  ? “true” : “false”  ﻿
+false ? “true” : “false”  ﻿
+nil ? “true” : “false”  ﻿
+1 ? “true” : “false”  ﻿
+0 ? “true” : “false”  ﻿
+“false” ? “true” : “false”  ﻿
+“”  ? “true” : “false”  ﻿
+[]  ? “true” : “false”  ﻿
+Answer –
+
+In Ruby, the only values that evaluate to false are false and nil. Everything else – even zero (0) and an empty array ([]) – evaluates to true.
+
+This comes as a real surprise to programmers who have previously been working in other languages like JavaScript.
+
+
+
+...
+
+31. 
+
+49) What will val1 and val2 equal after the code below is executed? Explain your answer.
+
+Answer –
+
+Although these two statements might appear to be equivalent, they are not, due to the order of operations. Specifically, the and and or operators have lower precedence than the = operator, whereas the && and || operators have higher precedence than the = operator, based on order of operations.
+
+To help clarify this, here’s the same code, but employing parentheses to clarify the default order of operations:
+
+...
+
+32.
+What are the roles of the ror developer ?
+
+
+A Guide To Hiring Ruby On Rails Developer
+Given below is a small guide that you can use as a reference at any given point in time.
+
+Understand The Needs Of The Job Role
+This is among the most important things you should do. Of course, a developer is primarily required to develop web pages or applications. Yet, you need to make sure what exactly the company is looking for and what their bigger picture is.
+
+With that in mind, you can judge the applicants better.
+
+Ruby On Rails Required Skills
+As with any profession, being a ROR developer means being good with a certain set of skills.
+
+When you’re on the lookout for an experienced ROR developer, here is what you should keep an eye out for:
+
+Beginner
+Basic HTML, JavaScript, and CSS
+MYSQL
+Basic GIT - clone, push, commit.
+Agile Methodology
+Linux Administration
+Should know how to set up a Rails environment
+Should be efficient in using generators to create models, migrations, and controllers
+Should be efficient in creating and using migration to handle the database
+Should be efficient in creating a unit test using RSpec/etc
+Should be efficient in creating a model and basic validations
+Should be efficient in managing a GET request utilizing a Controller, View, and Model
+Should be efficient in managing a POST request using a Model, View, and Controller
+Advanced
+Should be able to analyze an application for memory and performance issues
+Should be able to analyze an application for security issues
+Should have a good understanding of query analysis and database modeling
+Tune a production deployment (Apache, Thin, Passenger, etc.)
+Should have a good understanding of Ruby metaprogramming
+Mentoring skills
+Should possess good communication skills
+Estimation and Planning
+Preparing Questions
+Once you’ve understood the requirements, you should start working on questions. This means you should come up with a list of Ruby on Rails Interview Questions. This list should also consist of advanced Ruby on Rails questions to help you hire candidates for a senior-level ROR developer role.
+
+Here is a small list of Ruby on Rails questions to help you get started.
+
+With the help of an example, explain Rails MVC implementation.
+Describe how (almost) anything in Ruby is an object.
+Draw a deployment architecture for a Ruby on Rails app that uses several servers.
+In Ruby, there are 3 methods to call a method. Could you please give me at least two?
+How can a Rails application be secured to avoid Session Fixation?
+What is the process of validation? What is the best way to manage validation code?
+Is it possible for clusters to access the same memory? Is it possible for one cluster to manage a client request that was previously managed by another?
+Explain the steps for writing and running a Ruby on Rails application?
+In Ruby, how do you accomplish Multiple Inheritance?
+How can 2 databases be used with a single application?
+Define a symbol, and what are the drawbacks of using them in web applications?
+What are database transfers and how do they function in Rails?
+What exactly is CSRF? What security do Rails provide?
+In Ruby, what are the functions of load, require relative and autoload?
+16. What is the best way to call the base class method from within an overridden function?
+What is the best way to use Rails Observer for multiple models?
+Can partial views be embedded within layouts? How do you do it?
+How do you go about bringing process overloading into practical terms?
+Given:
+x = “hello”
+What is the difference between the given two:
+x.concat " world" and x += " world"
+
+...
+
+33. 
+
+Explain this ruby idiom: a ||= b
+A common idiom that strong ruby developers use all the time.
+
+# a = b when a == false
+# otherwise a remains unchanged
+a || a = b # (Kudos to Markus Prinz)
+a = 1
+b = 2
+a ||= b #=> a = 1
+a = nil
+b = 2
+a ||= b #=> a = 2
+a = false
+b = 2
+a ||= b #=> a = 2
+
+
+...
+
+34.
+
+21. Consider the following two methods
+
+Method 1 - def times_two(arg1);
+
+puts arg1*2;
+
+end
+
+Method 2 - def sum(arg1, arg2);
+
+puts arg1 + arg2;
+
+end
+
+What will be the result of each of the following lines of code?
+
+times_two 5
+
+times_two(5)
+
+times_two (5)
+
+sum 1, 2
+
+sum(1, 2)
+
+sum(1,  2)
+
+
+...
+
+35 ::  8 Important Questions ::
+
+
+A. 
+
+
+#1 Given this model with a few fields, how would you select all model instances where the field id matches one of the ids in this list [1, 5, 30]? Additionally, how would you show the average of the field total?
+This question can see if you have mastered the basics of Rails, such as whether or not you know how to query for models based on different filters and field values. The latter part of the question will show if you know how to go further and apply aggregation functions through the Rails ActiveRecord querying interface.
+
+To answer the first part of this question, given an ActiveRecord model named "Product", you would do something like this:
+
+Product.where(id: [1, 5, 30])
+To answer the second part of the question, you would do something like this:
+
+Product.where(id: [1, 5, 30]).average('total')
+The interviewer may ask follow up questions, such as how to limit the number of results returned. This is important because you don't want to overload the database by returning millions of results. They may ask how to sort the results too. To learn how to do this, read and review the Rails Guide to Active Record Query Interface.
+
+
+...
+
+B.
+
+#2 There is a model with three fields, how would you add validation to them?
+Like the last one, this question shows how much you know about the basics of Rails. Note that you would usually refer to the Rails documentation or other documentation to find out how to add specific types of validation. However, for an interview, you should be aware of what options are available and be able to recall the function and method names.
+
+For example, the interviewer could ask you how you would ensure that the fields name and email are not empty for the "SurveyResponse" model, and you would write something like this:
+
+class SurveyResponse < ApplicationRecord
+  validates :name, :email, presence: true
+end
+they could also ask you to ensure that a particular field is unique, which you would do so by doing something like this:
+
+class Product < ApplicationRecord
+  validates :sku, uniqueness: true
+end
+The Rails Guide to Validation has more information on the validators and how to use them.
+
+...
+
+C.
+
+#3 We have a model that needs data sent to a 3rd party API service after it is saved to the database. What code we need to accomplish this?
+The first thing to do is recognize that we are being asked to use callbacks. When an Active Record model is created, updated, saved, and committed to the database, any registered callbacks are called at those points in the lifecycle.
+
+For this particular question, we would use the after_save callback because it is called whenever the model is created or updated.
+
+This is how the code could look like:
+
+class MyModel
+  after_save :send_data_to_3rd_party_api
+
+  def send_data_to_3rd_party_api
+  end
+end
+The interviewer may also ask you about the before_validation or after_commit callback. For instance, they may ask, at what point in the lifecycle, you would invalidate the cache for a model. To answer that sort of question, you could use the after_commit callback, as it is called after every create, update, or destroy that takes place.
+
+You can find out more about the Rails Active Record lifecycle callbacks in this Rails Guide.
+
+...
+
+D.
+
+#4 How would you define a database migration that creates a new table for a model that includes timestamps and two fields: name and email address?
+This is a slightly more advanced question but a typical task you will have to do when working on a Ruby on Rails web application. You will need to be able to create new Active Record models and their corresponding database tables.
+
+The answer to this particular question is the following code:
+
+class CreateMyModels < ActiveRecord::Migration[5.0]
+  def change
+    create_table :my_models do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
+    end
+  end
+end
+The timestamps method will add two columns to the table which are called created_at and updated_at. The string method will create a string field in the database with the given name as the column name.
+
+Knowing how to create new models by using migrations and defining data tables is one of the necessities when working with Rails. You can review the guide for creating Rails migrations here.
+
+...
+E. 
+
+
+
+Codementor Blog
+Last updated Feb 22, 2021
+8 More Ruby on Rails Interview Questions and Answers
+From Rails ActiveRecord to APIs, these questions will help you prepare for your next technical interview.
+8 More Ruby on Rails Interview Questions and Answers
+Are you interviewing for a frontend developer or Ruby on Rails engineer position? In addition to these 11 questions, here are eight more interview questions you should know and be able to answer. They will prepare you for questions about Rails ActiveRecord, caching, database design and architecture, APIs and system monitoring, and logging.
+
+Extended reading: 11 Ruby on Rails Interview Questions and Answers
+
+#1 Given this model with a few fields, how would you select all model instances where the field id matches one of the ids in this list [1, 5, 30]? Additionally, how would you show the average of the field total?
+This question can see if you have mastered the basics of Rails, such as whether or not you know how to query for models based on different filters and field values. The latter part of the question will show if you know how to go further and apply aggregation functions through the Rails ActiveRecord querying interface.
+
+To answer the first part of this question, given an ActiveRecord model named "Product", you would do something like this:
+
+Product.where(id: [1, 5, 30])
+To answer the second part of the question, you would do something like this:
+
+Product.where(id: [1, 5, 30]).average('total')
+The interviewer may ask follow up questions, such as how to limit the number of results returned. This is important because you don't want to overload the database by returning millions of results. They may ask how to sort the results too. To learn how to do this, read and review the Rails Guide to Active Record Query Interface.
+
+#2 There is a model with three fields, how would you add validation to them?
+Like the last one, this question shows how much you know about the basics of Rails. Note that you would usually refer to the Rails documentation or other documentation to find out how to add specific types of validation. However, for an interview, you should be aware of what options are available and be able to recall the function and method names.
+
+For example, the interviewer could ask you how you would ensure that the fields name and email are not empty for the "SurveyResponse" model, and you would write something like this:
+
+class SurveyResponse < ApplicationRecord
+  validates :name, :email, presence: true
+end
+they could also ask you to ensure that a particular field is unique, which you would do so by doing something like this:
+
+class Product < ApplicationRecord
+  validates :sku, uniqueness: true
+end
+The Rails Guide to Validation has more information on the validators and how to use them.
+
+#3 We have a model that needs data sent to a 3rd party API service after it is saved to the database. What code we need to accomplish this?
+The first thing to do is recognize that we are being asked to use callbacks. When an Active Record model is created, updated, saved, and committed to the database, any registered callbacks are called at those points in the lifecycle.
+
+For this particular question, we would use the after_save callback because it is called whenever the model is created or updated.
+
+This is how the code could look like:
+
+class MyModel
+  after_save :send_data_to_3rd_party_api
+
+  def send_data_to_3rd_party_api
+  end
+end
+The interviewer may also ask you about the before_validation or after_commit callback. For instance, they may ask, at what point in the lifecycle, you would invalidate the cache for a model. To answer that sort of question, you could use the after_commit callback, as it is called after every create, update, or destroy that takes place.
+
+You can find out more about the Rails Active Record lifecycle callbacks in this Rails Guide.
+
+#4 How would you define a database migration that creates a new table for a model that includes timestamps and two fields: name and email address?
+This is a slightly more advanced question but a typical task you will have to do when working on a Ruby on Rails web application. You will need to be able to create new Active Record models and their corresponding database tables.
+
+The answer to this particular question is the following code:
+
+class CreateMyModels < ActiveRecord::Migration[5.0]
+  def change
+    create_table :my_models do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
+    end
+  end
+end
+The timestamps method will add two columns to the table which are called created_at and updated_at. The string method will create a string field in the database with the given name as the column name.
+
+Knowing how to create new models by using migrations and defining data tables is one of the necessities when working with Rails. You can review the guide for creating Rails migrations here.
+
+#5 How would you log errors in Rails?
+Errors and bugs in programs do occur and Rails is no different. When an interviewer asks you this question, they are wondering whether you know how to debug a program. To answer this question, you can start with this code:
+
+Rails.logger.debug "This is an error"
+Then you could talk about the different log levels: verbose, error, info, fatal.
+
+The interviewer may then ask you about other tools for debugging a Rails app. To this, you can reply "byebug" which lets you set breakpoints and step through a Rails app.
+
+The interviewer may show you a Rails controller or Active Record model, and ask you fix the bugs that exist within it, or to point out and log potential issues. Knowing how to add logging statements can show that you know how to handle debugging in a production environment.
+
+Here are more ways to debug a Rails app.
+
+...
+
+F. 
+
+#6 How would you design a shopping cart that contains a Cart model and Item classes? How would you define the association and database relationship?
+It is very likely that an interviewer will ask you to design and implement a few models to understand how well you understand the basics of Rails. They also want to find out what sorts of questions you ask about the problem, such as if particular details need to be added to the models.
+
+So let's use the example of a shopping cart design to see one way of answering this interview question.
+
+One way to define the model is to have a Cart active record and an Item active record. The cart would have a has_many association with the items, and the Item would have a has_one relationship pointing back to the cart. You can find out more about associations between models in ActiveRecord in this Rails Guide.
+
+Here is an example of how you could write this in an interview:
+
+class Cart < ApplicationRecord
+  has_many :items
+end
+
+class Item < ApplicationRecord
+  belongs_to :cart
+end
+The idea is to test whether a candidate knows the basics of defining database models within Ruby on Rails and if they have some skill in architecture. If you are interviewing for a mid-level role, you may be asked to implement or design a migration that will store particular data types within the cart or items. It's possible for an interviewer to dive deeper into this question by adding the concepts of billing, shipping, or tax information. This will be the case if you are interviewing at an ecommerce, payments, or fintech company.
+
+For example, with more details provided by the interviewer, your model for the Cart could end up looking like this:
+
+class Cart < ApplicationRecord
+  has_many :items
+  has_one :shipping_address
+
+  def sales_tax
+    if shipping_address.country == 'US'
+      Taxes.calculate_for_united_states(shipping_address.state)
+    elsif shipping_address.country == 'CA'
+      Taxes.calculate_for_canada(shipping_address.state)
+    end
+  end
+
+  def taxed_items
+    items.reject(&:tax_free?)
+  end
+
+  def total
+    subtotal = items.map { |item| item.quantity * item.price }]
+    taxes = sales_tax * taxed_items.map { |item| item.quantity * item.price }
+    subtotal + taxes
+  end
+end
+
+...
+
+G. 
+
+
+
+
+
+
+Codementor Blog
+Last updated Feb 22, 2021
+8 More Ruby on Rails Interview Questions and Answers
+From Rails ActiveRecord to APIs, these questions will help you prepare for your next technical interview.
+8 More Ruby on Rails Interview Questions and Answers
+Are you interviewing for a frontend developer or Ruby on Rails engineer position? In addition to these 11 questions, here are eight more interview questions you should know and be able to answer. They will prepare you for questions about Rails ActiveRecord, caching, database design and architecture, APIs and system monitoring, and logging.
+
+Extended reading: 11 Ruby on Rails Interview Questions and Answers
+
+#1 Given this model with a few fields, how would you select all model instances where the field id matches one of the ids in this list [1, 5, 30]? Additionally, how would you show the average of the field total?
+This question can see if you have mastered the basics of Rails, such as whether or not you know how to query for models based on different filters and field values. The latter part of the question will show if you know how to go further and apply aggregation functions through the Rails ActiveRecord querying interface.
+
+To answer the first part of this question, given an ActiveRecord model named "Product", you would do something like this:
+
+Product.where(id: [1, 5, 30])
+To answer the second part of the question, you would do something like this:
+
+Product.where(id: [1, 5, 30]).average('total')
+The interviewer may ask follow up questions, such as how to limit the number of results returned. This is important because you don't want to overload the database by returning millions of results. They may ask how to sort the results too. To learn how to do this, read and review the Rails Guide to Active Record Query Interface.
+
+#2 There is a model with three fields, how would you add validation to them?
+Like the last one, this question shows how much you know about the basics of Rails. Note that you would usually refer to the Rails documentation or other documentation to find out how to add specific types of validation. However, for an interview, you should be aware of what options are available and be able to recall the function and method names.
+
+For example, the interviewer could ask you how you would ensure that the fields name and email are not empty for the "SurveyResponse" model, and you would write something like this:
+
+class SurveyResponse < ApplicationRecord
+  validates :name, :email, presence: true
+end
+they could also ask you to ensure that a particular field is unique, which you would do so by doing something like this:
+
+class Product < ApplicationRecord
+  validates :sku, uniqueness: true
+end
+The Rails Guide to Validation has more information on the validators and how to use them.
+
+#3 We have a model that needs data sent to a 3rd party API service after it is saved to the database. What code we need to accomplish this?
+The first thing to do is recognize that we are being asked to use callbacks. When an Active Record model is created, updated, saved, and committed to the database, any registered callbacks are called at those points in the lifecycle.
+
+For this particular question, we would use the after_save callback because it is called whenever the model is created or updated.
+
+This is how the code could look like:
+
+class MyModel
+  after_save :send_data_to_3rd_party_api
+
+  def send_data_to_3rd_party_api
+  end
+end
+The interviewer may also ask you about the before_validation or after_commit callback. For instance, they may ask, at what point in the lifecycle, you would invalidate the cache for a model. To answer that sort of question, you could use the after_commit callback, as it is called after every create, update, or destroy that takes place.
+
+You can find out more about the Rails Active Record lifecycle callbacks in this Rails Guide.
+
+#4 How would you define a database migration that creates a new table for a model that includes timestamps and two fields: name and email address?
+This is a slightly more advanced question but a typical task you will have to do when working on a Ruby on Rails web application. You will need to be able to create new Active Record models and their corresponding database tables.
+
+The answer to this particular question is the following code:
+
+class CreateMyModels < ActiveRecord::Migration[5.0]
+  def change
+    create_table :my_models do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
+    end
+  end
+end
+The timestamps method will add two columns to the table which are called created_at and updated_at. The string method will create a string field in the database with the given name as the column name.
+
+Knowing how to create new models by using migrations and defining data tables is one of the necessities when working with Rails. You can review the guide for creating Rails migrations here.
+
+#5 How would you log errors in Rails?
+Errors and bugs in programs do occur and Rails is no different. When an interviewer asks you this question, they are wondering whether you know how to debug a program. To answer this question, you can start with this code:
+
+Rails.logger.debug "This is an error"
+Then you could talk about the different log levels: verbose, error, info, fatal.
+
+The interviewer may then ask you about other tools for debugging a Rails app. To this, you can reply "byebug" which lets you set breakpoints and step through a Rails app.
+
+The interviewer may show you a Rails controller or Active Record model, and ask you fix the bugs that exist within it, or to point out and log potential issues. Knowing how to add logging statements can show that you know how to handle debugging in a production environment.
+
+Here are more ways to debug a Rails app.
+
+#6 How would you design a shopping cart that contains a Cart model and Item classes? How would you define the association and database relationship?
+It is very likely that an interviewer will ask you to design and implement a few models to understand how well you understand the basics of Rails. They also want to find out what sorts of questions you ask about the problem, such as if particular details need to be added to the models.
+
+So let's use the example of a shopping cart design to see one way of answering this interview question.
+
+One way to define the model is to have a Cart active record and an Item active record. The cart would have a has_many association with the items, and the Item would have a has_one relationship pointing back to the cart. You can find out more about associations between models in ActiveRecord in this Rails Guide.
+
+Here is an example of how you could write this in an interview:
+
+class Cart < ApplicationRecord
+  has_many :items
+end
+
+class Item < ApplicationRecord
+  belongs_to :cart
+end
+The idea is to test whether a candidate knows the basics of defining database models within Ruby on Rails and if they have some skill in architecture. If you are interviewing for a mid-level role, you may be asked to implement or design a migration that will store particular data types within the cart or items. It's possible for an interviewer to dive deeper into this question by adding the concepts of billing, shipping, or tax information. This will be the case if you are interviewing at an ecommerce, payments, or fintech company.
+
+For example, with more details provided by the interviewer, your model for the Cart could end up looking like this:
+
+class Cart < ApplicationRecord
+  has_many :items
+  has_one :shipping_address
+
+  def sales_tax
+    if shipping_address.country == 'US'
+      Taxes.calculate_for_united_states(shipping_address.state)
+    elsif shipping_address.country == 'CA'
+      Taxes.calculate_for_canada(shipping_address.state)
+    end
+  end
+
+  def taxed_items
+    items.reject(&:tax_free?)
+  end
+
+  def total
+    subtotal = items.map { |item| item.quantity * item.price }]
+    taxes = sales_tax * taxed_items.map { |item| item.quantity * item.price }
+    subtotal + taxes
+  end
+end
+#7 If a controller action is being used heavily, how would you improve its performance?
+For this question, the interviewer will want to know that you understand the basics of performance optimization in Rails.
+
+One way to improve performance is by adding caching using Rails's built-in cache store methods. The company you are interviewing at may be using Memcached or Redis (or both!) to store the caching data. You can ask them about this to indicate more knowledge on the subject of caching and performance optimization.
+
+Here is the Rails Guide to caching.
+
+The interviewer may ask you how you would improve the performance of this controller action, which displays a list of airfare prices for different airlines retrieved from a 3rd party API:
+
+class AirfareController < ApplicationController 
+  def index
+    @airfares = TravelPriceAPI.retrieve_prices_for(params[:city_from], params[:city_to])
+  end
+end
+If there were 100 users hitting that controller action to see the prices for popular destinations, it would result in 100 calls to the 3rd party travel price API.
+
+To relieve the pressure on the 3rd party API, you can introduce caching:
+
+class AirfareController < ApplicationController 
+  def index
+    cache_key = "airfare/#{params[:city_from]}/params[:city_to]"
+    @airfares = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+      TravelPriceAPI.retrieve_prices_for(params[:city_from], params[:city_to])
+    end
+  end
+end
+The effect of this is that the airfare prices will be cached based on the city that the user is flying from and the city they are flying to. The cache expiration time, also known as a TTL (Time To Live), is set to 10 minutes to ensure users see relatively fresh prices without overloading the 3rd party API.
+
+In an ideal situation, 100 users accessing this controller action, all from the same city and flying to the same destination and within the 10 minute time span, would only result in one API request. This is a huge improvement over the 100 API requests we would have made.
+
+More realistically, we'll have users from different cities, creating additional API requests. However, we would still get a performance improvement if a user hits the refresh button a few times on the page.
+
+Another way of improving performance is simply to add more hardware: either by scaling up the servers being used through additional memory or CPUs or by scaling out and adding more servers. For instance, you can ask the interviewer what sort of AWS (Amazon Web Services), Google Cloud Platform, or Microsoft Azure instance types they are using. Or if they have auto-scaling groups setup. This will not always work, for instancem with our example above, where we were relying on a 3rd party API for airfare prices. Scaling up without caching would increase the load on the 3rd party API and offer no relief for our own Rails servers.
+
+Here are links to some autoscaling guides:
+
+Amazon Web Services EC2 Auto Scaling Groups
+Best Practices for Auto Scaling for Microsoft Azure
+Google Cloud Platform Auto Scaling
+
+...
+7.
+
+
+
+
+
+
+
+Codementor Blog
+Last updated Feb 22, 2021
+8 More Ruby on Rails Interview Questions and Answers
+From Rails ActiveRecord to APIs, these questions will help you prepare for your next technical interview.
+8 More Ruby on Rails Interview Questions and Answers
+Are you interviewing for a frontend developer or Ruby on Rails engineer position? In addition to these 11 questions, here are eight more interview questions you should know and be able to answer. They will prepare you for questions about Rails ActiveRecord, caching, database design and architecture, APIs and system monitoring, and logging.
+
+Extended reading: 11 Ruby on Rails Interview Questions and Answers
+
+#1 Given this model with a few fields, how would you select all model instances where the field id matches one of the ids in this list [1, 5, 30]? Additionally, how would you show the average of the field total?
+This question can see if you have mastered the basics of Rails, such as whether or not you know how to query for models based on different filters and field values. The latter part of the question will show if you know how to go further and apply aggregation functions through the Rails ActiveRecord querying interface.
+
+To answer the first part of this question, given an ActiveRecord model named "Product", you would do something like this:
+
+Product.where(id: [1, 5, 30])
+To answer the second part of the question, you would do something like this:
+
+Product.where(id: [1, 5, 30]).average('total')
+The interviewer may ask follow up questions, such as how to limit the number of results returned. This is important because you don't want to overload the database by returning millions of results. They may ask how to sort the results too. To learn how to do this, read and review the Rails Guide to Active Record Query Interface.
+
+#2 There is a model with three fields, how would you add validation to them?
+Like the last one, this question shows how much you know about the basics of Rails. Note that you would usually refer to the Rails documentation or other documentation to find out how to add specific types of validation. However, for an interview, you should be aware of what options are available and be able to recall the function and method names.
+
+For example, the interviewer could ask you how you would ensure that the fields name and email are not empty for the "SurveyResponse" model, and you would write something like this:
+
+class SurveyResponse < ApplicationRecord
+  validates :name, :email, presence: true
+end
+they could also ask you to ensure that a particular field is unique, which you would do so by doing something like this:
+
+class Product < ApplicationRecord
+  validates :sku, uniqueness: true
+end
+The Rails Guide to Validation has more information on the validators and how to use them.
+
+#3 We have a model that needs data sent to a 3rd party API service after it is saved to the database. What code we need to accomplish this?
+The first thing to do is recognize that we are being asked to use callbacks. When an Active Record model is created, updated, saved, and committed to the database, any registered callbacks are called at those points in the lifecycle.
+
+For this particular question, we would use the after_save callback because it is called whenever the model is created or updated.
+
+This is how the code could look like:
+
+class MyModel
+  after_save :send_data_to_3rd_party_api
+
+  def send_data_to_3rd_party_api
+  end
+end
+The interviewer may also ask you about the before_validation or after_commit callback. For instance, they may ask, at what point in the lifecycle, you would invalidate the cache for a model. To answer that sort of question, you could use the after_commit callback, as it is called after every create, update, or destroy that takes place.
+
+You can find out more about the Rails Active Record lifecycle callbacks in this Rails Guide.
+
+#4 How would you define a database migration that creates a new table for a model that includes timestamps and two fields: name and email address?
+This is a slightly more advanced question but a typical task you will have to do when working on a Ruby on Rails web application. You will need to be able to create new Active Record models and their corresponding database tables.
+
+The answer to this particular question is the following code:
+
+class CreateMyModels < ActiveRecord::Migration[5.0]
+  def change
+    create_table :my_models do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
+    end
+  end
+end
+The timestamps method will add two columns to the table which are called created_at and updated_at. The string method will create a string field in the database with the given name as the column name.
+
+Knowing how to create new models by using migrations and defining data tables is one of the necessities when working with Rails. You can review the guide for creating Rails migrations here.
+
+#5 How would you log errors in Rails?
+Errors and bugs in programs do occur and Rails is no different. When an interviewer asks you this question, they are wondering whether you know how to debug a program. To answer this question, you can start with this code:
+
+Rails.logger.debug "This is an error"
+Then you could talk about the different log levels: verbose, error, info, fatal.
+
+The interviewer may then ask you about other tools for debugging a Rails app. To this, you can reply "byebug" which lets you set breakpoints and step through a Rails app.
+
+The interviewer may show you a Rails controller or Active Record model, and ask you fix the bugs that exist within it, or to point out and log potential issues. Knowing how to add logging statements can show that you know how to handle debugging in a production environment.
+
+Here are more ways to debug a Rails app.
+
+#6 How would you design a shopping cart that contains a Cart model and Item classes? How would you define the association and database relationship?
+It is very likely that an interviewer will ask you to design and implement a few models to understand how well you understand the basics of Rails. They also want to find out what sorts of questions you ask about the problem, such as if particular details need to be added to the models.
+
+So let's use the example of a shopping cart design to see one way of answering this interview question.
+
+One way to define the model is to have a Cart active record and an Item active record. The cart would have a has_many association with the items, and the Item would have a has_one relationship pointing back to the cart. You can find out more about associations between models in ActiveRecord in this Rails Guide.
+
+Here is an example of how you could write this in an interview:
+
+class Cart < ApplicationRecord
+  has_many :items
+end
+
+class Item < ApplicationRecord
+  belongs_to :cart
+end
+The idea is to test whether a candidate knows the basics of defining database models within Ruby on Rails and if they have some skill in architecture. If you are interviewing for a mid-level role, you may be asked to implement or design a migration that will store particular data types within the cart or items. It's possible for an interviewer to dive deeper into this question by adding the concepts of billing, shipping, or tax information. This will be the case if you are interviewing at an ecommerce, payments, or fintech company.
+
+For example, with more details provided by the interviewer, your model for the Cart could end up looking like this:
+
+class Cart < ApplicationRecord
+  has_many :items
+  has_one :shipping_address
+
+  def sales_tax
+    if shipping_address.country == 'US'
+      Taxes.calculate_for_united_states(shipping_address.state)
+    elsif shipping_address.country == 'CA'
+      Taxes.calculate_for_canada(shipping_address.state)
+    end
+  end
+
+  def taxed_items
+    items.reject(&:tax_free?)
+  end
+
+  def total
+    subtotal = items.map { |item| item.quantity * item.price }]
+    taxes = sales_tax * taxed_items.map { |item| item.quantity * item.price }
+    subtotal + taxes
+  end
+end
+#7 If a controller action is being used heavily, how would you improve its performance?
+For this question, the interviewer will want to know that you understand the basics of performance optimization in Rails.
+
+One way to improve performance is by adding caching using Rails's built-in cache store methods. The company you are interviewing at may be using Memcached or Redis (or both!) to store the caching data. You can ask them about this to indicate more knowledge on the subject of caching and performance optimization.
+
+Here is the Rails Guide to caching.
+
+The interviewer may ask you how you would improve the performance of this controller action, which displays a list of airfare prices for different airlines retrieved from a 3rd party API:
+
+class AirfareController < ApplicationController 
+  def index
+    @airfares = TravelPriceAPI.retrieve_prices_for(params[:city_from], params[:city_to])
+  end
+end
+If there were 100 users hitting that controller action to see the prices for popular destinations, it would result in 100 calls to the 3rd party travel price API.
+
+To relieve the pressure on the 3rd party API, you can introduce caching:
+
+class AirfareController < ApplicationController 
+  def index
+    cache_key = "airfare/#{params[:city_from]}/params[:city_to]"
+    @airfares = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+      TravelPriceAPI.retrieve_prices_for(params[:city_from], params[:city_to])
+    end
+  end
+end
+The effect of this is that the airfare prices will be cached based on the city that the user is flying from and the city they are flying to. The cache expiration time, also known as a TTL (Time To Live), is set to 10 minutes to ensure users see relatively fresh prices without overloading the 3rd party API.
+
+In an ideal situation, 100 users accessing this controller action, all from the same city and flying to the same destination and within the 10 minute time span, would only result in one API request. This is a huge improvement over the 100 API requests we would have made.
+
+More realistically, we'll have users from different cities, creating additional API requests. However, we would still get a performance improvement if a user hits the refresh button a few times on the page.
+
+Another way of improving performance is simply to add more hardware: either by scaling up the servers being used through additional memory or CPUs or by scaling out and adding more servers. For instance, you can ask the interviewer what sort of AWS (Amazon Web Services), Google Cloud Platform, or Microsoft Azure instance types they are using. Or if they have auto-scaling groups setup. This will not always work, for instancem with our example above, where we were relying on a 3rd party API for airfare prices. Scaling up without caching would increase the load on the 3rd party API and offer no relief for our own Rails servers.
+
+Here are links to some autoscaling guides:
+
+Amazon Web Services EC2 Auto Scaling Groups
+Best Practices for Auto Scaling for Microsoft Azure
+Google Cloud Platform Auto Scaling
+#8 Given these models, how would you put them into a single database table? And what are the advantages of this?
+If the company you interview at is working on a complex Rails app, the chances are good that they use sub-classed ActiveRecord models. These are models that use STI (Single Table Inheritance) to store models in a single database table. With single table inheritance, we will have one database table with an additional column created that stores the type of subclass.
+
+For example, we have 4 models: FleetVehicle which is sub-classed as Car, Truck, Scooter. Without single table inheritance we would have three database tables, one for each subclass. However, by using single table inheritance, we will have only one database table which stores the type of each subclass.
+
+Here's how the code looks before using single-table inheritance:
+
+class FleetCar < ApplicationRecord; end
+class FleetTruck < ApplicationRecord; end
+class FleetScooter < ApplicationRecord; end
+That's three separate database tables and any commonality between models would have to be shared using modules and mixins and concerns.
+
+Here's how the models look after applying single-table inheritance:
+
+class FleetVehicle < ActiveRecord::Base; end
+class Car < FleetVehicle; end
+class Truck < FleetVehicle; end
+class Scooter < FleetVehicle; end
+This results in just one database table with an additional column to specify the type of object.
+
+The main advantage is that it simplifies queries and reduces the workload on the database. Instead of joining multiple tables to find a particular type of model, you can query one table. This is especially helpful if you are trying to ensure a unique constraint for certain model fields. For instance, you might want all products in an ecommerce store to be in a single table so that the product serial numbers are unique, or you'd want all vehicles in your fleet to have a unique id.
+
+In the Rails documentation for ActiveRecord there is another example of how to use Single-Table Inheritance: https://api.rubyonrails.org/v6.0.2.1/classes/ActiveRecord/Inheritance.html
+
+...
+
+
+Q- 
+
+Write a function that sorts the keys in a hash by the length of the key as a string. For instance, the hasht :
+
+hsh.keys.map(&:to_s).sort_by(&:length) 
+or: 
+
+hsh.keys.collect(&:to_s).sort_by { |key| key.length } 
+or : 
+
+def key_sort hsh 
+hsh.keys.collect(&:to_s).sort { |a, b| a.length <=> b.length } end 
+
+...
+
+Q- 
+
+Write a single line of Ruby code that prints the Fibonacci sequence of any length as an array.
+There are multiple ways to do this, but one possible answer is: 
+
+(1..20).inject( [0, 1] ) { | fib | fib << fib.last(2).inject(:+) } 
+As you go up the sequence fib, you sum, or inject(:+), the last two elements in the array and add the result to the end of fib. 
+
+Note: inject is an alias of reduce 
+
+
+...
+
+
+16 / 16
+Beginner
+Intermediate
+Advanced
+Beginner
+Intermediate
+Advanced
+ 
+1.
+Difference between File.new method and File.open method in Ruby?
+
+2.
+How would you freeze an object in Ruby? Can you provide a sample example ?
+
+3.Explain the role of thread pooling in relation to the thread lifecycle in Ruby?
+4.What are some built-in Ruby class exceptions.
+5.What are the different iterators used in Ruby?
+6.
+How can the user specify a local gem in Gemfile
+
+7.What are the different ways to compare Ruby string
+8.
+Explain Ruby object and how to create
+
+9.What is the use of load and require in Ruby ?
+10.What is the difference between nil and false in Ruby?
+11.
+Write a function that sorts the keys in a hash by the length of the key as a string. For instance, the hasht :
+
+12.Write a single line of Ruby code that prints the Fibonacci sequence of any length as an array.
+13.What is the difference between calling super and calling super()?
+14.
+What does ‘self’ mean?
+
+15.
+What is lambda ruby?
+
+16.
+Can you print the current day of the week in words such if the current day is Monday then it should print “Monday” in Ruby?
+
+Ruby is provided with default libraries in the form of classes, which will be accessible after installing ruby in your system. These libraries are referred to as Ruby Standard Library. Some of the libraries need to be invoked explicitly. ‘Date’ class is a library in ruby where you can get most of the actions related to date and make use of these to implement your requirement. You need to load the ‘date’ module in file or IRB or console where you want to print the current day of the week.
+
+The following example is in IRB,
+
+Load ‘date’ class to get the current day of the week in ruby.
+
+For example:
+
+//----start code--------
+> load ‘date’
+>   Date.today.strftime("%A")
+=> "Sunday"
+//----end code--------
+From the above example, In the first line, we have loaded the ‘date’ library. Now you will have all the required classes and methods available for you in this IRB console. ‘Date’ is the class that we will be using to get the current day of the week. Date.today will give the current day information such as date, month and year. Calling strftime method on the current day to format and get the desired output. In this case, You will use ‘%A’ to get the current day of the week which is ‘Sunday’. There are also many other options to format the date such as get the month in the letter, month in word, year in the letter, year in 4 digits, year in 2 digits, etc
+
+Please refer to the following for more formatting options
+
+...
+
+
+Link ::  https://www.knowledgehut.com/interview-questions/ruby
+
+
+...
+
+Q 36 - 
+
+2. Tell Us Which of The Expressions Below Are False:
+true  ? “true” : “false”
+0 ? “true” : “false”
+nil ? “true” : “false”
+“”  ? “true” : “false”
+false ? “true” : “false”
+“false” ? “true” : “false”
+1 ? “true” : “false”
+This question refers to the logical part of programming, where you can assess the candidate’s logical thinking capabilities and whether he draws the right logic for any statement or expression.
+
+Expected Answer-
+
+In Ruby on Rails, the false value is evaluated only to the nill, and the false and everything else, even 0 is evaluated as true.
+
+...
+
+
+Q.
+
+https://tests4geeks.com/ruby-on-rails-online-test
+
+Sample RoR Test Question
+Consider the following Ruby on Rails controller:
+
+Ruby on Rails Sample Question
+What will happen when the update action receives the following parameters?
+
+Ruby on Rails Test
+Answers
+
+1. The user model will not be updated because an unexpected parameter was provided, and the user will be redirected to the edit page.
+
+2. The user model will be updated with all the provided parameters.
+
+3. The user model will be updated with the provided first_name, last_name and email parameters.
+
+...
+
+Very good assignment in rails :: 
+
+link ::  https://www.testdome.com/tests/ruby-on-rails-online-test/66
+
+
+......
+
+Q36 - 
+Sample RoR Test Question
+Consider the following Ruby on Rails controller:
+
+Ruby on Rails Sample Question
+What will happen when the update action receives the following parameters?
+
+Ruby on Rails Test
+Answers
+
+1. The user model will not be updated because an unexpected parameter was provided, and the user will be redirected to the edit page.
+
+2. The user model will be updated with all the provided parameters.
+
+3. The user model will be updated with the provided first_name, last_name and email parameters.
+
+The correct answer is 3.
+
+...
+
+Q37=
+
+What is the output of the given code?
+
+ print "What's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   a=a.reverse
+   puts"My name is #{a}"
+a) amil jones
+b) What’s your first name? amil
+My name is Amil
+c) What’s your first name? amil
+My name is limA
+d) My name is limA
+View Answer
+
+Answer: b
+Explanation: The string is reversed then and stored in a variable.
+Output:
+what's your first name? amil
+My name is limA
+
+....
+
+Q38 - 
+
+9. What do we mean by expression substitution?
+a) Embedding the value of Ruby expression into a string using #{ }
+b) Substituting string functions
+c) Storing string value
+d) None of the mentioned
+View Answer
+
+Answer: a
+Explanation: Strings are displayed #{} sequence.
+
+...
+Q38 -
+
+11. What does %{Learn ruby language} represents?
+a) “Learn Ruby language”
+b) “%{Learn Ruby language}”
+c) ” Learn Ruby language ”
+d) None of the mentioned
+View Answer
+
+Answer: a
+Explanation: Anything written inside %{} is same as anything written inside “”.
+12. What does %Q{ Learn ruby language } represents?
+a) ” Learn Ruby language ”
+b) “%{ Learn Ruby language }”
+c) ” Learn Ruby language ”
+d) None of the mentioned
+View Answer
+
+Answer: a
+Explanation: Anything inside %Q{} is written inside “”.
+
+...
+39.
+
+13. What does %x!ls! represents?
+a) Same as back tick command output `ls`
+b) Same as ‘x’
+c) Same as “xls”
+d) None of the mentioned
+View Answer
+
+Answer: a
+Explanation: It is same as back tick command output `ls`.
+
+...
+
+4. What is the output of the code?
+
+print "What's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   first_name.capitalize!
+   print "What's your last name?"
+   last_name=gets.chomp
+   b=last_name.capitalize
+   last_name.capitalize!
+   puts "My name is #{first_name} #{last_name}"
+a) Amil Jones
+b) What’s your first name? amil
+What’s your last name? jones
+My name is Amil Jones
+c) My name is Amil Jones
+d) None of the mentioned
+View Answer
+
+Answer: b
+Explanation: First it takes the input from user and then modifies accordingly and displays output.
+Check this: Programming MCQs | Information Technology Books
+Output:
+What's your first name? amil
+What's your last name? jones
+My name is Amil Jones
+5. What is the output of the code?
+
+print "What's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   first_name.capitalize!
+   print "What's your last name?"
+   last_name=gets.chomp
+   b=last_name.capitalize
+   last_name.capitalize
+   puts "My name is #{first_name} #{last_name}"
+a) Amil Jones
+b) What’s your first name? amil
+What’s your last name? jones
+My name is Amil Jones
+c) What’s your first name? amil
+What’s your last name? jones
+My name is Amil jones
+d) None of the mentioned
+View Answer
+
+Answer: b
+Explanation: Capitalize method was not called at the time of last name, jones was not printed correctly it was not modified because ! was not used.
+Output :
+What's your first name? amil
+What's your last name? jones
+My name is Amil jones
+6. What is the output of the given code?
+
+print "what's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   "first_name.capitalize!".reverse
+   puts"My name is #{first_name}"
+a) amil jones
+b) What’s your first name? amil
+My name is amil
+c) My name is lima
+d) My name is limA
+View Answer
+
+Answer: b
+Explanation: “first_name.capitalize!” can not be in double quotes because it is a method.
+Output:
+What's your first name? amil
+My name is amil
+7. What is the output of the given code?
+
+print "what's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   "a".reverse
+   puts"My name is #{a}"
+a) amil jones
+b) What’s your first name? amil
+My name is Amil
+c) My name is lima
+d) My name is limA
+View Answer
+
+Answer: b
+Explanation: The string is reversed but it is not stored in any variable.
+Output:
+What's your first name? amil
+My name is amil
+8. What is the output of the given code?
+
+ print "What's your first name?"
+   first_name=gets.chomp
+   a=first_name.capitalize
+   a=a.reverse
+   puts"My name is #{a}"
+a) amil jones
+b) What’s your first name? amil
+My name is Amil
+c) What’s your first name? amil
+My name is limA
+d) My name is limA
+View Answer
+
+Answer: b
+Explanation: The string is reversed then and stored in a variable.
+Output:
+what's your first name? amil
+My name is limA
+
+...Link ::  https://www.sanfoundry.com/ruby-programming-interview-questions-answers/
+
+...
+Q- This set of Ruby Programming Interview Questions and Answers focuses on “Formatting String Methods”.
+
+1. The .upcase and .capitalize method are used for capitalizing the whole string.
+a) True
+b) False
+View Answer
+
+Answer: b
+Explanation: The .capitalize method doesn’t change the whole string to uppercase, it just capitalizes the first letter.
+2. What is the use of .capitalize method?
+a) It capitalizes the entire string
+b) It capitalize on the first letter of the string
+c) It capitalize the strings which are in small case
+d) All of the mentioned
+View Answer
+
+Answer: b
+Explanation: It capitalizes only the first letter.
+3. What is the role of ! at the end of the capitalize method?
+a) It is the syntax for using capitalize method
+b) It modifies the value stored in the variable
+c) It indicates the termination of string
+d) None of the mentioned
+View Answer
+
+Answer: b
+Explanation: It is used for modifying the variable.
+
+
+...
+Q - many times it is asking do it ??
+
+https://tests4geeks.com/ruby-on-rails-online-test
+
+
+Consider the following Ruby on Rails controller:
+
+Ruby on Rails Sample Question
+What will happen when the update action receives the following parameters?
+
+Ruby on Rails Test
+Answers
+
+1. The user model will not be updated because an unexpected parameter was provided, and the user will be redirected to the edit page.
+
+2. The user model will be updated with all the provided parameters.
+
+3. The user model will be updated with the provided first_name, last_name and email parameters.
+
+The correct answer is 3.
+
+
+
+....
+
+Q=== Write the Sql query in Rails ?????
+
+Links :: https://www.microverse.org/blog/how-to-write-a-sql-query-in-ruby-on-rails
+
+....
+
+1. Return a user or users with the name ‘zee’:
+SELECT * FROM users WHERE (users.name = “zee”) LIMIT 1
+
+Write this Query in the Active Record ?
+
+User.where(name: “zee”)
+User.where(“name = ?”, params[:name])
+User.where(“name = ?”, “roy”) 
+
+
+
+
+
+
+
 

@@ -199,6 +199,10 @@ Query28 :: select_all  :: Find by Sql Query ::
 Query29 :: Pluck   :: 
 pluck can be used to query single or multiple columns from the underlying table of a model. It accepts a list of column names as an argument and returns an array of values of the specified columns with the corresponding data type.
 
+Client.where(:active=>true).pluck(:id) = Select id from clients where active=1
+Client.uniq.pluck(:role) = Select distinct roles from the clients.
+
+
 
 irb> Book.where(out_of_print: true).pluck(:id)
 SELECT id FROM books WHERE out_of_print = true
@@ -249,8 +253,35 @@ Customer.where(first_name: 'Ryan').exists?
 ...
 Query32 :: Retrieving Multiple Objects in Batches ::
 
+find_each ::
+
+User.find_each do |user|
+  NewsMailer.weekly(user).deliver_now
+end
+User.where(weekly_subscriber: true).find_each do |user|
+  NewsMailer.weekly(user).deliver_now
+end
+User.find_each(batch_size: 5000) do |user|
+  NewsMailer.weekly(user).deliver_now
+end
+User.find_each(start: 2000) do |user|
+  NewsMailer.weekly(user).deliver_now
+end
+User.find_each(start: 2000, finish: 10000) do |user|
+  NewsMailer.weekly(user).deliver_now
+end
 
 
+find_in_batches ::
+# Give add_invoices an array of 1000 invoices at a time.
+Invoice.find_in_batches do |invoices|
+  export.add_invoices(invoices)
+end
+Invoice.pending.find_in_batches do |invoices|
+  pending_invoices_export.add_invoices(invoices)
+end
+
+...
 
 
 

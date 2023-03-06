@@ -1,5 +1,7 @@
 differences.txt :: 
 
+.............................................................
+
 
 1. 
 
@@ -192,4 +194,37 @@ No.Ruby is the dynamic language so it does not support the method overloading be
 
 
 Method Overriding ::
+
+
+
+..................................................................
+
+.............................................................
+
+3. Difference between Static and dynamic Scaffolding?
+4. Difference between Mocs and Stubs?
+5. Difference between Harness and Fixtures ?
+6. Differnece between TDD and BDD ?
+7. Diff between Include and Extend ?
+8. Diff between Join and Include ?
+9. Diff between instance_eval and class_eval ?
+10.Diff between Proc and Lambda ?
+11.Diff between Instance and Class Methods ?
+12.Diff between length , count and size ?
+13.Diff between select,collect,map,inject,detect,each ?
+14.Diff between Rails4,5,6,7 ?
+15.Diff between Hash and HashwithIndifferentAccess ?
+16.Diff between load and require ?
+17.Diff between autoload and require ?
+18.Diff between raise and ensure statement in rails ?
+19.Diff between render and redirect ?
+
+20.Diff between string and text ?
+
+Both string and text save information of the "string-type" that you can freely write in. The number of characters you can enter in these fields differs between the two. The character limit for a string field is 255 characters, while the character limit for a text field is 30,000 characters.
+If you wish to store data like addresses, names, or basic custom data, a string field is an excellent option. When you want to store information from a comment box on a form, or if you're importing a huge block of text, a text area field is an excellent solution.
+
+
+..............................................
+
 

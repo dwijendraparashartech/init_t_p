@@ -663,7 +663,7 @@ It became a power-packed solution for the business needs with the latest updates
 .......................
 
 
-
+Rails 5 Features :: 
 .......................  .......................  .......................
 
 C. Diff bet rails 4 and 5 ::
@@ -756,4 +756,23 @@ D. Diff between Rails 2 and Rails 3 :::
 Q.Difference Between Rails 2 And Rails 3 ?
 Ans: I found 7 major Difference between rails 2 and rails 3 has: New Router Api, New mailer, New Active Record Query interface, Assets pipeline, Security Improvements, Unobtrusive JavaScript (UJS) , Dependency management with bundler.
 
+
+1. Introduction to Bundler (New Way to manage em dependencies
+2. Gemfile and Gemfile.lock - where all your gem dependencies lies ,instead of enviornment.rb 
+3. A new.rb file in config/folder named as application.rb, (which has previously enviornment.rb had)
+4. Change in SQL Structure : Model.where(:activated=>true)
+5. All the mailer Script will now be in the app/mailers folders,earlier we kept inside the app/models.
+6. Rails3-UJS Support .for links and forms to work as AJAX, instead of writing complex line of code ,we write 
+:remote => true 
+7. HTML 5 Support 
+8. Change in the model based validation syntax : 
+valdiates:name,presence => true 
+9. Ability to install 
+
+
+.....................
+.....................
+
+Features of rails 4 :: 
+Diff between Rails 3 and Rails 4 ::
 
