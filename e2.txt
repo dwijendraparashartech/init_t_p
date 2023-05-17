@@ -8,6 +8,341 @@ examples_basic_advance_programs_ruby.txt
 
 
 
+0.0.0 ::
+
+Examples and Methods of Hashes ::
+
+e10.txt
+
+Hash 
+
+1.old hash syntax:   old_syntax_hash = {:name => 'bob'} => {:name=>'bob'}
+
+2.new hash syntax:   new_hash = {name: 'bob'}  => {:name=>'bob'}
+
+3.Add on to an existing Hash :: 
+person = { height: '6 ft', weight: '160 lbs' } => {:height=>'6 ft', :weight=>'160 lbs'}
+person[:hair] = 'brown'
+person => {:height=>'6 ft', :weight=>'160 lbs', :hair=>'brown'}
+person[:age] = 62 => 62
+person => {:height=>'6 ft', :weight=>'160 lbs', :hair=>'brown', :age=>62}
+
+4.Remove from a hash :  person.delete(:age)   => 62
+
+5.How do you retrieve a piece of information from a hash?
+ person[:weight]  => "160 lbs"
+
+6.How to merge two hashes together :  
+person.merge!(new_hash)=> {:height=>'6 ft', :weight=>'160 lbs', :hair=>'brown', :name=>'bob'}
+
+7.Iterating Over Hashes :
+person = {name: 'bob', height: '6 ft', weight: '160 lbs', hair: 'brown'}
+person.each do |key, value|
+  puts "Bob's #{key} is #{value}"
+end
+
+8.Common hash methods :
+
+A. key? 
+The key? method allows you to check if a hash contains a specific key. It returns a boolean value.    name_and_age = { "Bob" => 42, "Steve" => 31, "Joe" => 19} => {"Bob"=>42, "Steve"=>31, "Joe"=>19}
+name_and_age.key?("Steve") => true
+name_and_age.key?("Larry") => false
+
+
+B. select
+The select method allows you to pass a block and will return any key-value pairs that evaluate to true when passed to the block
+
+name_and_age.select { |k,v| k == "Bob" }  => {"Bob"=>42}
+name_and_age.select { |k,v| (k == "Bob") || (v == 19) } => {"Bob"=>42, "Joe"=>19}
+
+C. fetch
+The fetch method allows you to pass a given key and it will return the value for that key if it exists. You can also specify an option for return if that key is not present. Take a look at the Ruby docs here to see what else is possible.
+
+ name_and_age.fetch("Steve")
+=> 31
+
+ name_and_age.fetch("Larry")
+=> KeyError: key not found: "Larry"
+     from (irb):32:in `fetch'
+     from (irb):32
+     from /usr/local/rvm/rubies/ruby-2.5.3/bin/irb:16:in `<main>'
+
+name_and_age.fetch("Larry", "Larry isn't in this hash")
+=> "Larry isn't in this hash"
+
+D. to_a
+The to_a method returns an array version of your hash when called. Let's see it in action. It doesn't modify the hash permanently though.
+
+Copy Code
+irb :009 > name_and_age.to_a
+=> [["Bob", 42], ["Steve", 31], ["Joe", 19]]
+irb :010 > name_and_age
+=> {"Bob"=>42, "Steve"=>31, "Joe"=>19}
+
+E. keys and values
+Finally, if you want to just retrieve all the keys or all the values out of a hash, you can do so very easily:
+
+Copy Code
+irb :0011 > name_and_age.keys
+=> ["Bob", "Steve", "Joe"]
+irb :0012 > name_and_age.values
+=> [42, 31, 19]
+Notice that the returned values are in array format. Because it's returning an array, you can do interesting things like printing out all the keys in a hash: name_and_age.keys.each { |k| puts k }.
+
+
+
+............................................................................................
+
+Exercises based on Hash ::
+
+Problem 01: 
+
+Given a hash of family members, with keys as the title and an array of names as the values, use Ruby's built-in select method to gather only siblings' names into a new array.
+
+family = {  uncles: ["bob", "joe", "steve"],
+            sisters: ["jane", "jill", "beth"],
+            brothers: ["frank","rob","david"],
+            aunts: ["mary","sally","susan"]
+          }
+
+Solution ::
+
+immediate_family = family.select do |k, v|
+  k == :sisters || k == :brothers
+end
+
+arr = immediate_family.values.flatten
+
+p arr
+
+.............................................................
+
+Problem 02:
+
+Look at Ruby's merge method. Notice that it has two versions. What is the difference between merge and merge!? Write a program that uses both and illustrate the differences.
+
+The difference is merge! modifies permanently, while merge does not.
+
+Copy Code
+cat = {name: "whiskers"}
+weight = {weight: "10 lbs"}
+puts cat.merge(weight)
+puts cat                  # => {:name=>"whiskers"}
+puts weight               # => {:weight=>"10 lbs"}
+puts cat.merge!(weight)
+puts cat                  # => {:name=>"whiskers", :weight=>"10 lbs"}
+puts weight               # => {:weight=>"10 lbs"}
+
+
+.............................................................
+
+
+Problem 03:
+
+Using some of Ruby's built-in Hash methods, write a program that loops through a hash and prints all of the keys. Then write a program that does the same thing except printing the values. Finally, write a program that prints both.
+
+opposites = {positive: "negative", up: "down", right: "left"}
+
+opposites.each_key { |key| puts key }
+opposites.each_value { |value| puts value }
+opposites.each { |key, value| puts "The opposite of #{key} is #{value}" }
+
+.............................................................
+
+
+Problem 04:
+
+Given the following expression, how would you access the name of the person?
+person = {name: 'Bob', occupation: 'web developer', hobbies: 'painting'}
+
+person[:name]
+
+.............................................................
+
+Problem 05:
+
+What method could you use to find out if a Hash contains a specific value in it? Write a program that verifies that the value is within the hash.
+
+Solution :
+
+# value?
+
+if opposites.value?("negative")
+  puts "Got it!"
+else
+  puts "Nope!"
+end
+
+................................................................
+
+Problem 06 : 
+
+Given the following code...
+
+Copy Code
+x = "hi there"
+my_hash = {x: "some value"}
+my_hash2 = {x => "some value"}
+What's the difference between the two hashes that were created?
+
+Solution :: 
+
+The first hash that was created used a symbol x as the key. The second hash used the string value of the x variable as the key.
+
+................................................................
+
+Problem 07 :
+
+If you see this error, what do you suspect is the most likely problem?
+
+Copy Code
+NoMethodError: undefined method `keys' for Array
+
+
+A. We're missing keys in an array variable.
+B. There is no method called keys for Array objects.
+C. keys is an Array object, but it hasn't been defined yet.
+D. There's an array of strings, and we're trying to get the string keys out of the array, but it doesn't exist.
+
+B.There is no method called keys for Array objects.
+
+
+................................................................
+
+
+good link : very good link :: 
+Use compact_blank to remove empty strings from Arrays and Hashes
+
+
+Q.0.  Short Basic Tricky questions ::
+1.To Compute the sum of elements of a given array :
+    nums = [1,4,3,9,3,4,2,8]
+    print nums.inject(0){|sum,x| sum+x}
+
+2.1.To Remove blank elements from array ::
+    print color = ['','red','green','blue'],"\n"
+    print color.reject{|c| c.empty?}
+
+    print color = ['','','','green','','blue','','','red']
+    print color.reject{|c| c.to_s.empty?}
+
+2.2.Program to remove nil elements in an array ::
+    [1, nil, “3”, “”, []].compact
+
+3.Covert an Array into index Hash ::
+    nums = [10,20,30,40,50]
+    print Hash[nums.zip]
+
+4.Convert an string into index Hash ::
+    p text = 'The rain in Spain falls mainly in the plain.'
+    word_count_hash = Hash.new 0
+    p word_count_hash
+    text.split(/\W+/).each { |word| word_count_hash[word.downcase] += 1 }
+    p word_count_hash
+    # => {"rain"=>1, "plain"=>1, "in"=>2, "mainly"=>1, "falls"=>1,
+    #     "the"=>2, "spain"=>1}
+
+4. Convert Hash to Array in Ruby :: 
+
+Converts hsh to a nested array of [ key, value ] arrays.
+h = { "c" => 300, "a" => 100, "d" => 400, "c" => 300  }
+h.to_a #=> [["c", 300], ["a", 100], ["d", 400]]
+
+................................................................... 
+
+4.1.Find the items that are more than one in a given array :: 
+
+a = [1,2,3,2,4,4,2,5]
+puts a.select{ |el| a.count(el) > 1 }.uniq
+
+4.2.Find the frequency of given items in a given array ::
+  print nums = [10,20,30,40,50,10,20,10],"\n"
+  puts nums.inject(Hash.new(0)){|h,v| h[v] += 1;h}
+
+4.3.Find the most occured item in a given array ::
+p letters = [1,2,3,4,1,2,1,1,1]
+p letters.max_by { |i| letters.count(i) } 
+
+
+4.4 Find how many times a most occured item in an array ::
+
+def most_frequent_item_count(collection)
+  if collection == []
+    return 0
+  else
+    collection.uniq.map { |n| collection.count(n) }.max
+  end
+end
+print  most_frequent_item_count([1,1,1,1,1,2,3,2,3,5,1,1,1,1,1])
+
+
+
+5. check this program ::
+Search an Item with a Specific String ::
+    str = "1,2,3,4,5,6"
+    str.grep(/^ab/)
+
+6. To chec if all the items are identical in an array ::
+
+    puts arr = [1,1,1,2]
+    puts arr.all?{|x| x==arr[0]}  #> output : false
+
+    puts arr = [1,1,1,1]
+    puts arr.all?{|x| x==arr[0]}  #> output : true
+
+7. check this example
+Split an delimited string into an array : 
+  color = "c,o,l,o,r"
+  color.split(",")
+
+8. Count the lines in the string ::
+
+puts str = "1234
+88888"
+puts str.lines.count
+
+9. Get a substring from a specified position tonlast character of a string :: 
+
+def check_string (str,n)
+  str = str[n...-1]
+  return str
+end 
+print check_string(abcrdere,8)
+
+
+10. Remove all whitespace from a string :: 
+
+correct 
+puts "I have white space".delete(' ')
+
+correct 
+def check_string(my_string)
+  return my_string.delete(' ')
+end 
+print check_string("I have white space")
+
+
+wrong
+def check_string(my_string)
+  return my_string.delete('')
+end 
+print check_string("I have white space")
+
+11.Remove last specified character from a given string ::
+def check_string(n,my_string)
+  n.times do my_string.chop! end
+return my_string
+end
+print check_string(1,"1245")
+
+12.
+
+............................................
+............................................
+............................................
+............................................
+............................................
+
 0.1.  Examples and Methods of String :: 
 
 string methods 
@@ -28,7 +363,6 @@ whether a string starts with an other string ::   return my_string.start_with?(s
 remove a substring from a specified string ::    return my_string.slice! substr
 split a delimited string and convert it to an array:: return my_string.split(d)
 draw a string as bold or italic text ::  "<#{tag}> #{word} </#{tag}>"
-
 Get The String Length :: "ruby".size      ||     "ruby".size
 Check If A String Is Empty :: "".size == 0  ||   "".empty?
 String Interpolation? ::  name = "Jesus"   ,  puts "Hello #{name}"
@@ -80,8 +414,9 @@ array = [1, 1, 2, 3, nil]
 6. Presence in the String :: array = ['Simple', 'Ample', 'Sit'] ,  array.find{|s| s['Si']}
 7. Find common items from below arrays :: array1 = [1, 2, 3 ] ,array2 = [0, 5, 2]
 print array3 = array1 & array2
-8. Sum up the values of a Hash in Ruby ?  hash = {"a"=>10, "b"=>20, "c"=>30}
-  hash.values.inject { |a, b| a + b }
+8. Sum up the values of a Hash in Ruby ?  
+  p hash = {"a"=>10, "b"=>20, "c"=>30}
+  p  hash.values.inject { |a, b| a + b }
 
 .................................................................
 .....................................................................
@@ -162,7 +497,61 @@ end
 print list_duplicates([1,1,4,5,6,6,9])
 
 ........................................
+
+2.2 Find out the sum of first part of strings of an array ::
+
+p ["5 Apple", "5 Orange", "15 Grapes"].map(&:to_i).sum
+
 ..........................................................
+
+2.3 Hash - How to Create and access the arrays of hashes --
+p hash_arr = [{"a"=>'vvvv',"b"=>'xxxx'},{"c"=>"cccccc","d"=>"dddd"}]
+p hash_arr[1]["c"]
+
+...........................................................
+2.4 Iterate over array of hashes :: 
+hash_arr = [{name:'Amu',occupation:'Web Developer'},{name:'Sumit',occupation:'HR'}]
+hash_arr.each do |hash|
+  puts 'values in the hash'
+  hash.each do |key,value|
+    puts (key.to_s+':'+value.to_s)
+end
+end
+...........................................................
+...........................................................
+
+2.5 Iterate over normal hash :: 
+
+h = { "first_name" => "John", "last_name" => "Doe" }
+h.each do |key, value|
+    puts "#{key} = #{value}"
+end
+
+# => first_name = John
+#    last_name = Doe
+...........................................................
+
+
+h = { "first_name" => "John", "last_name" => "Doe" }
+h.each_key do |key|
+  puts key
+end
+
+# => first_name
+#    last_name
+...........................................................
+
+
+h = { "first_name" => "John", "last_name" => "Doe" }
+h.each_value do |value|
+    puts value
+end
+
+# => John
+#    Doe
+...........................................................
+...........................................................
+
 
 2. Give an Example to get Duplicate Items of an Array  ::
 
@@ -242,7 +631,7 @@ First, we set the count to zero and the variable arr to our initial array. If th
 
 ......................
 
-3.Flattening an Array with Recursion
+3.Flattening an Array with Recursion :: Single /Total Flatten whole Array ::
 
 my_array = [1, [2, 3, [4, 5]]]
 recursive_flatten(my_array) #=> [1, 2, 3, 4, 5]
@@ -336,9 +725,9 @@ puts pets.max_by {|i| pets.count(i)}
 
 6. Find whether two array elements are match or not (order does not matter) ::
 
-a = [1,2,3,2,2]
-b = [1,3,2,2,2]
-puts a.sort == b.sort
+p a = [1,2,3,2,2]
+p b = [1,3,2,2,2]
+p a.sort == b.sort
 # output : true
 
 c = [1,2,3,2,2]

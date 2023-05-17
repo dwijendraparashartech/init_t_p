@@ -1,6 +1,30 @@
 queires.txt ::
 
-.....................
+Very good link and problem ::  https://stackoverflow.com/questions/50401702/joining-nested-associations-multiple-level
+
+...............................................
+
+Query 00 :: Sql Query Example ::
+
+SQL Query for the Joins :: 
+There are multiple ways to use the joins method.
+Query ::     Author.joins("INNER JOIN books ON books.author_id = authors.id AND books.out_of_print = FALSE")
+Result ::   SELECT authors.* FROM authors INNER JOIN books ON books.author_id = authors.id AND books.out_of_print = FALSE
+
+
+
+
+...............................................
+More Important others different queries ::
+
+Query ::::   Rails find all Customers that have exactly 1 Order::::::::::::::::
+
+Customer.joins(:orders).group(:id).having("count(orders.id) = 1")
+Customer.joins(:orders).group("customers.id").having("count(orders.id) = 1")
+Customer.joins(:orders).where("count(orders.id) = 1")
+
+............................................
+
 
 Query 01 ::  All the Categories that have products with duplicate categories also
 Category.joins(:products)  ::  Simple Joins
@@ -22,11 +46,11 @@ Query 05 ::  All products(duplicate also) that have a category and at least one 
 Product.joins(:category, :likes)  ::  Multiple Joins
 .......
 
-Query 05 ::  All uniq products that have a category and at least one like
-Product.joins(:category, :likes).uniq  :: Multiple Joins
+Query 05.1 ::  All products that have a category and at least one like
+Product.joins(:category, :likes)  :: Multiple Joins
 .......
 
-Query 06 ::  All uniq products that have a category and at least one like
+Query 05.2 ::  All uniq products that have a category and at least one like
 Product.joins(:category, :likes).uniq  :: Multiple Joins
 .......
 
@@ -34,7 +58,7 @@ Query 06 ::   All categories that have products that were liked
 Category.joins(products: :likes).uniq  :: Nested Joins 
 .......
 
-Query 07 ::   Product has_many reviews and likes.
+Query 07 :: All Categories that have Product has_many reviews and likes.
 Category.joins(products: [:reviews, :likes]).uniq  :: Nested Joins 
 .......
 
@@ -101,6 +125,7 @@ Post => :id, :summary
 class Post < ActiveRecord::Base
    has_many :taggings
    has_many :tags, :through => :taggings 
+
  end
  class Taggins < ActiveRecord::Base 
    belongs_to :post 
@@ -125,6 +150,7 @@ Book.where("title = 'Introduction to Algorithms'")
 
 Query 21 :: Find all books where the title field value is 'Introduction to Algorithms'.
 Conditions :: Pure String Conditions :: and Array Conditions :: 
+
 Book.where("title = ?", params[:title])
 Book.where("title = ? AND out_of_print = ?", params[:title], false) :: with mult condtns
 Book.where("title = ?", params[:title])  :: highly preferable
@@ -187,6 +213,7 @@ Book
 ...
 
 Query27 :: Find by Sql Query :: Find the record with the help of sql ::
+
 Customer.find_by_sql("SELECT * FROM customers INNER JOIN orders ON customers.id = orders.customer_id ORDER BY customers.created_at desc")
 => [#<Customer id: 1, first_name: "Lucas" ...>, #<Customer id: 2, first_name: "Jan" ...>, ...]
 
@@ -283,7 +310,33 @@ end
 
 ...
 
+Query33: Example of All joins Syntax ::
 
+Syntax of Joins ::
+
+................
+0.Syntax of Inner Joins :: Student.joins(:club) or Club.joins(:students)
+................
+1.Syntax of Left Joins ::   Student.left_joins(:club)
+..........
+2. Syntax of Forced Left Joins :: Student.eager_load(:club)
+..........
+3. Syntax of Right Joins ::  Club.left_joins(:students)
+..........
+4. Syntax of Forced Right Joins :: Club.eager_load(:students)
+..........
+5. Syntax of Inner Joins :: Student.joins(:club)  OR    Club.joins(:students)
+..........
+6. Syntax of Other/Custom Joins :: Student.joins('RIGHT JOIN "clubs" ON "students"."id" = "clubs"."id"')
+..........
+6. Syntax of Full Outer Joins ::
+Student.joins(' FULL OUTER JOIN "clubs" ON "students"."id" = "clubs"."id" ')
+
+
+
+Query34: By default sql query  :: (may be check below please)
+
+Student.joins(' FULL OUTER JOIN "clubs" ON "students"."id" = "clubs"."id" ')
 
 
 

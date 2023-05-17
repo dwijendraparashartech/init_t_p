@@ -2,7 +2,7 @@ tasks_rails_big.txt ::
 
 .........................
 
-1. Add has_and_belongs_to_many Association ::
+1.Add has_many_through Association ::
 
 class Physician < ApplicationRecord
   has_many :appointments
@@ -21,7 +21,7 @@ end
 
 .........................
 
-2. Add has_many_through Association ::
+2.Add has_and_belongs_to_many Association ::
 
 class Assembly < ApplicationRecord
   has_and_belongs_to_many :parts
@@ -46,4 +46,7 @@ end
 class Product < ApplicationRecord
   has_many :pictures, as: :imageable
 end
+
+.........................
+
 

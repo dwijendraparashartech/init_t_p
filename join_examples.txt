@@ -1,10 +1,8 @@
 join_examples.txt::
 
 Link ::  https://www.learneroo.com/modules/137/nodes/768
-................ .................... ................ ...................  ................
 
-
-
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 Types of Joins :: 
 
@@ -13,13 +11,7 @@ Types of Joins ::
 3. Where :: Before looking at more advanced joins queries, let's look at querying a single model. , .where lets you retrieve all items that match a specific condition.
 4. Conditional Joins :: The goal of joins is often to get one model based on specific conditions in another model. 
 
-
-................ .................... ................ ...................  ................
-
-
-................ .................... ................ ...................  ................
-
-
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 1. Simple Joins :: 
 
@@ -39,20 +31,12 @@ D. All the Products that have categories without  duplicate categories
 
 Product joins(:categories).uniq
 
-................ .................... ................ ...................  ................
-
-
-................ .................... ................ ...................  ................
-
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 Multiple Joins :: 
 We Have :: 
-
 category table | product table with category_id |  
 Like table with product_id and user_id | user table 
-
-
-
 .........................
 
 2. Multiple Joins ::
@@ -65,35 +49,21 @@ B.  all uniq products that have a category and at least one like
 
 Product.joins(:category, :likes).uniq 
 
-
-................ .................... ................ ...................  ................
-
-
-................ .................... ................ ...................  ................
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 Nested Joins :: 
-
 A. All categories that have products that were liked
-
 Category.joins(products: :likes).uniq
 
-
 B. Product has_many reviews and likes.
-
 Category.joins(products: [:reviews, :likes]).uniq
 
 C. All products with a quantity of 0 ::
-
 Product.where(quantity: 0)
 Product.where(quantity: 2..5)  (for range of quantity from 2 to 5)
 Product.where('quantity > 3')  (Conditional)
 
-
-................ .................... ................ ...................  ................
-
-
-................ .................... ................ ...................  ................
-
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 Conditional Joins :: 
 
@@ -111,12 +81,7 @@ C. you'll generally want to add .uniq to these queries avoid returning duplicate
 
 Category.joins(:products).where('products.quantity > 3').uniq
 
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-
-................ .................... ................ ...................  ................
-
-
-................ .................... ................ ...................  ................
-
-
+# Join Examples :::
 

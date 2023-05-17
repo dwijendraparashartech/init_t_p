@@ -1,0 +1,96 @@
+duck_typing.txt :: 
+
+
+Duck typing in Ruby
+What is duck typing?
+Duck types are public interfaces that are not tied to any specific class.
+
+This is the definition from a great author Sandi Metz book POODR.
+
+Before touching this concept, I will give you 1 simple analogy to explain the concept.
+
+Suppose we have a bird duck who can swim and quack, so these are features of duck. Now suppose there is another species of bird who is capable of swim and quack is also comes under that category of duck, so we will call that bird a duck. This is called duck typing.
+
+If we want to put a concept of duck typing in terms of Ruby,
+
+Consider an object who can do swim and quack is a duck. Let's continue with Duck's example.
+
+class Duck
+  def quack
+    puts 'Duck quack'
+  end
+  def swim
+    puts 'Duck swim'
+  end
+end
+class Goose
+  def quack 
+    puts 'Goose quack'
+  end
+  def swim
+    puts 'Goose swim'
+  end
+end 
+class BirdActions
+attr_reader :birds
+def initialize
+  @birds = []
+  duck = Duck.new()
+  goose = Goose.new()
+  @birds.push(duck)
+  @birds.push(goose)
+end
+def quack
+  birds.each do | bird |
+    bird.quack
+  end
+end
+def swim
+  birds.each do | bird |
+    bird.swim
+  end
+end
+
+end
+
+action = BirdActions.new()
+action.quack
+action.swim
+
+
+In the above example, we have 2 objects of birds, 1st is Duck and another one is Goose and 3rd class which is just a class which is an aggregating bird and performing actions on them.
+
+Both the bird classes have 2 methods which are quack and swim.
+
+Now the most interesting part, In BirdActions class we are creating an instance of Duck and Goose class and saving in a `birds` array.
+
+action = BirdActions.new()
+action.quack
+action.swim
+When we called method quack and swim from the BirdAction method, we will get the following output.
+
+Duck quack
+Goose quack
+Duck swim
+Goose swim
+We achieve the duck typing model here.
+
+This can be achieved in dynamic type language, here we can pass 2 different types of object which has methods with the same name but can execute different behavior according to requirement. Here we don’t have to check kind_of? (this method checks the instance of a class) as it shares the public interface methods. By this, we achieve the simplicity of code by avoiding the condition statement like if-else and switch.
+
+Document and test your duck
+
+With great power comes great responsibility, for using this amazing feature we have to be careful as a compiler is not going to alarm a warning when we call the public methods of class instances and we will bump with the error or unexpected behavior in production code.
+
+To avoid this when you duck type the public interface, we must document and test their behavior, try to cover all possible use cases.
+
+Fear of using duck typing
+
+In my humble opinion, I mostly used the static type language and recently start writing code in Ruby, This behavior of dynamic type language drives me crazy as fear of no type safety. The developers who fear duck typing generally keep adding the check of class type, by adding this check we are subverting the power of dynamic type language and making it impossible to duck type. To overcome the anxiety, one must gain more experience in writing code in dynamic type language.
+
+Conclusion
+
+In conclusion, one must use duck typing as it will help in reducing the boilerplate code and explicit checks.
+
+Thank you for reading this blog and please give me your valuable feedback.
+
+

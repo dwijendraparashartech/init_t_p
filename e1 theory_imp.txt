@@ -1,5 +1,25 @@
 theory_imp.txt :: 
 
+...........................................................................
+
+0.What are the third party libraries in your rails application , how to integrate third party library in your rails application , which third party library you did use ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+...........................................................................
+
 
 1. What is Bang Method in Rails ?
 
@@ -130,7 +150,7 @@ Database queries usually play the biggest role in an application’s performance
 A. Loading too much data into memory 
 B.  N+1 queries
 C   lack of cached values
-D   ack of proper databases indexes
+D   lack of proper databases indexes
 
 Missing database indexes on foreign keys and commonly searched columns or values that need to be sorted can make a huge difference. The missing index is an issue that is not even noticeable for tables with several thousand records. However, when you start hitting millions of records, the lookups in the table become painfully slow.
 

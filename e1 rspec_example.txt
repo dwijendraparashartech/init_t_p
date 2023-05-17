@@ -1,0 +1,273 @@
+rspec_example.txt ::
+
+require 'rails_helper'
+RSpec.describe "BxBlockTax::Tax", type: :request do
+  TAX_URL = '/bx_block_tax/taxes/'
+    TAX_URL_FILT = '/bx_block_tax/taxes/filter'
+    TAX_URL_IMP = '/bx_block_tax/taxes/import'
+    TAX_URL_EXP = '/bx_block_tax/taxes/export'
+    TAX_URL_BULK_U = '/bx_block_tax/taxes/bulk_update'
+    TAX_URL_BULK_D = '/bx_block_tax/taxes/bulk_destroy'
+    TAX_URL_Sh = '/bx_block_tax/taxes/search'
+    TAX_URL_Namerates = '/bx_block_tax/taxes/tax_rate_names/'
+
+  before(:all) do
+    role = BxBlockRolesPermissions::Role.find_or_create_by(name: "Director")
+    @account = create(:account, role_id: role.id)
+    auth_token = BuilderJsonWebToken::JsonWebToken.encode(@account.id)
+    @account.update(lms_token: auth_token)
+    @headers = {
+        "token" => @account.lms_token
+    }
+
+    @tax = create(:tax)
+    @tax2 = create(:tax)
+    @tax3 = create(:tax)
+    @tax4 = create(:tax, tax_type:"CGST")
+  end
+
+  describe "Get#index" do
+    it 'returns list of Taxes' do
+      get TAX_URL, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+
+     it 'When there is no Tax in the Record' do
+      get TAX_URL, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "POST#create" do
+
+    let(:params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:taxtype_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:valid_taxtype_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "GST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:name_params) do {
+        tax: {
+          name: "",
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:tax_per_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: "" ,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+    it "when tax successfully Created" do
+      post TAX_URL , params: params, headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+    end
+
+    it "Please enter name" do
+      post TAX_URL , params: name_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]["message"].join("")).to eq "Please enter name"
+      expect(response).to have_http_status 422
+    end
+
+    it "Please enter tax%" do
+      post TAX_URL , params: tax_per_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]["message"].join("")).to eq "Please enter tax %"
+      expect(response).to have_http_status 422
+    end
+  end
+
+  describe "Put#update" do
+    let(:params) do {
+        tax: {
+          name: "Tax1",
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        },
+      }
+    end
+    let(:new_params) do {
+        tax: {
+          name: "",
+          tax_percentage: 25,
+          description: "tax2 description",
+          tax_type: "CGST",
+          is_gst: true
+
+        }
+      }
+    end
+
+    it "when tax successfully updated" do
+      put TAX_URL + "#{@tax.id}", params: params, headers: @headers
+      expect(response.status).to eq 201
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+      expect(json_data['data']['id'].to_i).to eq @tax.id
+    end
+    it "when tax not present" do
+      put TAX_URL + "#{@tax.id}", params: new_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]['name'].join("")).to eq "Tax name can't be blank"
+      expect(response).to have_http_status 422
+    end
+  end
+
+  describe "Get#show" do
+    it "when tax found" do
+      get TAX_URL + "#{@tax.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+    end
+
+    it "when tax not found" do
+      get TAX_URL + 0.to_s, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]).to eq nil
+      expect(response).to have_http_status 404
+    end
+  end
+
+  describe "DELETE#destroy" do
+    it 'delete given tax' do
+      delete TAX_URL + "#{@tax.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "GET#filter" do
+    let(:name_params) do {
+        name: @tax.name,
+        start_range: 15,
+        end_range: 30,
+        tax_type: @tax.tax_type,
+        tax_percentage: @tax.tax_percentage
+      }
+    end
+    it 'when name not present' do
+      get TAX_URL_FILT, params: name_params, headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+      expect(json_data["data"].count).to eq 1
+    end
+  end
+
+  describe "GET#search" do
+    it 'it should return results' do
+      get TAX_URL_Sh + "?name=#{@tax.name}", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+      expect(json_response(response)['data'][0]["id"].to_i).to eq @tax.id
+    end
+    it 'it should return no records' do
+      get TAX_URL_Sh + "?name=asasas", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 404
+      expect(json_response(response)['message']).to eq "No records."
+    end
+  end
+
+  describe "Get#tax_rate_names" do
+    it 'returns list of Taxes' do
+      get TAX_URL_Namerates, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "PUT#bulk_update" do
+    let(:params) do {
+          "tax_type": "UTGST",
+          "ids": [@tax.id,@tax2.id]
+     }
+   end
+    let(:new_params) do {
+          "tax_type": "CGST",
+          "ids": ''
+     }
+    end
+    it 'when tax successfully updated' do
+      put TAX_URL_BULK_U, headers: @headers,params:params
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+      json_data['data'][0]["attributes"]["tax_type"] != @tax.tax_type
+    end
+
+      it "when tax not present" do
+      put TAX_URL_BULK_U , params: new_params, headers: @headers
+      json_data = json_response(response)
+      # expect(json_data["errors"]['name'].join("")).to eq "Tax name can't be blank"
+      expect(response).to have_http_status 404
+    end
+  end
+
+  describe "DELETE#bulk_destroy" do
+    it 'when tax successfully deleted' do
+      delete TAX_URL_BULK_D + "?ids=#{@tax4.id},#{@tax2.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+    end
+    it 'when tax not found' do
+      delete TAX_URL_BULK_D + "?ids=''", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 404
+    end
+  end
+
+  # import action
+  describe "POST#import" do
+    let(:params) do {
+      file: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, 'app/assets/csv_files/sample_file_for_tax.csv')))
+      }
+    end
+    it 'import the csv file' do
+      post TAX_URL_IMP, headers: @headers,params:params
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+    end
+  end
+end

@@ -2,6 +2,39 @@ design_pattern_Example.txt
 
 ..................................
 
+
+
+Types of Design Patterns ??
+
+1. Design Pattern 
+...............................
+2. Creational Pattern ::
+A. Abstract Factory Design PAttern in Ruby 
+B. Factory Method Design Pattern
+C. Prototype Design Pattern
+D. Singleton Design Pattern
+...............................
+3. Structural Pattern :: 
+Bridge Structure
+Composite Structure
+Decorator
+Facade
+Flyweight
+Proxy 
+...............................
+4. Behavioral Pattern :: 
+Responsibility Structure
+Interpreter 
+Iterator
+Mediator
+Memento
+Observer
+State
+Strategy
+Template
+Visitor
+
+
 ..................................
 
 
@@ -665,23 +698,70 @@ Of course, the query object doesn’t have to implement only class methods; it c
 ..................................  .................................. ..................................  ..................................
 
 
-9. Service Object 
+9. Service Object ::
+
+1. Service ::
+
+class WebsiteTitleScraper
+  def self.call(url)
+    response = RestClient.get(url)
+    Nokogiri::HTML(response.body).at('title').text
+  end
+end
+The above class is responsible only for scraping the website title.
+
+
+
+..................................  .................................. ..................................  ..................................
+
+
+10. Value Object
+
+2. Value Object ::
+
+The main idea behind the value object pattern is to create a simple and plain Ruby class that will be responsible for providing methods that return only values:
+
+class Email
+  def initialize(value)
+    @value = value
+  end
+
+  def domain
+    @value.split('@').last
+  end
+end
+The above class is responsible for parsing the email’s value and returning the data related to it.
+
+
+..................................  .................................. ..................................  ..................................
+
+11. View Object  (Presenter)
+3. Presenter 
+
+This design pattern is responsible for isolating more advanced logic that is used inside the Rails’ views:
+
+class UserPresenter
+  def initialize(user)
+    @user = user
+  end
+
+  def status
+    @user.sign_in_count.positive? ? 'active' : 'inactive'
+  end
+end
+We should keep the views as simple as possible and avoid putting the business logic inside of them. Presenters are a good solution for code isolation that makes the code more testable and readable.
+
+
 
 
 ..................................  .................................. ..................................  ..................................
 
 
-10. Value Object (Presenter)
-
-
-..................................  .................................. ..................................  ..................................
-
-11. View Object 
 
 
 
 
-..................................  .................................. ..................................  ..................................
+
 
 
 

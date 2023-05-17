@@ -17,7 +17,7 @@ Cron Job Special Strings
 cron jobs are great for computers that work 24/7, such as servers.
 
  Like any other program, cron has limitations you should consider before using it:
-
+ 
  The shortest interval between jobs is 60 seconds. With cron, you won’t be able to repeat a job every 59 seconds or less.
 
  Centralized on one computer. Cron jobs can’t be distributed to multiple computers on a network. So if the computer running cron crashes, the scheduled tasks won’t be executed, and the missed jobs will only be able to be run manually.

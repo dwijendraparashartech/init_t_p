@@ -1,5 +1,8 @@
 examples_basic_advance_programs_rails.txt :: 
 
+Q.what is the difference between sort and sort!
+Q.what is the difference between collect and collect!
+
 
 
 .........................................................
@@ -43,19 +46,13 @@ end
         options
       end
     end
-
 Solution :: 
 Replace :: 
 this ::
 all_keys = params.keys.map(&:to_sym)
-
 by this ::
 all_keys = params.slice(*available_option_keys)
-
-
 my_desc :: 
-
-
 
 desc ::
 It’s dangerous to convert user supplied parameters to symbols, since Symbol objects in Ruby are not garbage collected. An attacker could send a series of requests with random keys that would be turned into symbols, quickly exhausting your server’s available memory and taking down your site.There are two ways that this could be fixed. The first would be to use slice to eliminate values from the params hash that are not valid option keys. This would look something like:
@@ -69,8 +66,6 @@ An alternative, some would argue better, option would simply be to use String ke
 .........................................................
 
 Q3.What is the problem with controller code below :: 
-
-
 class CommentsController < ApplicationController
   def users_comments
     posts = Post.all
@@ -80,17 +75,13 @@ class CommentsController < ApplicationController
     end
   end
 end
-
 Sol ::   
 Replace - 
 posts = Post.all      to the below line please 
 posts = Post.includes(comments: [:author]).all
-
-
+post = Post.all
 my_desc:
 this is n+1 bug , we have retrive the post objects first but immediately after we get the comments and after that immediately we get the author of each comment . so use includes with post and comments with Post initially so database request will decreased. and this is the fast query which will tell the active record immediately.
-
-
 desc: 
 This is a classic example of the notorious “n+1” bug. The first line will retrieve all of the Post objects from the database, but then the very next line will make an additional request for each Post to retrieve the corresponding Comment objects. To make matters worse, this code is then making even more database requests in order to retrieve the Author of each Comment.This can all be avoided by changing the first line in the method to: posts = Post.includes(comments: [:author]).all
 This tells ActiveRecord to retrieve the corresponding Comment and Author records from the database immediately after the initial request for all Posts, thereby reducing the number of database requests to just three.Please note that the above answer is only one of a few ways that it is possible to avoid incurring an “n+1” penalty, and each alternative will have its own caveats and corner cases. The above answer was selected to be presented here since it requires the smallest change to the existing code and makes no assumptions regarding the reverse association of Comment to Post.
@@ -112,12 +103,14 @@ one array containing all keys
 another containing all values
 the sum of all the values
 
+Q -Without this merge option what other alternate we can use here.
+.......................................................................
 
 Sol ::  
 x = [{"a" => 10},{"b" => 20},{"c" => 30}]
 y = x[0].merge(x[1]).merge(x[2])
-y.keys  # will return all keys
-y.values # will return all values
+puts y.keys,"\n" # will return all keys
+puts y.values,"\n" # will return all values
 y.values.inject(:+)   # will return the sum of all values
 
 But a better first line would be this:
@@ -135,7 +128,7 @@ Answer: Summation of an array is one of the most fundamental concepts in program
 def sum(array)
   return array.inject(:+)
 end
-
+print sum([1,2,3,4,5,6,7,8,9])
 
 ..........................................
 
@@ -263,42 +256,29 @@ h['my_value'] #=> nil
 ....................................
 
 Q 11. .........................................
-
-
-7. Write a function that sorts the keys in a hash by the length of the key as a string. For instance, the hash:
+ Write a function that sorts the keys in a hash by the length of the key as a string. For instance, the hash:
 
 { abc: 'hello', 'another_key' => 123, 4567 => 'third' }
 should result in:
 
 ["abc", "4567", "another_key"]
-
-
 ..........
 
 Ans :: 
-
-
 Best Answer ::
 hsh.keys.map(&:to_s).sort_by(&:length)
-
 Other Answers ::
 hsh.keys.collect(&:to_s).sort_by { |key| key.length }
 def key_sort hsh
 	hsh.keys.collect(&:to_s).sort { |a, b| a.length <=> b.length }
 end
 collect { |x| x.to_s }
-
 ..................
-
 Ans::  hsh.keys.map(&:to_s).sort_by(&:length)
-
-
 As is always true in programming, there are in fact multiple ways to accomplish this.
-
 The most straightforward answer would be of the form:
 
 hsh.keys.map(&:to_s).sort_by(&:length)
-
 
 or:
 
@@ -330,6 +310,12 @@ val2 = (true && false)     # results in val2 being equal to false
 Description ::
 
 Although these two statements might appear to be equivalent, they are not, due to the order of operations. Specifically, the and and or operators have lower precedence than the = operator, whereas the && and || operators have higher precedence than the = operator, based on order of operations.
+
+prcedence of operations :: 
+
+and , or   ========= lower order of precedence 
+=   ========= higher order of precedence
+&& and ||  ==========  most higher order of operations
 
 To help clarify this, here’s the same code, but employing parentheses to clarify the default order of operations:
 
@@ -394,10 +380,15 @@ However, when we then declare Foo::Bar (i.e., using ::), we are actually creatin
 ..............................................................
 
 
-Q11. Is the line of code below valid Ruby code? If so, what does it do? Explain your answer.
+Q13. Is the line of code below valid Ruby code? If so, what does it do? Explain your answer.
 
 -> (a) {p a}["Hello world"]
 
+Yes, it’s valid. Here’s how to understand what it does:
+The -> operator creates a new Proc, which is one of Ruby’s function types. (The -> is often called the “stabby proc”. It’s also called the “stabby lambda”, as it creates a new Proc instance that is a lambda. All lambdas are Procs, but not all Procs are lambdas. There are some slight differences between the two.)
+This particular Proc takes one parameter (namely, a). When the Proc is called, Ruby executes the block p a, which is the equivalent of puts(a.inspect) (a subtle, but useful, difference which is why p is sometimes better than puts for debugging). So this Proc simply prints out the string that is passed to it.
+You can call a Proc by using either the call method on Proc, or by using the square bracket syntax, so this line of code also invokes the Proc and passes it the string “Hello World”.
+So putting that all together, this line of code (a) creates a Proc that takes a single parameter a which it prints out and (b) invokes that Proc and passes it the string “Hello world”. So, in short, this line of code prints “Hello World”.
 
 
 ..................

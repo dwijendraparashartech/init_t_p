@@ -4,7 +4,7 @@ Imp links ::
 https://www.akshaykhot.com/metaprogramming-ruby/
 ..................
 
-
+0. Example of RSPec Test Cases 
 1. Example of metaprogramming
 2. ExamplE of monkey patching 
 3. ExamplE of delegate method 
@@ -30,6 +30,354 @@ https://www.akshaykhot.com/metaprogramming-ruby/
 
 
 ............  ............  ............  ............ ............  ............  ............  ............  ............  ............ ............  ............ 
+Rspec Links :: Best Best Best Link to Understand ::
+https://dev.to/isalevine/intro-to-rspec-in-rails-basic-syntax-and-strategy-for-testing-3hh6
+
+
+
+ 0.Example of RSPec Test Cases 
+ .................................
+
+ First Example :: 
+
+  RSpec.describe Human, "#greet" do
+    it "should greet successfully" do
+      human = Human.new
+      expect(human.greet).to eq "Hello, world!"
+    end
+  end
+ ----------------------------------------------------
+  Second Example ::
+
+  class Bowling
+    attr_reader :score
+    def hit(pin_count)
+    end
+  end 
+  ..................
+
+  require 'bowling'
+  Rspec.describe Bowling,"#score" do
+    context "with no strikes or spares do"
+    it "sums the pin count for each roll" do
+    bowling = Bowling.new
+    20.times {bowling.hit(4)}
+      expect(bowling.score).to eq 80
+  end
+  ---------------------------------------------------
+
+Third Example ::  Link ::  https://www.tutorialspoint.com/rspec/rspec_introduction.htm
+This is the Best Example :: 
+
+Class for which Rspec Write :: 
+
+  class HelloWorld
+     def say_hello 
+        "Hello World!"
+     end
+  end
+
+Rspec Test Case for this Class :: 
+
+  describe HelloWorld do 
+   context “When testing the HelloWorld class” do 
+      it "should say 'Hello World' when we call the say_hello method" do 
+         hw = HelloWorld.new 
+         message = hw.say_hello 
+         expect(message).to eq "Hello World!"
+      end
+   end
+  end
+
+Rspec Write Command :: 
+
+rspec spec spec\hello_world_spec.rb
+
+Rspec Result ::
+
+Finished in 0.002 seconds (files took 0.11101 seconds to load) 
+1 example, 0 failures
+
+  ---------------------------------------------------
+Fourth Example From my end ::  From my Project :: 
+
+Complete example of Rspec Test Case tax.rb :: From my end :: 
+
+
+
+require 'rails_helper'
+RSpec.describe "BxBlockTax::Tax", type: :request do
+  TAX_URL = '/bx_block_tax/taxes/'
+    TAX_URL_FILT = '/bx_block_tax/taxes/filter'
+    TAX_URL_IMP = '/bx_block_tax/taxes/import'
+    TAX_URL_EXP = '/bx_block_tax/taxes/export'
+    TAX_URL_BULK_U = '/bx_block_tax/taxes/bulk_update'
+    TAX_URL_BULK_D = '/bx_block_tax/taxes/bulk_destroy'
+    TAX_URL_Sh = '/bx_block_tax/taxes/search'
+    TAX_URL_Namerates = '/bx_block_tax/taxes/tax_rate_names/'
+
+  before(:all) do
+    role = BxBlockRolesPermissions::Role.find_or_create_by(name: "Director")
+    @account = create(:account, role_id: role.id)
+    auth_token = BuilderJsonWebToken::JsonWebToken.encode(@account.id)
+    @account.update(lms_token: auth_token)
+    @headers = {
+        "token" => @account.lms_token
+    }
+
+    @tax = create(:tax)
+    @tax2 = create(:tax)
+    @tax3 = create(:tax)
+    @tax4 = create(:tax, tax_type:"CGST")
+  end
+
+  describe "Get#index" do
+    it 'returns list of Taxes' do
+      get TAX_URL, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+
+     it 'When there is no Tax in the Record' do
+      get TAX_URL, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "POST#create" do
+
+    let(:params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:taxtype_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:valid_taxtype_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "GST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:name_params) do {
+        tax: {
+          name: "",
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+      let(:tax_per_params) do {
+        tax: {
+          name: Faker::Name.name,
+          tax_percentage: "" ,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        }
+      }
+    end
+
+    it "when tax successfully Created" do
+      post TAX_URL , params: params, headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+    end
+
+    it "Please enter name" do
+      post TAX_URL , params: name_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]["message"].join("")).to eq "Please enter name"
+      expect(response).to have_http_status 422
+    end
+
+    it "Please enter tax%" do
+      post TAX_URL , params: tax_per_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]["message"].join("")).to eq "Please enter tax %"
+      expect(response).to have_http_status 422
+    end
+  end
+
+  describe "Put#update" do
+    let(:params) do {
+        tax: {
+          name: "Tax1",
+          tax_percentage: 15,
+          description: "tax1 description",
+          tax_type: "CGST",
+          is_gst: true
+        },
+      }
+    end
+    let(:new_params) do {
+        tax: {
+          name: "",
+          tax_percentage: 25,
+          description: "tax2 description",
+          tax_type: "CGST",
+          is_gst: true
+
+        }
+      }
+    end
+
+    it "when tax successfully updated" do
+      put TAX_URL + "#{@tax.id}", params: params, headers: @headers
+      expect(response.status).to eq 201
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+      expect(json_data['data']['id'].to_i).to eq @tax.id
+    end
+    it "when tax not present" do
+      put TAX_URL + "#{@tax.id}", params: new_params, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]['name'].join("")).to eq "Tax name can't be blank"
+      expect(response).to have_http_status 422
+    end
+  end
+
+  describe "Get#show" do
+    it "when tax found" do
+      get TAX_URL + "#{@tax.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+    end
+
+    it "when tax not found" do
+      get TAX_URL + 0.to_s, headers: @headers
+      json_data = json_response(response)
+      expect(json_data["errors"]).to eq nil
+      expect(response).to have_http_status 404
+    end
+  end
+
+  describe "DELETE#destroy" do
+    it 'delete given tax' do
+      delete TAX_URL + "#{@tax.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "GET#filter" do
+    let(:name_params) do {
+        name: @tax.name,
+        start_range: 15,
+        end_range: 30,
+        tax_type: @tax.tax_type,
+        tax_percentage: @tax.tax_percentage
+      }
+    end
+    it 'when name not present' do
+      get TAX_URL_FILT, params: name_params, headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+      expect(json_data["data"].count).to eq 1
+    end
+  end
+
+  describe "GET#search" do
+    it 'it should return results' do
+      get TAX_URL_Sh + "?name=#{@tax.name}", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+      expect(json_response(response)['data'][0]["id"].to_i).to eq @tax.id
+    end
+    it 'it should return no records' do
+      get TAX_URL_Sh + "?name=asasas", headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 404
+      expect(json_response(response)['message']).to eq "No records."
+    end
+  end
+
+  describe "Get#tax_rate_names" do
+    it 'returns list of Taxes' do
+      get TAX_URL_Namerates, headers: @headers
+      json_data = json_response(response)
+      expect(response.status).to eq 200
+    end
+  end
+
+  describe "PUT#bulk_update" do
+    let(:params) do {
+          "tax_type": "UTGST",
+          "ids": [@tax.id,@tax2.id]
+     }
+   end
+    let(:new_params) do {
+          "tax_type": "CGST",
+          "ids": ''
+     }
+    end
+    it 'when tax successfully updated' do
+      put TAX_URL_BULK_U, headers: @headers,params:params
+      json_data = json_response(response)
+      expect(response).to have_http_status 201
+      json_data['data'][0]["attributes"]["tax_type"] != @tax.tax_type
+    end
+
+      it "when tax not present" do
+      put TAX_URL_BULK_U , params: new_params, headers: @headers
+      json_data = json_response(response)
+      # expect(json_data["errors"]['name'].join("")).to eq "Tax name can't be blank"
+      expect(response).to have_http_status 404
+    end
+  end
+
+  describe "DELETE#bulk_destroy" do
+    it 'when tax successfully deleted' do
+      delete TAX_URL_BULK_D + "?ids=#{@tax4.id},#{@tax2.id}", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+    end
+    it 'when tax not found' do
+      delete TAX_URL_BULK_D + "?ids=''", headers: @headers
+      json_data = json_response(response)
+      expect(response).to have_http_status 404
+    end
+  end
+
+  # import action
+  describe "POST#import" do
+    let(:params) do {
+      file: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, 'app/assets/csv_files/sample_file_for_tax.csv')))
+      }
+    end
+    it 'import the csv file' do
+      post TAX_URL_IMP, headers: @headers,params:params
+      json_data = json_response(response)
+      expect(response).to have_http_status 200
+    end
+  end
+end
+
+
 
 
 ...................................................  ...................................
@@ -46,6 +394,13 @@ https://www.akshaykhot.com/metaprogramming-ruby/
 
 First Example of Meta Programming ::
 .......................................
+
+Very good blog of ruby meta progamming :: 
+
+https://www.bigbinary.com/books/learn-rubyonrails-book/rails-macros-and-metaprogramming
+
+
+metaclass is eigenclass or singleton class 
 
 # before meataprogramming 
 class MyClass
@@ -76,6 +431,36 @@ end
 Second Example of Meta Programming ::
 .......................................
 
+class Animal
+  def eats?
+    true
+  end
+end
+dog = Animal.new
+dog.send(:eats?) # true
+
+...
+
+Defining Methods Dynamically :: 
+
+class Animal
+  def perform(action)
+    puts "Performing #{action}."
+  end
+end
+
+class Animal
+  ["eat", "walk"].each do |action|
+    define_method(action) do
+      puts "performing #{action}"
+    end
+  end
+end
+
+...............
+
+
+
 
 ...................................................  ...................................
 ...................................................  ...................................
@@ -90,6 +475,19 @@ Second Example of Meta Programming ::
 ............  ............  ............  ............ ............  ............  ............  ............  ............  ............ ............  ............ 
 
 2. Monkey patching ::
+
+First and Best Example ::
+
+class String 
+  def reverse 
+    puts "Reversing has Stopped Manually by Monkey Patching Technique"
+  end 
+end 
+"Reverse me?".reverse
+
+......................................................................
+
+
 
 # Before applying patching
 hash = { "Geeks"=>"G","for"=>"F","geeks"=>"g" }
@@ -204,7 +602,7 @@ queue_item = QueueItem.first
 queue_item.video_title == queue_item.video.title
 # => true
 
-
+  
 ...................................................  ...................................
 ...................................................  ...................................
 ...................................................  ...................................
@@ -329,6 +727,7 @@ B.
 Duck typing is a style of programming where it allows an object to be passed in to a method that expects a certain type even if it doesn’t inherit from that type. 
 All it has to do is support the methods and properties of the expected type in use by the method. In duck typing, one is concerned with just those aspects of an object that are used, rather than the type of the object itself.
 If the object does not have the methods that are called then it will signal a run-time error to the user. If the object have the methods, then they are executed no matter the type of the object.
+
 
 
 ...................................................  ...................................
@@ -478,6 +877,45 @@ AccessLevel.new.something_interesting
 ...........  ............  ............  ............ ............  ............  ............ ............  ............  ............  ............ ............
 
 9. Example of SingeTon Method ::
+
+MyExample :: 
+
+class Stm
+  def print
+    puts 'Hello'
+  end
+end 
+o1= Stm.new
+o2= Stm.new
+o1.print # => 'Hello'
+o2.print # => 'Hello'
+
+def o2.print
+  puts 'Sto'
+end 
+o1.print
+o2.print
+
+..................
+Ex0 :: 
+class ExampleObject
+  def print_hello
+    puts 'Hello'
+  end
+end 
+object1= ExampleObject.new
+object2= ExampleObject.new
+object1.print_hello # => 'Hello'
+object2.print_hello # => 'Hello'
+
+def object2.print_hello
+  puts 'Bonjour'
+end 
+object1.print_hello
+object2.print_hello 
+
+...........................
+
 
 Ex1 :: ........................
 
@@ -852,52 +1290,33 @@ $ ruby method_overloading_example.rb
 ...................................................  ...................................
 
 15. Example of Method Overriding :: 
-
-
 Example of Method Overriding :: 
-
-
 The below example is for the method overriding 
 ..........................
-
 Ex.
-
 method_overriding_example.rb 
-
 ....
-
 class MethodOverridingExample
-
 def display_message 
   message = "Welcome to the Ruby Progamming World"
   puts message
 end 
-
 def display_message
   user = 'Chetan Singh'
   message = 'Welcome to the Ruby World'
   puts "Hello #{user} #{message}"
 end
-
 def display_message
   puts "Welcome to the Ruby World"
 end 
-
 end 
-
 ....
 ........................
-
 Execute :: 
-
 ruby method_overriding_example.rb 
 obj1 = MethodOverridingExample.new
 obj1.display_message
-
 Output :: Last method will be used because ruby is the interpretd language so it execute the code line by line .
-
-
-
 ...................................................  ...................................
 ...................................................  ...................................
 ...................................................  ...................................

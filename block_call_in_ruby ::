@@ -1,0 +1,62 @@
+block_call_in_ruby ::
+
+link ::   https://www.codewithjason.com/two-common-ways-call-ruby-block/ 
+.........................................................................
+
+
+there are two ways to call a block in ruby ::
+
+................................................
+
+block.call and yield.
+
+............................
+
+1. The first way: block.call
+2. The second way: yield
+
+
+
+....................................
+....................................
+
+
+
+1. The first way: block.call
+
+
+def hello(&block)
+  block.call
+end
+
+hello { puts "hey!" }
+
+................................................
+
+2. The second way: yield
+
+2. yield ::
+
+def hello(&block)
+  yield
+end
+
+hello { puts "hey!" }
+
+............
+
+OR
+
+............
+
+def hello
+  yield
+end
+
+hello { puts "hey!" }
+
+................................................
+
+
+2. 
+
