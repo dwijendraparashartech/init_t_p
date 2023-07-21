@@ -1,0 +1,88 @@
+1. Write a Ruby program to check whether a value exists in an array.
+
+2. Write a Ruby program to check whether 7 appears as either the first or last element in a given array. The array length must be 1 or more.
+
+3. Write a Ruby program to pick number of random elements from a given array.
+
+4. Write a Ruby program to check whether first and the last element are the same of a given array of integers. The array length must be 1 or more.
+
+5. Write a Ruby program to compute the sum of elements in a given array.
+
+6. Write a Ruby program to remove duplicate elements from a given array.
+
+7. Write a Ruby program to check two given arrays of integers and test whether they have the same first element or they have the same last element. Both arrays length must be 1 or more.
+
+8. Write a Ruby program to remove blank elements from a given array.
+
+9. Write a Ruby program to compute the sum of all the elements. The array length must be 3 or more.
+
+10. Write a Ruby program to split a delimited string into an array.
+
+11. Write a Ruby program to create an array with the elements "rotated left" of a given array of ints length 3.
+
+12. Write a Ruby program to create a new array with the elements in reverse order from a given an array of integers length 3.
+
+13. Write a Ruby program to find the larger between the first and last elements of a given array of integers of length 3. Replace all the other values to be that value. Return the changed array.
+
+14. Write a Ruby program to compute the sum of the first 2 elements of a given array of integers. If the array length is less than 2, just sum up the elements that exist, returning 0 if the length of the array is 0.
+
+15. Write a Ruby program to create an array of length 2 containing their middle elements from two given arrays of integers of length 3.
+
+16. Write a Ruby program to concatenate array of arrays into one.
+
+17. Write a Ruby program to check whether a given array of integers of length 2 contains a 4 or a 7.
+
+18. Write a Ruby program to check whether a given array of integers of length 2 does not contain a 6 or a 9.
+
+19. Write a Ruby program to check whether a given array of integers contains 3 twice, or 5 twice. The array will be length 0, 1, or 2.
+
+20. Write a Ruby program to set 5 to 1 whether there is a 3 immediately followed by a 4 in a given array of integers (length 3).
+
+21. Write a Ruby program to compute the sum of two arrays (length 3) and return the array which has the largest sum.
+
+22. Write a Ruby program to create a new array of length 2 containing the middle two elements from a given array of integers of even length 2 or more.
+
+23. Write a Ruby program to create a new array of length 4 containing all their elements from two array of integers, length 2.
+
+24. Write a Ruby program to swap the first and last elements of a given array of integers, length will be at least 1. Return the modified array.
+
+25. Write a Ruby program to create a new array of length 3 containing the elements from the middle of a given array of integers of odd length (at least 3).
+
+26. Write a Ruby program to find the largest value from a given array of integers of odd length. The array length will be a least 1.
+
+27. Write a Ruby program to create a new array using first three elements of a given array of integers. If the length of the given array is less than three return the original array.
+
+28. Write a Ruby program to create a new array with the first element of two arrays. If length of any array is 0, ignore that array.
+
+29. Write a Ruby program to get the number of even integers in a given array.
+
+30. Write a Ruby program to find the difference between the largest and smallest values of a given array of integers and length 1 or more.
+
+31. Write a Ruby program to compute the average values of a given array of except the largest and smallest values. The array length must be 3 or more.
+
+32. Write a Ruby program to compute the sum of the numbers of a given array except the number 17 and numbers that come immediately after a 17. Return 0 for an empty array.
+
+33. Write a Ruby program to check whether the sum of all the 3's of a given array of integers is exactly 9.
+
+
+34. Write a Ruby program to check whether the number of 2's is greater than the number of 5's of a given array of integers.
+
+35. Write a Ruby program to check whether every element is a 3 or a 5 in a given array of integers.
+
+36. Write a Ruby program to check whether it contains no 3 or it contains no 5.
+
+
+37. Write a Ruby program to check whether a given value appears everywhere in a given array. A value is "everywhere" in an array if it presents for every pair of adjacent elements in the array.
+
+38. Write a Ruby program to check whether a given array contains a 3 next to a 3 or a 5 next to a 5, but not both.
+
+39. Write a Ruby program to check whether a given array of integers contains two 6's next to each other, or there are two 6's separated by one element, such as {6, 2, 6}.
+
+40. Write a Ruby program to check whether there is a 2 in the array with a 3 somewhere later in a given array of integers.
+
+41. Write a Ruby program to check whether the value 2 appears in a given array of integers exactly 2 times, and no 2's are next to each other.
+
+42. Write a Ruby program to convert an array into an index hash.
+
+
+
